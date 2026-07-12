@@ -31,20 +31,18 @@
                     <p class="text-sm text-gray-500">Sistem Monitoring K3 Kontraktor</p>
                 </div>
 
-                {{-- Error Alert --}}
-                @if ($errors->any())
-                <div id="error-alert" class="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 p-4 rounded-xl transition-opacity duration-300">
+                {{-- Error Alert (Server & Client) --}}
+                <div id="error-alert" class="mb-6 flex items-start gap-3 bg-red-50 border border-red-200 p-4 rounded-xl transition-opacity duration-300 {{ $errors->any() ? '' : 'hidden' }}">
                     <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                     </svg>
-                    <div class="text-sm font-medium text-red-800">
-                        Email atau password salah.
+                    <div id="error-message" class="text-sm font-medium text-red-800">
+                        {{ $errors->any() ? 'Email atau password salah.' : '' }}
                     </div>
                 </div>
-                @endif
 
                 {{-- Form --}}
-                <form method="POST" action="{{ route('login') }}" id="login-form" class="space-y-5">
+                <form method="POST" action="{{ route('login') }}" id="login-form" class="space-y-5" novalidate>
                     @csrf
 
                     {{-- Email --}}
@@ -142,16 +140,16 @@
             // 2. Hide error alert on input or after 5 seconds
             if (errorAlert) {
                 // Auto hide after 5 seconds
-                const hideTimer = setTimeout(() => {
+                let hideTimer = setTimeout(() => {
                     errorAlert.style.opacity = '0';
-                    setTimeout(() => errorAlert.remove(), 300);
+                    setTimeout(() => errorAlert.classList.add('hidden'), 300);
                 }, 5000);
 
                 // Hide on typing
                 inputs.forEach(input => {
                     input.addEventListener('input', () => {
                         errorAlert.style.opacity = '0';
-                        setTimeout(() => errorAlert.remove(), 300);
+                        setTimeout(() => errorAlert.classList.add('hidden'), 300);
                         clearTimeout(hideTimer);
                         
                         // Remove red borders
@@ -163,12 +161,49 @@
                 });
             }
 
-            // 3. Form Submit State
-            form.addEventListener('submit', function() {
+            // 3. Form Submit State and Validation
+            form.addEventListener('submit', function(e) {
+                const emailVal = document.getElementById('email').value.trim();
+                const passwordVal = passwordInput.value.trim();
+
+                // Client-side validation for empty fields
+                if (!emailVal || !passwordVal) {
+                    e.preventDefault(); // Stop submission
+                    
+                    let errorMessage = 'Mohon lengkapi email dan kata sandi.';
+                    if (!emailVal && passwordVal) {
+                        errorMessage = 'Mohon isi email Anda.';
+                    } else if (emailVal && !passwordVal) {
+                        errorMessage = 'Mohon isi kata sandi Anda.';
+                    }
+
+                    // Update error message and show alert
+                    document.getElementById('error-message').textContent = errorMessage;
+                    errorAlert.classList.remove('hidden');
+                    errorAlert.style.opacity = '1';
+                    
+                    // Highlight empty fields
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            input.classList.remove('border-gray-200', 'focus:border-inka-navy', 'focus:ring-inka-navy/20');
+                            input.classList.add('border-red-300', 'focus:border-red-500', 'focus:ring-red-500/20');
+                        }
+                    });
+
+                    // Set auto hide timer
+                    setTimeout(() => {
+                        errorAlert.style.opacity = '0';
+                        setTimeout(() => errorAlert.classList.add('hidden'), 300);
+                    }, 5000);
+                    
+                    return;
+                }
+
+                // If valid, show loading state
                 submitBtn.disabled = true;
                 btnText.textContent = 'Masuk...';
                 btnSpinner.classList.remove('hidden');
-                btnText.classList.add('ml-2'); // Add margin to separate text from spinner slightly
+                btnText.classList.add('ml-2');
             });
 
             // 4. Enter to submit
