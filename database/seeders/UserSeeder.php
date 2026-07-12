@@ -17,30 +17,35 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'Super Admin',
+                'username' => 'superadmin',
                 'email' => 'superadmin@inka.co.id',
                 'role' => 'superadmin',
                 'password' => Hash::make('password'),
             ],
             [
                 'name' => 'Divisi Teknik',
+                'username' => 'divisi_teknik',
                 'email' => 'divisi@inka.co.id',
                 'role' => 'divisi',
                 'password' => Hash::make('password'),
             ],
             [
                 'name' => 'Staff HSE',
+                'username' => 'staff_hse',
                 'email' => 'staff@inka.co.id',
                 'role' => 'staff',
                 'password' => Hash::make('password'),
             ],
             [
                 'name' => 'Manager HSE',
+                'username' => 'manager_hse',
                 'email' => 'manager@inka.co.id',
                 'role' => 'manager',
                 'password' => Hash::make('password'),
             ],
             [
                 'name' => 'Senior Manager HSE',
+                'username' => 'seniormanager_hse',
                 'email' => 'seniormanager@inka.co.id',
                 'role' => 'senior-manager',
                 'password' => Hash::make('password'),

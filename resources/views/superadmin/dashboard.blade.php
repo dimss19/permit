@@ -1,88 +1,137 @@
 <x-app-layout>
-    <x-slot name="title">Dashboard — Super Admin</x-slot>
+    <x-slot name="title">Dashboard Super Admin</x-slot>
 
-    {{-- ===== WIDGETS ===== --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
-        {{-- Total Divisi --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-blue-50 flex items-center justify-center shrink-0">
-                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-gray-500">Total Divisi</p>
-                <p class="text-2xl font-bold text-gray-800 mt-0.5">0</p>
-            </div>
+<div class="max-w-7xl mx-auto space-y-6">
+
+    {{-- Page Header --}}
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900">Dashboard Super Admin</h1>
+            <p class="text-sm text-gray-500 mt-1">Ringkasan statistik akun Divisi pada sistem</p>
         </div>
-
-        {{-- Total Akun --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-slate-50 flex items-center justify-center shrink-0">
-                <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-gray-500">Total Akun</p>
-                <p class="text-2xl font-bold text-gray-800 mt-0.5">0</p>
-            </div>
-        </div>
-
-        {{-- Akun Aktif --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center shrink-0">
-                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-gray-500">Akun Aktif</p>
-                <p class="text-2xl font-bold text-green-600 mt-0.5">0</p>
-            </div>
-        </div>
-
-        {{-- Akun Nonaktif --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex items-center gap-4">
-            <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center shrink-0">
-                <svg class="w-6 h-6 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-            </div>
-            <div>
-                <p class="text-xs font-medium text-gray-500">Akun Nonaktif</p>
-                <p class="text-2xl font-bold text-red-500 mt-0.5">0</p>
-            </div>
-        </div>
-    </div>
-
-    {{-- ===== QUICK ACTION + TABLE ===== --}}
-    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
-            <div>
-                <h3 class="text-sm font-semibold text-gray-800">Daftar Akun Divisi</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Kelola akun pengguna yang bertanggung jawab atas pengajuan permit</p>
-            </div>
-            {{-- Quick Action: Tambah Akun Divisi --}}
-            <a href="/superadmin/users/create" class="inline-flex items-center gap-2 bg-inka-navy text-white text-sm font-semibold px-4 py-2 rounded-xl hover:opacity-90 transition-opacity">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+        <div>
+            <a href="{{ url('superadmin/users') }}?create=true" class="inline-flex items-center gap-2 bg-inka-navy text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-opacity-90 transition-colors shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-inka-navy">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 Tambah Akun Divisi
             </a>
         </div>
-
-        {{-- Tabel --}}
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-sm">
-                <thead>
-                    <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100">
-                        <th class="px-6 py-3 font-semibold">Nama Divisi</th>
-                        <th class="px-6 py-3 font-semibold">Email / Username</th>
-                        <th class="px-6 py-3 font-semibold">Status</th>
-                        <th class="px-6 py-3 font-semibold">Tanggal Dibuat</th>
-                        <th class="px-6 py-3 font-semibold text-right">Aksi</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td colspan="5" class="px-6 py-10 text-center text-sm text-gray-400">
-                            Belum ada akun divisi yang dibuat.
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
+    {{-- Alert Messages --}}
+    @if(session('success'))
+        <div class="bg-green-50 border border-green-200 text-green-800 p-4 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 text-green-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="text-sm font-medium">{{ session('success') }}</div>
+        </div>
+    @endif
+    @if($errors->any())
+        <div class="bg-red-50 border border-red-200 text-red-800 p-4 rounded-xl flex items-start gap-3">
+            <svg class="w-5 h-5 text-red-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            <div class="text-sm font-medium">
+                <ul class="list-disc pl-4 space-y-1">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        </div>
+    @endif
+
+    {{-- Widgets Row --}}
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        
+        {{-- Widget 1: Total Divisi --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between group hover:shadow-md transition-shadow">
+            <div>
+                <p class="text-sm font-medium text-gray-500 mb-1">Total Divisi</p>
+                <h3 class="text-3xl font-bold text-gray-900">{{ $counts['total'] }}</h3>
+            </div>
+            <div class="w-12 h-12 bg-blue-50 text-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            </div>
+        </div>
+
+        {{-- Widget 2: Akun Aktif --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between group hover:shadow-md transition-shadow">
+            <div>
+                <p class="text-sm font-medium text-gray-500 mb-1">Akun Aktif</p>
+                <h3 class="text-3xl font-bold text-gray-900">{{ $counts['aktif'] }}</h3>
+            </div>
+            <div class="w-12 h-12 bg-green-50 text-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+
+        {{-- Widget 3: Akun Nonaktif --}}
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex items-center justify-between group hover:shadow-md transition-shadow">
+            <div>
+                <p class="text-sm font-medium text-gray-500 mb-1">Akun Nonaktif</p>
+                <h3 class="text-3xl font-bold text-gray-900">{{ $counts['nonaktif'] }}</h3>
+            </div>
+            <div class="w-12 h-12 bg-red-50 text-red-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+        </div>
+
+    </div>
+
+    {{-- Section: Akun Divisi Terbaru --}}
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        
+        <div class="px-6 py-5 border-b border-gray-100 flex items-center justify-between bg-gray-50/50">
+            <h2 class="text-lg font-bold text-gray-900">Akun Divisi Terbaru</h2>
+            <a href="{{ url('superadmin/users') }}" class="text-sm font-semibold text-inka-navy hover:underline">Lihat Semua</a>
+        </div>
+
+        @if($users->isEmpty())
+            <div class="p-12 text-center">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-50 mb-4">
+                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                </div>
+                <h3 class="text-base font-bold text-gray-900 mb-1">Belum ada akun Divisi</h3>
+                <p class="text-sm text-gray-500 mb-5">Tambahkan akun Divisi agar dapat mengajukan permit.</p>
+                <a href="{{ url('superadmin/users') }}?create=true" class="inline-flex items-center gap-2 bg-white border border-gray-300 text-gray-700 px-4 py-2 rounded-xl text-sm font-semibold hover:bg-gray-50 transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                    Tambah Akun Divisi
+                </a>
+            </div>
+        @else
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-gray-50/50 text-xs uppercase text-gray-500 border-b border-gray-100">
+                        <tr>
+                            <th class="px-6 py-4 font-semibold">Nama Divisi</th>
+                            <th class="px-6 py-4 font-semibold">Username</th>
+                            <th class="px-6 py-4 font-semibold">Email</th>
+                            <th class="px-6 py-4 font-semibold">Status</th>
+                            <th class="px-6 py-4 font-semibold">Tanggal Dibuat</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-100">
+                        @foreach($users as $user)
+                        <tr class="hover:bg-gray-50/50 transition-colors">
+                            <td class="px-6 py-4 font-medium text-gray-900">{{ $user->name }}</td>
+                            <td class="px-6 py-4">{{ $user->username }}</td>
+                            <td class="px-6 py-4">{{ $user->email ?? '—' }}</td>
+                            <td class="px-6 py-4">
+                                @if($user->is_active)
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700 border border-green-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-green-500"></span> Aktif
+                                    </span>
+                                @else
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium bg-red-50 text-red-700 border border-red-200">
+                                        <span class="w-1.5 h-1.5 rounded-full bg-red-500"></span> Nonaktif
+                                    </span>
+                                @endif
+                            </td>
+                            <td class="px-6 py-4">{{ $user->created_at->format('d/m/Y') }}</td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
+    </div>
+
+</div>
 </x-app-layout>

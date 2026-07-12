@@ -23,13 +23,12 @@ Route::get('/dashboard', function () {
     return redirect($map[Auth::user()->role] ?? '/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// ===== SUPERADMIN =====
-Route::get('/superadmin/dashboard', function () {
-    return view('superadmin.dashboard');
-});
-Route::get('/superadmin/users', function () {
-    return view('superadmin.dashboard'); // placeholder
-});
+// ===== SUPER ADMIN =====
+Route::get('/superadmin/dashboard', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'index']);
+Route::get('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index']);
+Route::post('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'store']);
+Route::patch('/superadmin/users/{id}/status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'updateStatus']);
+Route::patch('/superadmin/users/{id}/reset-password', [\App\Http\Controllers\SuperAdmin\UserController::class, 'resetPassword']);
 
 // ===== DIVISI (menggunakan controller + data nyata) =====
 Route::get('/divisi/dashboard', [DivisiDashboard::class, 'index']);

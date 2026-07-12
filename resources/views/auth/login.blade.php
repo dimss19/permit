@@ -37,7 +37,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
                     </svg>
                     <div id="error-message" class="text-sm font-medium text-red-800">
-                        {{ $errors->any() ? 'Email atau password salah.' : '' }}
+                        {{ $errors->any() ? ($errors->first('username') ?? 'Username atau password salah.') : '' }}
                     </div>
                 </div>
 
@@ -45,18 +45,18 @@
                 <form method="POST" action="{{ route('login') }}" id="login-form" class="space-y-5" novalidate>
                     @csrf
 
-                    {{-- Email --}}
+                    {{-- Username --}}
                     <div>
-                        <label for="email" class="block text-sm font-semibold text-gray-700 mb-1.5">Email</label>
+                        <label for="username" class="block text-sm font-semibold text-gray-700 mb-1.5">Username</label>
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
                                 <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                 </svg>
                             </div>
-                            <input id="email" type="email" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                            <input id="username" type="text" name="username" value="{{ old('username') }}" required autofocus autocomplete="username"
                                 class="login-input block w-full pl-11 pr-4 py-2.5 bg-gray-50 border {{ $errors->any() ? 'border-red-300 focus:border-red-500 focus:ring-red-500/20' : 'border-gray-200 focus:border-inka-navy focus:ring-inka-navy/20' }} rounded-xl text-sm transition-all duration-200 focus:bg-white focus:outline-none focus:ring-4 placeholder-gray-400" 
-                                placeholder="nama@perusahaan.com">
+                                placeholder="Masukkan username Anda">
                         </div>
                     </div>
 
@@ -163,17 +163,17 @@
 
             // 3. Form Submit State and Validation
             form.addEventListener('submit', function(e) {
-                const emailVal = document.getElementById('email').value.trim();
+                const usernameVal = document.getElementById('username').value.trim();
                 const passwordVal = passwordInput.value.trim();
 
                 // Client-side validation for empty fields
-                if (!emailVal || !passwordVal) {
+                if (!usernameVal || !passwordVal) {
                     e.preventDefault(); // Stop submission
                     
-                    let errorMessage = 'Mohon lengkapi email dan kata sandi.';
-                    if (!emailVal && passwordVal) {
-                        errorMessage = 'Mohon isi email Anda.';
-                    } else if (emailVal && !passwordVal) {
+                    let errorMessage = 'Mohon lengkapi username dan kata sandi.';
+                    if (!usernameVal && passwordVal) {
+                        errorMessage = 'Mohon isi username Anda.';
+                    } else if (usernameVal && !passwordVal) {
                         errorMessage = 'Mohon isi kata sandi Anda.';
                     }
 
