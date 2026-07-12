@@ -48,15 +48,11 @@ Route::put('/staff/approvals/{id}', [\App\Http\Controllers\Staff\ApprovalControl
 Route::get('/staff/history', [\App\Http\Controllers\Staff\HistoryController::class, 'index']);
 
 // ===== MANAGER =====
-Route::get('/manager/dashboard', function () {
-    return view('manager.dashboard');
-});
-Route::get('/manager/approvals', function () {
-    return view('manager.dashboard'); // placeholder
-});
-Route::get('/manager/history', function () {
-    return view('manager.dashboard'); // placeholder
-});
+Route::get('/manager/dashboard', [\App\Http\Controllers\Manager\DashboardController::class, 'index']);
+Route::get('/manager/approvals', [\App\Http\Controllers\Manager\ApprovalController::class, 'index']);
+Route::get('/manager/approvals/{id}', [\App\Http\Controllers\Manager\ApprovalController::class, 'show']);
+Route::put('/manager/approvals/{id}', [\App\Http\Controllers\Manager\ApprovalController::class, 'update']);
+Route::get('/manager/history', [\App\Http\Controllers\Manager\HistoryController::class, 'index']);
 
 // ===== SENIOR MANAGER =====
 Route::get('/senior-manager/dashboard', function () {
