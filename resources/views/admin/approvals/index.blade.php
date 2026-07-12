@@ -1,5 +1,5 @@
 <x-app-layout>
-    <x-slot name="title">Review Permit (Manager)</x-slot>
+    <x-slot name="title">Review Permit ({{ $config['roleName'] }})</x-slot>
 
     {{-- ===== FLASH MESSAGES ===== --}}
     @if(session('success'))
@@ -16,7 +16,7 @@
     @endif
 
     {{-- ===== FILTER BAR ===== --}}
-    <form method="GET" action="/manager/approvals" class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 mb-5 flex flex-wrap items-center gap-3">
+    <form method="GET" action="/admin/approvals" class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 mb-5 flex flex-wrap items-center gap-3">
         <div class="relative flex-1 min-w-[200px]">
             <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -27,7 +27,7 @@
         </div>
 
         <select name="status" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
-            <option value="">Status: Review Manager</option>
+            <option value="">Status: {{ $config['expectedStatus'] }}</option>
             <option value="Revision" {{ request('status') === 'Revision' ? 'selected' : '' }}>Direvisi</option>
             <option value="Semua" {{ request('status') === 'Semua' ? 'selected' : '' }}>Semua Status</option>
         </select>
@@ -38,7 +38,7 @@
         </button>
 
         @if(request('search') || request('status') || request('date'))
-        <a href="/manager/approvals" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">
+        <a href="/admin/approvals" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">
             Reset
         </a>
         @endif
@@ -49,7 +49,7 @@
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <div>
                 <h3 class="text-sm font-semibold text-gray-800">Daftar Antrean Review</h3>
-                <p class="text-xs text-gray-400 mt-0.5">Permit yang telah disetujui Staff dan menunggu approval Anda.</p>
+                <p class="text-xs text-gray-400 mt-0.5">Permit yang menunggu persetujuan tingkat {{ $config['roleName'] }}.</p>
             </div>
         </div>
 
@@ -58,7 +58,7 @@
                 <div class="w-16 h-16 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-5">
                     <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                 </div>
-                <p class="text-sm font-semibold text-gray-700">Tidak ada permit yang perlu direview.</p>
+                <p class="text-sm font-semibold text-gray-700">Tidak ada permit yang perlu direview saat ini.</p>
             </div>
         @else
             <div class="overflow-x-auto">
@@ -69,31 +69,37 @@
                             <th class="px-6 py-3 font-semibold">Nama Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Divisi</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
-                            <th class="px-6 py-3 font-semibold">Tgl. Masuk Manager</th>
+                            <th class="px-6 py-3 font-semibold">{{ $config['dateColumnLabel'] }}</th>
                             <th class="px-6 py-3 font-semibold text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
                         @foreach($permits as $permit)
-                        <tr class="hover:bg-orange-50/30 transition-colors cursor-pointer" onclick="window.location='/manager/approvals/{{ $permit->id }}'">
-                            <td class="px-6 py-3.5"><a href="/manager/approvals/{{ $permit->id }}" class="font-semibold text-inka-navy hover:underline" onclick="event.stopPropagation()">{{ $permit->no_permit }}</a></td>
+                        <tr class="hover:bg-orange-50/30 transition-colors cursor-pointer" onclick="window.location='/admin/approvals/{{ $permit->id }}'">
+                            <td class="px-6 py-3.5"><a href="/admin/approvals/{{ $permit->id }}" class="font-semibold text-inka-navy hover:underline" onclick="event.stopPropagation()">{{ $permit->no_permit }}</a></td>
                             <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
                             <td class="px-6 py-3.5 text-gray-700">{{ optional($permit->user)->name ?? '—' }}</td>
                             <td class="px-6 py-3.5">
-                                @if($permit->status === 'Review Manager')
+                                @if($permit->status === $config['expectedStatus'])
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-orange-100 text-orange-700">Menunggu Anda</span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700">{{ $permit->status }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $permit->updated_at ? $permit->updated_at->format('d/m/Y') : '—' }}</td>
+                            <td class="px-6 py-3.5 text-gray-500 text-xs">
+                                @if($config['sortCol'] === 'submitted_at')
+                                    {{ $permit->submitted_at ? $permit->submitted_at->format('d/m/Y') : '—' }}
+                                @else
+                                    {{ $permit->updated_at ? $permit->updated_at->format('d/m/Y') : '—' }}
+                                @endif
+                            </td>
                             <td class="px-6 py-3.5 text-right">
-                                @if($permit->status === 'Review Manager')
-                                <a href="/manager/approvals/{{ $permit->id }}" class="inline-flex items-center bg-inka-navy text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-colors">
+                                @if($permit->status === $config['expectedStatus'])
+                                <a href="/admin/approvals/{{ $permit->id }}" class="inline-flex items-center bg-inka-navy text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-colors">
                                     Review
                                 </a>
                                 @else
-                                <a href="/manager/approvals/{{ $permit->id }}" class="inline-flex items-center text-inka-navy text-[11px] font-semibold hover:underline">
+                                <a href="/admin/approvals/{{ $permit->id }}" class="inline-flex items-center text-inka-navy text-[11px] font-semibold hover:underline">
                                     Lihat
                                 </a>
                                 @endif

@@ -1,8 +1,8 @@
 <x-app-layout>
-    <x-slot name="title">History Permit (Staff)</x-slot>
+    <x-slot name="title">History Permit ({{ $roleName }})</x-slot>
 
     {{-- ===== FILTER BAR ===== --}}
-    <form method="GET" action="/staff/history" class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 mb-5 flex flex-wrap items-center gap-3">
+    <form method="GET" action="/admin/history" class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 mb-5 flex flex-wrap items-center gap-3">
         <div class="relative flex-1 min-w-[200px]">
             <svg class="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             <input type="text" name="search" value="{{ request('search') }}" placeholder="Cari no. permit, divisi, kontraktor..." class="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy">
@@ -15,7 +15,7 @@
         </select>
         <button type="submit" class="px-4 py-2 bg-inka-navy text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity">Cari</button>
         @if(request('search') || request('status'))
-        <a href="/staff/history" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Reset</a>
+        <a href="/admin/history" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Reset</a>
         @endif
     </form>
 
@@ -26,6 +26,9 @@
         </div>
         @if($permits->isEmpty())
             <div class="flex flex-col items-center justify-center py-16 text-center px-6">
+                <div class="w-16 h-16 rounded-2xl bg-gray-50 border border-gray-100 flex items-center justify-center mb-5">
+                    <svg class="w-8 h-8 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </div>
                 <p class="text-sm font-semibold text-gray-700">Tidak ada permit ditemukan.</p>
             </div>
         @else

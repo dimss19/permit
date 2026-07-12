@@ -18,7 +18,7 @@
     <body class="font-sans antialiased bg-slate-50 text-gray-900 flex h-screen overflow-hidden">
 
         {{-- ===== SIDEBAR ===== --}}
-        @php $role = request()->segment(1); @endphp
+        @php $role = auth()->user()->role ?? ''; @endphp
         <aside id="sidebar" class="w-64 bg-inka-navy text-white flex flex-col shrink-0 z-30 transition-transform duration-200">
 
             {{-- Logo --}}
@@ -61,49 +61,17 @@
                     </a>
                 @endif
 
-                {{-- === STAFF === --}}
-                @if($role === 'staff')
-                    <a href="/staff/dashboard" class="sidebar-link {{ request()->is('staff/dashboard') ? 'active' : '' }}">
+                {{-- === ADMIN (Staff, Manager, Senior Manager) === --}}
+                @if(in_array($role, ['staff', 'manager', 'senior-manager']))
+                    <a href="/admin/dashboard" class="sidebar-link {{ request()->is('admin/dashboard') ? 'active' : '' }}">
                         <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                         Dashboard
                     </a>
-                    <a href="/staff/approvals" class="sidebar-link {{ request()->is('staff/approvals*') ? 'active' : '' }}">
+                    <a href="/admin/approvals" class="sidebar-link {{ request()->is('admin/approvals*') ? 'active' : '' }}">
                         <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Review Permit
                     </a>
-                    <a href="/staff/history" class="sidebar-link {{ request()->is('staff/history*') ? 'active' : '' }}">
-                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                        History
-                    </a>
-                @endif
-
-                {{-- === MANAGER === --}}
-                @if($role === 'manager')
-                    <a href="/manager/dashboard" class="sidebar-link {{ request()->is('manager/dashboard') ? 'active' : '' }}">
-                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                        Dashboard
-                    </a>
-                    <a href="/manager/approvals" class="sidebar-link {{ request()->is('manager/approvals*') ? 'active' : '' }}">
-                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Review Permit
-                    </a>
-                    <a href="/manager/history" class="sidebar-link {{ request()->is('manager/history*') ? 'active' : '' }}">
-                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                        History
-                    </a>
-                @endif
-
-                {{-- === SENIOR MANAGER === --}}
-                @if($role === 'senior-manager')
-                    <a href="/senior-manager/dashboard" class="sidebar-link {{ request()->is('senior-manager/dashboard') ? 'active' : '' }}">
-                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                        Dashboard
-                    </a>
-                    <a href="/senior-manager/approvals" class="sidebar-link {{ request()->is('senior-manager/approvals*') ? 'active' : '' }}">
-                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                        Final Approval
-                    </a>
-                    <a href="/senior-manager/history" class="sidebar-link {{ request()->is('senior-manager/history*') ? 'active' : '' }}">
+                    <a href="/admin/history" class="sidebar-link {{ request()->is('admin/history*') ? 'active' : '' }}">
                         <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                         History
                     </a>

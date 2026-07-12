@@ -34,9 +34,9 @@ class AuthenticatedSessionController extends Controller
         $redirectMap = [
             'superadmin'     => '/superadmin/dashboard',
             'divisi'         => '/divisi/dashboard',
-            'staff'          => '/staff/dashboard',
-            'manager'        => '/manager/dashboard',
-            'senior-manager' => '/senior-manager/dashboard',
+            'staff'          => '/admin/dashboard',
+            'manager'        => '/admin/dashboard',
+            'senior-manager' => '/admin/dashboard',
         ];
 
         $destination = $redirectMap[$role] ?? '/dashboard';

@@ -2,7 +2,6 @@
     <x-slot name="title">Detail Permit — {{ $permit->no_permit }}</x-slot>
 
     @php
-        $canEdit = in_array($permit->status, ['Draft', 'Revision']);
         $statusMap = [
             'Draft'                    => 'bg-gray-100 text-gray-600',
             'Submitted'                => 'bg-blue-100 text-blue-700',
@@ -19,14 +18,14 @@
     {{-- Breadcrumb + aksi --}}
     <div class="flex items-center justify-between mb-5">
         <div class="flex items-center gap-2 text-sm text-gray-400">
-            <a href="/staff/dashboard" class="hover:text-gray-600 transition-colors">Dashboard</a>
+            <a href="/admin/dashboard" class="hover:text-gray-600 transition-colors">Dashboard</a>
             <span>/</span>
-            <a href="/staff/approvals" class="hover:text-gray-600 transition-colors">Review Permit</a>
+            <a href="/admin/approvals" class="hover:text-gray-600 transition-colors">Review Permit</a>
             <span>/</span>
             <span class="font-semibold text-gray-700">{{ $permit->no_permit }}</span>
         </div>
         <div class="flex items-center gap-3">
-            <a href="/staff/approvals"
+            <a href="/admin/approvals"
                class="px-4 py-2 text-sm font-semibold text-gray-600 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
                 ← Kembali
             </a>
@@ -38,6 +37,7 @@
         <div>
             <p class="text-xs text-gray-400 mb-1">Nomor Permit</p>
             <p class="text-xl font-bold text-gray-800">{{ $permit->no_permit }}</p>
+            <p class="text-xs text-gray-500 mt-1">Divisi: <span class="font-semibold text-gray-700">{{ optional($permit->user)->name ?? '—' }}</span></p>
         </div>
         <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold {{ $badge }}">
             {{ $permit->status }}
@@ -58,7 +58,6 @@
 
     {{-- Grid detail --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-
         {{-- A. Klasifikasi --}}
         <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
             <div class="px-6 py-4 border-b border-gray-100">
@@ -167,7 +166,6 @@
                 @endif
             </div>
         </div>
-
     </div>
 
     {{-- Timeline status --}}
@@ -190,11 +188,11 @@
     </div>
 
     @if($canReview)
-    {{-- Aksi Review Staff --}}
+    {{-- Aksi Review Terpadu --}}
     <div class="mt-5 bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-5">
-        <h3 class="text-sm font-semibold text-gray-800 mb-4">Tindak Lanjut Review (Staff)</h3>
+        <h3 class="text-sm font-semibold text-gray-800 mb-4">Tindak Lanjut Review ({{ $config['roleName'] }})</h3>
         
-        <form action="/staff/approvals/{{ $permit->id }}" method="POST">
+        <form action="/admin/approvals/{{ $permit->id }}" method="POST">
             @csrf
             @method('PUT')
             
@@ -204,9 +202,15 @@
             </div>
             
             <div class="flex gap-3">
+                @if($config['nextStatus'] === 'Active')
                 <button type="submit" name="action" value="approve" class="px-6 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition-colors">
-                    Setujui & Lanjutkan ke Manager
+                    Setujui & Aktifkan Permit
                 </button>
+                @else
+                <button type="submit" name="action" value="approve" class="px-6 py-2.5 bg-green-600 text-white text-sm font-semibold rounded-xl hover:bg-green-700 transition-colors">
+                    Setujui & Lanjutkan ke {{ $config['nextRoleName'] }}
+                </button>
+                @endif
                 <button type="submit" name="action" value="revise" class="px-6 py-2.5 bg-red-100 text-red-700 text-sm font-semibold rounded-xl hover:bg-red-200 transition-colors">
                     Kembalikan ke Divisi (Revisi)
                 </button>
