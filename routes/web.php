@@ -41,15 +41,11 @@ Route::get('/divisi/permits/{id}/edit', [\App\Http\Controllers\Divisi\PermitCont
 Route::put('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitController::class, 'update']);
 
 // ===== STAFF =====
-Route::get('/staff/dashboard', function () {
-    return view('staff.dashboard');
-});
-Route::get('/staff/approvals', function () {
-    return view('staff.dashboard'); // placeholder
-});
-Route::get('/staff/history', function () {
-    return view('staff.dashboard'); // placeholder
-});
+Route::get('/staff/dashboard', [\App\Http\Controllers\Staff\DashboardController::class, 'index']);
+Route::get('/staff/approvals', [\App\Http\Controllers\Staff\ApprovalController::class, 'index']);
+Route::get('/staff/approvals/{id}', [\App\Http\Controllers\Staff\ApprovalController::class, 'show']);
+Route::put('/staff/approvals/{id}', [\App\Http\Controllers\Staff\ApprovalController::class, 'update']);
+Route::get('/staff/history', [\App\Http\Controllers\Staff\HistoryController::class, 'index']);
 
 // ===== MANAGER =====
 Route::get('/manager/dashboard', function () {

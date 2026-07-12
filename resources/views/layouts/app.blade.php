@@ -23,11 +23,10 @@
 
             {{-- Logo --}}
             <div class="h-16 flex items-center gap-3 px-5 border-b border-white/10 shrink-0">
-                <img src="{{ asset('assets/images/logo.png') }}" alt="Logo PT INKA" class="h-8 hidden" id="sidebar-logo">
-                <div class="w-8 h-8 bg-white/10 rounded-lg flex items-center justify-center text-[10px] font-bold text-gray-300 border border-white/20 shrink-0"></div>
-                <div class="leading-tight">
+                <img src="{{ asset('assets/images/logoinka.svg') }}" alt="Logo PT INKA" class="h-8 w-auto brightness-0 invert">
+                <div class="leading-tight pl-1 border-l border-white/20">
                     <p class="text-[11px] font-bold tracking-wider text-white">SAFETY PERMIT</p>
-                    <p class="text-[9px] text-gray-400 tracking-wide">PT INKA (Persero) Madiun</p>
+                    <p class="text-[9px] text-gray-400 tracking-wide">PT INKA Madiun</p>
                 </div>
             </div>
 
@@ -110,14 +109,7 @@
                     </a>
                 @endif
 
-                {{-- Divider --}}
-                <div class="border-t border-white/10 my-2"></div>
 
-                {{-- Profile — semua role --}}
-                <a href="#" class="sidebar-link">
-                    <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    Profil Saya
-                </a>
 
             </nav>
 
