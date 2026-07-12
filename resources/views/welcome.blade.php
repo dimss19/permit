@@ -17,6 +17,29 @@
         .bg-navy-dark { background-color: var(--navy-dark); }
         .text-accent-orange { color: var(--accent-orange); }
         .bg-accent-orange { background-color: var(--accent-orange); }
+
+        /* Custom Animations */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        .delay-100 { animation-delay: 100ms; opacity: 0; }
+        .delay-200 { animation-delay: 200ms; opacity: 0; }
+        .delay-300 { animation-delay: 300ms; opacity: 0; }
+        
+        /* Scroll Animation Classes */
+        .scroll-fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .scroll-fade-up.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
     </style>
     <style data-purpose="typography">
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
@@ -52,14 +75,14 @@
 <!-- BEGIN: Hero Section -->
 <section class="bg-navy-dark text-white pt-24 pb-32 px-6 text-center" data-purpose="hero-section">
     <div class="max-w-4xl mx-auto">
-        <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">
+        <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6 animate-fade-in-up">
             Kelola Izin Kerja Risiko Tinggi <br>
             <span class="text-accent-orange">Kontraktor Anda</span> dengan Lebih Aman
         </h2>
-        <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-2xl mx-auto mb-10 opacity-80">
+        <p class="text-gray-300 text-sm md:text-base leading-relaxed max-w-2xl mx-auto mb-10 opacity-80 animate-fade-in-up delay-100">
             Safety Permit INKA Madiun membantu tim HSE dan kontraktor mengajukan, memverifikasi, dan memantau izin kerja risiko tinggi secara digital — cepat, tercatat rapi, dan sesuai standar K3.
         </p>
-        <div class="flex flex-col sm:flex-row justify-center gap-4">
+        <div class="flex flex-col sm:flex-row justify-center gap-4 animate-fade-in-up delay-200">
             @auth
                 <a class="px-8 py-3 bg-accent-orange text-navy-dark font-bold rounded-lg hover:brightness-110 transition-all" href="{{ route('dashboard') }}">Ke Dashboard</a>
             @else
@@ -73,7 +96,7 @@
 <!-- BEGIN: Alur Pengajuan Section -->
 <section class="py-20 px-6 bg-slate-50" data-purpose="workflow-section">
     <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-16">
+        <div class="text-center mb-16 scroll-fade-up">
             <span class="text-accent-orange text-xs font-bold tracking-widest uppercase">— ALUR PENGAJUAN</span>
             <h3 class="text-3xl font-extrabold mt-4 mb-4">Yang Perlu Disiapkan Sebelum <br> Mengajukan Izin Kerja</h3>
             <p class="text-gray-500 text-sm max-w-xl mx-auto">
@@ -83,31 +106,31 @@
         <!-- Steps Grid -->
         <div class="grid grid-cols-1 md:grid-cols-5 gap-8 mb-16">
             <!-- Step 1 -->
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center text-center scroll-fade-up" style="transition-delay: 100ms;">
                 <div class="w-10 h-10 bg-navy-dark text-white rounded-full flex items-center justify-center font-bold mb-6">1</div>
                 <h4 class="font-bold text-sm mb-3">Daftar &amp; Login</h4>
                 <p class="text-xs text-gray-500 leading-relaxed">Buat akun kontraktor dan lengkapi data perusahaan Anda.</p>
             </div>
             <!-- Step 2 -->
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center text-center scroll-fade-up" style="transition-delay: 200ms;">
                 <div class="w-10 h-10 bg-navy-dark text-white rounded-full flex items-center justify-center font-bold mb-6">2</div>
                 <h4 class="font-bold text-sm mb-3">Lengkapi Data Kontraktor</h4>
                 <p class="text-xs text-gray-500 leading-relaxed">Isi data PIC lapangan, jumlah pekerja, dan dokumen legal perusahaan.</p>
             </div>
             <!-- Step 3 -->
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center text-center scroll-fade-up" style="transition-delay: 300ms;">
                 <div class="w-10 h-10 bg-navy-dark text-white rounded-full flex items-center justify-center font-bold mb-6">3</div>
                 <h4 class="font-bold text-sm mb-3">Identifikasi Pekerjaan</h4>
                 <p class="text-xs text-gray-500 leading-relaxed">Tentukan klasifikasi pekerjaan, bahaya, serta APD yang akan digunakan.</p>
             </div>
             <!-- Step 4 -->
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center text-center scroll-fade-up" style="transition-delay: 400ms;">
                 <div class="w-10 h-10 bg-navy-dark text-white rounded-full flex items-center justify-center font-bold mb-6">4</div>
                 <h4 class="font-bold text-sm mb-3">Lengkapi Berkas K3</h4>
                 <p class="text-xs text-gray-500 leading-relaxed">Lampirkan dokumen pendukung seperti HIRADC, JSA, atau HSE Plan.</p>
             </div>
             <!-- Step 5 -->
-            <div class="flex flex-col items-center text-center">
+            <div class="flex flex-col items-center text-center scroll-fade-up" style="transition-delay: 500ms;">
                 <div class="w-10 h-10 bg-accent-orange text-white rounded-full flex items-center justify-center font-bold mb-6">5</div>
                 <h4 class="font-bold text-sm mb-3">Ajukan Izin Kerja</h4>
                 <p class="text-xs text-gray-500 leading-relaxed">Kirim pengajuan untuk diverifikasi Safety Officer sebelum pekerjaan dimulai.</p>
@@ -130,7 +153,7 @@
 <section class="py-24 px-6 bg-white" data-purpose="about-section">
     <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         <!-- Left Content -->
-        <div>
+        <div class="scroll-fade-up">
             <span class="text-accent-orange text-xs font-bold tracking-widest uppercase">— TENTANG KAMI</span>
             <h3 class="text-3xl font-extrabold mt-4 mb-6 leading-tight">Dibangun untuk Tim HSE yang Ingin Bekerja Lebih Cepat dan Aman</h3>
             <div class="space-y-4 text-gray-600 text-sm leading-relaxed mb-8">
@@ -139,7 +162,7 @@
             </div>
         </div>
         <!-- Right Stats Grid -->
-        <div class="bg-slate-50 p-8 rounded-2xl grid grid-cols-2 gap-4" data-purpose="stats-grid">
+        <div class="bg-slate-50 p-8 rounded-2xl grid grid-cols-2 gap-4 scroll-fade-up" style="transition-delay: 200ms;" data-purpose="stats-grid">
             <div class="bg-white p-6 rounded-xl shadow-sm">
                 <p class="text-2xl font-extrabold mb-1">40+</p>
                 <p class="text-[10px] text-gray-400 uppercase font-medium">Kontraktor aktif dipantau</p>
@@ -183,6 +206,29 @@
     </div>
 </footer>
 <!-- END: Footer -->
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.scroll-fade-up').forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
 
 </body>
 </html>

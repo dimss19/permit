@@ -161,7 +161,7 @@
                             <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $badge }}">
-                                    {{ $permit->status }}
+                                    {{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}
                                 </span>
                             </td>
                             <td class="px-6 py-3.5 text-gray-500 text-xs">

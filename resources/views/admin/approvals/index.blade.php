@@ -83,7 +83,7 @@
                                 @if($permit->status === $config['expectedStatus'])
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-orange-100 text-orange-700">Menunggu Anda</span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700">{{ $permit->status }}</span>
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700">{{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}</span>
                                 @endif
                             </td>
                             <td class="px-6 py-3.5 text-gray-500 text-xs">

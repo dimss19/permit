@@ -9,7 +9,7 @@
                     1 => 'Klasifikasi & Info',
                     2 => 'Bahaya & Pencegahan',
                     3 => 'APD',
-                    4 => 'Dokumen & Validasi',
+                    4 => 'Validasi Kerja',
                     5 => 'Review & Submit',
                 ];
             @endphp
@@ -80,7 +80,7 @@
                 </div>
                 <div class="px-6 py-5 grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="md:col-span-2">
-                        <label class="form-label">Nama Pekerjaan <span class="text-red-500">*</span></label>
+                        <label class="form-label">Pekerjaan <span class="text-red-500">*</span></label>
                         <input type="text" name="nama_pekerjaan" class="form-input" placeholder="Contoh: Perbaikan Atap Gudang B" required>
                     </div>
                     <div>
@@ -88,7 +88,7 @@
                         <input type="text" name="lokasi" class="form-input" placeholder="Contoh: Gudang B, Area Produksi" required>
                     </div>
                     <div>
-                        <label class="form-label">Perusahaan / Kontraktor <span class="text-red-500">*</span></label>
+                        <label class="form-label">Perusahaan <span class="text-red-500">*</span></label>
                         <input type="text" name="kontraktor" class="form-input" placeholder="Nama perusahaan kontraktor" required>
                     </div>
                     <div>
@@ -96,7 +96,7 @@
                         <input type="text" name="penanggung_jawab" class="form-input" placeholder="Nama PIC">
                     </div>
                     <div>
-                        <label class="form-label">No. Telepon</label>
+                        <label class="form-label">No. Telpon</label>
                         <input type="text" name="telepon" class="form-input" placeholder="08xxxxxxxxxx">
                     </div>
                     <div>
@@ -176,20 +176,19 @@
                             'bahaya_makhluk_hidup' => 'Bahaya Makhluk Hidup',
                             'jatuh_ketinggian'     => 'Jatuh Dari Ketinggian',
                             'lantai_licin'         => 'Lantai Licin',
-                            'tangga_penyangga'     => 'Tangga / Penyangga',
-                            'tidak_kokoh'          => 'Tidak Kokoh / Patah',
+                            'tangga_penyangga'     => 'Tangga / Penyangga Tidak Kokoh / Patah',
                             'bising'               => 'Bising',
                             'menghasilkan_debu'    => 'Menghasilkan Debu',
                             'bahaya_angin'         => 'Bahaya Angin',
                             'keracunan_gas'        => 'Keracunan Gas',
                             'peledakan'            => 'Peledakan',
-                            'bahaya_aliran_listrik'=> 'Bahaya Aliran Listrik',
+                            'bahaya_aliran_listrik'=> 'Bahaya Alat / Aliran Listrik',
                             'bahaya_getaran'       => 'Bahaya Getaran',
                             'bahaya_zat_kimia'     => 'Bahaya Zat Kimia',
-                            'terpotong_tertusuk'   => 'Terpotong/Tertusuk',
+                            'terpotong_tertusuk'   => 'Terpotong / Tertusuk',
                             'terperosok'           => 'Terperosok',
-                            'tertimpa_tertimpa'    => 'Tertimpa',
-                            'mata_terkena'         => 'Mata Terkena Benda',
+                            'tertimpa_tertimpa'    => 'Tertimbun / Tertimpa',
+                            'mata_terkena'         => 'Mata Kemasukan Benda',
                             'tertabrak'            => 'Tertabrak / Tabrakan',
                             'limbah_b3'            => 'Limbah B3',
                             'bahaya_radiasi'       => 'Bahaya Radiasi',
@@ -219,9 +218,9 @@
                     @php
                         $pencegahan = [
                             'proteksi_dari_jatuh'   => 'Proteksi Dari Jatuh',
-                            'media_penghalang_api'  => 'Media Penghalang Api / Percikan',
+                            'media_penghalang_api'  => 'Media Penghambat Api / Percikan',
                             'pintu_masuk_keluar'    => 'Pintu Masuk / Keluar',
-                            'safety_briefing'       => 'Safety Briefing',
+                            'safety_briefing'       => 'Safety Brifing',
                             'tangga_penyangga_kuat' => 'Tangga / Penyangga Yang Kokoh',
                             'rambu_rambu'           => 'Rambu-Rambu',
                             'jalur_evakuasi'        => 'Jalur Evakuasi',
@@ -287,39 +286,21 @@
         </div>
 
         {{-- ========================================================
-             STEP 4 — F. DOKUMEN & VALIDASI
+             STEP 4 — F. VALIDASI KERJA
              ======================================================== --}}
         <div id="step-4" class="hidden">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">F</span>
-                    <h3 class="text-sm font-semibold text-gray-800 mt-0.5">Dokumen Pendukung</h3>
-                    <p class="text-xs text-gray-400 mt-0.5">Upload dokumen K3 yang diperlukan (PDF, JPG, PNG)</p>
+                    <h3 class="text-sm font-semibold text-gray-800 mt-0.5">Validasi Kerja</h3>
+                    <p class="text-xs text-gray-400 mt-0.5">Izin diberikan sesuai pengajuan dan kondisi di atas</p>
                 </div>
                 <div class="px-6 py-5 space-y-4">
-                    @php
-                        $docs = ['HIRADC', 'JSA (Job Safety Analysis)', 'Sertifikat Kompetensi', 'Foto Pendukung'];
-                    @endphp
-                    @foreach($docs as $doc)
-                        <div class="flex items-center justify-between p-4 border border-gray-100 rounded-xl bg-gray-50/50">
-                            <div>
-                                <p class="text-sm font-medium text-gray-700">{{ $doc }}</p>
-                                <p class="text-[11px] text-gray-400">PDF, JPG, PNG • Max 10MB</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs text-gray-400">Belum diupload</span>
-                                <button type="button" class="text-xs font-semibold text-inka-navy border border-inka-navy/30 px-3 py-1.5 rounded-lg hover:bg-inka-navy hover:text-white transition-colors">
-                                    Pilih File
-                                </button>
-                            </div>
-                        </div>
-                    @endforeach
-
-                    <div class="mt-6 pt-4 border-t border-gray-100">
+                    <div class="pt-2">
                         <div class="flex items-center justify-between mb-2">
                             <div>
-                                <p class="text-sm font-semibold text-gray-700">Tanda Tangan PIC <span class="text-red-500">*</span></p>
-                                <p class="text-xs text-gray-400">Tanda tangan Pemohon sebelum permit diajukan. Wajib diisi.</p>
+                                <p class="text-sm font-semibold text-gray-700">Tanda Tangan Pemohon <span class="text-red-500">*</span></p>
+                                <p class="text-xs text-gray-400">Tanda tangan pihak kontraktor. Wajib diisi.</p>
                             </div>
                             <button type="button" onclick="clearSignature()"
                                 class="text-xs font-semibold text-gray-400 hover:text-red-500 border border-gray-200 hover:border-red-300 px-3 py-1.5 rounded-lg transition-colors">
@@ -329,10 +310,10 @@
 
                         {{-- Canvas signature pad --}}
                         <div id="signature-container"
-                            class="relative border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-white hover:border-inka-navy/40 transition-colors cursor-crosshair">
+                            class="relative border-2 border-dashed border-gray-300 rounded-xl overflow-hidden bg-white hover:border-inka-navy/40 transition-colors cursor-crosshair w-full max-w-[300px] aspect-square mx-auto">
                             <canvas id="signature-canvas"
-                                class="block w-full"
-                                style="height: 140px; touch-action: none;"
+                                class="block w-full h-full"
+                                style="touch-action: none;"
                             ></canvas>
                             <span id="signature-placeholder"
                                 class="absolute inset-0 flex items-center justify-center text-xs text-gray-300 pointer-events-none select-none">
@@ -410,6 +391,21 @@
             const nextStep = currentStep + direction;
             if (nextStep < 1 || nextStep > totalSteps) return;
 
+            // HTML5 Form Validation before moving to the next step
+            if (direction > 0) {
+                const stepEl = document.getElementById('step-' + currentStep);
+                const inputs = stepEl.querySelectorAll('input, select, textarea');
+                let valid = true;
+                for (const input of inputs) {
+                    if (!input.checkValidity()) {
+                        input.reportValidity(); // Show native browser tooltip
+                        valid = false;
+                        break;
+                    }
+                }
+                if (!valid) return;
+            }
+
             // Validasi tanda tangan saat akan meninggalkan step 4 ke depan
             if (direction > 0 && currentStep === 4) {
                 if (!window._signatureHasDrawn || !window._signatureHasDrawn()) {
@@ -429,6 +425,11 @@
 
             // Show next
             document.getElementById('step-' + currentStep).classList.remove('hidden');
+
+            // Resize canvas if we just entered step 4
+            if (currentStep === 4 && typeof window._resizeSignature === 'function') {
+                window._resizeSignature();
+            }
 
             // Update buttons
             document.getElementById('btn-prev').classList.toggle('hidden', currentStep === 1);
@@ -504,22 +505,28 @@
             const hiddenInput = document.getElementById('tanda-tangan-input');
             const container = document.getElementById('signature-container');
 
+            const ctx = canvas.getContext('2d');
+
             // Sesuaikan resolusi canvas dengan ukuran tampilan
             function resizeCanvas() {
                 const rect = container.getBoundingClientRect();
+                if (rect.width === 0) return; // Prevent resizing if hidden
+
                 const dpr = window.devicePixelRatio || 1;
                 canvas.width  = rect.width  * dpr;
-                canvas.height = 140 * dpr;
-                canvas.getContext('2d').scale(dpr, dpr);
+                canvas.height = rect.height * dpr;
+                ctx.scale(dpr, dpr);
+                
+                // Reapply styles after scale resets them
+                ctx.strokeStyle = '#111d33';
+                ctx.lineWidth   = 2;
+                ctx.lineCap     = 'round';
+                ctx.lineJoin    = 'round';
             }
-            resizeCanvas();
             window.addEventListener('resize', resizeCanvas);
-
-            const ctx = canvas.getContext('2d');
-            ctx.strokeStyle = '#111d33';
-            ctx.lineWidth   = 2;
-            ctx.lineCap     = 'round';
-            ctx.lineJoin    = 'round';
+            
+            // Expose resize globally so we can trigger it when step 4 is shown
+            window._resizeSignature = resizeCanvas;
 
             let drawing = false;
             let hasDrawn = false;

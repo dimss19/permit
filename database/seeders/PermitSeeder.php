@@ -87,6 +87,67 @@ class PermitSeeder extends Seeder
                 'submitted_at'     => Carbon::now()->subDays(2),
                 'catatan_revisi'   => 'Dokumen JSA belum dilampirkan. Mohon dilengkapi sebelum diajukan kembali.',
             ],
+            [
+                'no_permit'        => 'WP-2026-006',
+                'user_id'          => $divisi->id,
+                'nama_pekerjaan'   => 'Pengecatan Gedung A',
+                'kontraktor'       => 'CV Warna Warni',
+                'lokasi'           => 'Eksterior Gedung A',
+                'penanggung_jawab' => 'Fajar Sidik',
+                'telepon'          => '086789012345',
+                'tanggal_mulai'    => Carbon::now()->addDays(2),
+                'tanggal_selesai'  => Carbon::now()->addDays(8),
+                'status'           => 'Review Staff',
+                'submitted_at'     => Carbon::now()->subHours(5),
+            ],
+            [
+                'no_permit'        => 'WP-2026-007',
+                'user_id'          => $divisi->id,
+                'nama_pekerjaan'   => 'Service AC Sentral',
+                'kontraktor'       => 'PT Dingin Sejuk',
+                'lokasi'           => 'Lantai 1-3',
+                'penanggung_jawab' => 'Gilang Pratama',
+                'telepon'          => '087890123456',
+                'tanggal_mulai'    => Carbon::now()->addDays(1),
+                'tanggal_selesai'  => Carbon::now()->addDays(2),
+                'status'           => 'Review Manager',
+                'submitted_at'     => Carbon::now()->subDays(1),
+                'approval_signatures' => [
+                    [
+                        'role' => 'Safety Officer',
+                        'name' => 'Staff Name',
+                        'signature' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+                        'date' => Carbon::now()->subHours(10)->toDateTimeString()
+                    ]
+                ]
+            ],
+            [
+                'no_permit'        => 'WP-2026-008',
+                'user_id'          => $divisi->id,
+                'nama_pekerjaan'   => 'Pemasangan Kabel Fiber Optik',
+                'kontraktor'       => 'PT Cepat Net',
+                'lokasi'           => 'Jalur Utama, Area IT',
+                'penanggung_jawab' => 'Hadi Sucipto',
+                'telepon'          => '088901234567',
+                'tanggal_mulai'    => Carbon::now()->addDays(4),
+                'tanggal_selesai'  => Carbon::now()->addDays(6),
+                'status'           => 'Review Senior Manager',
+                'submitted_at'     => Carbon::now()->subDays(2),
+                'approval_signatures' => [
+                    [
+                        'role' => 'Safety Officer',
+                        'name' => 'Staff Name',
+                        'signature' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+                        'date' => Carbon::now()->subDays(1)->toDateTimeString()
+                    ],
+                    [
+                        'role' => 'Manager',
+                        'name' => 'Manager Name',
+                        'signature' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=',
+                        'date' => Carbon::now()->subHours(5)->toDateTimeString()
+                    ]
+                ]
+            ],
         ];
 
         foreach ($permits as $permit) {

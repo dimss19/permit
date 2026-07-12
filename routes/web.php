@@ -23,24 +23,31 @@ Route::get('/dashboard', function () {
     return redirect($map[Auth::user()->role] ?? '/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// ===== SUPER ADMIN =====
-Route::get('/superadmin/dashboard', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'index']);
-Route::get('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index']);
-Route::post('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'store']);
-Route::patch('/superadmin/users/{id}/status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'updateStatus']);
-Route::patch('/superadmin/users/{id}/reset-password', [\App\Http\Controllers\SuperAdmin\UserController::class, 'resetPassword']);
+Route::middleware(['auth', 'prevent-back-history'])->group(function () {
+    
+    // ===== SUPER ADMIN =====
+    Route::get('/superadmin/dashboard', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'index']);
+    Route::get('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index']);
+    Route::post('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'store']);
+    Route::patch('/superadmin/users/{id}/status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'updateStatus']);
+    Route::patch('/superadmin/users/{id}/reset-password', [\App\Http\Controllers\SuperAdmin\UserController::class, 'resetPassword']);
 
-// ===== DIVISI (menggunakan controller + data nyata) =====
-Route::get('/divisi/dashboard', [DivisiDashboard::class, 'index']);
-Route::get('/divisi/history', [\App\Http\Controllers\Divisi\HistoryController::class, 'index']);
-Route::get('/divisi/permits/create', [\App\Http\Controllers\Divisi\PermitController::class, 'create']);
-Route::post('/divisi/permits', [\App\Http\Controllers\Divisi\PermitController::class, 'store']);
-Route::get('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitShowController::class, 'show']);
-Route::get('/divisi/permits/{id}/edit', [\App\Http\Controllers\Divisi\PermitController::class, 'edit']);
-Route::put('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitController::class, 'update']);
+    // ===== DIVISI (Pekerja / Pemohon) =====
+    Route::get('/divisi/dashboard', [\App\Http\Controllers\Divisi\DashboardController::class, 'index']);
+    
+    // Fitur Pembatalan Permit
+    Route::get('/divisi/cancellations', [\App\Http\Controllers\Divisi\CancellationController::class, 'index']);
+    Route::get('/divisi/cancellations/{id}', [\App\Http\Controllers\Divisi\CancellationController::class, 'show']);
+    Route::post('/divisi/cancellations/{id}', [\App\Http\Controllers\Divisi\CancellationController::class, 'cancel']);
 
-// ===== ADMIN (Staff, Manager, Senior Manager) =====
-Route::middleware('auth')->group(function () {
+    Route::get('/divisi/history', [\App\Http\Controllers\Divisi\HistoryController::class, 'index']);
+    Route::get('/divisi/permits/create', [\App\Http\Controllers\Divisi\PermitController::class, 'create']);
+    Route::post('/divisi/permits', [\App\Http\Controllers\Divisi\PermitController::class, 'store']);
+    Route::get('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitShowController::class, 'show']);
+    Route::get('/divisi/permits/{id}/edit', [\App\Http\Controllers\Divisi\PermitController::class, 'edit']);
+    Route::put('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitController::class, 'update']);
+
+    // ===== ADMIN (Staff, Manager, Senior Manager) =====
     Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
     Route::get('/admin/approvals', [\App\Http\Controllers\Admin\ApprovalController::class, 'index']);
     Route::get('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'show']);

@@ -9,7 +9,7 @@
         </div>
         <select name="status" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
             <option value="">Semua Status</option>
-            @foreach(['Draft','Submitted','Review Staff','Review Manager','Review Senior Manager','Revision','Active','Closed'] as $s)
+            @foreach(['Draft','Submitted','Review Staff','Review Manager','Review Senior Manager','Revision','Active','Closed','Cancelled'] as $s)
                 <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
             @endforeach
         </select>
@@ -41,6 +41,7 @@
                             <th class="px-6 py-3 font-semibold">Divisi</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
                             <th class="px-6 py-3 font-semibold">Tanggal Submit</th>
+                            <th class="px-6 py-3 font-semibold text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -55,6 +56,7 @@
                                 'Revision'                 => 'bg-red-100 text-red-700',
                                 'Active'                   => 'bg-green-100 text-green-700',
                                 'Closed'                   => 'bg-slate-100 text-slate-600',
+                                'Cancelled'                => 'bg-red-600 text-white',
                             ];
                             $badge = $statusMap[$permit->status] ?? 'bg-gray-100 text-gray-600';
                         @endphp
@@ -62,8 +64,11 @@
                             <td class="px-6 py-3.5"><span class="font-semibold text-gray-800">{{ $permit->no_permit }}</span></td>
                             <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
                             <td class="px-6 py-3.5 text-gray-700">{{ optional($permit->user)->name ?? '—' }}</td>
-                            <td class="px-6 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $badge }}">{{ $permit->status }}</span></td>
+                            <td class="px-6 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $badge }}">{{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}</span></td>
                             <td class="px-6 py-3.5 text-gray-400 text-xs">{{ $permit->submitted_at ? $permit->submitted_at->format('d/m/Y') : '—' }}</td>
+                            <td class="px-6 py-3.5 text-right">
+                                <a href="/admin/approvals/{{ $permit->id }}" class="inline-block px-3 py-1.5 border border-gray-200 text-gray-600 text-[11px] font-bold rounded-lg hover:border-inka-navy hover:text-inka-navy transition-colors ml-1">Detail</a>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>

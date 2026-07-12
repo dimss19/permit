@@ -33,6 +33,10 @@ class Permit extends Model
         'submitted_at',
         'closed_at',
         'catatan_revisi',
+        'cancelled_at',
+        'cancellation_reason',
+        'cancellation_signatures',
+        'approval_signatures',
     ];
 
     protected $casts = [
@@ -46,6 +50,9 @@ class Permit extends Model
         'bahaya_pekerjaan'      => 'array',
         'tindakan_pencegahan'   => 'array',
         'apd'                   => 'array',
+        'cancelled_at'          => 'datetime',
+        'cancellation_signatures' => 'array',
+        'approval_signatures'   => 'array',
     ];
 
     /** Relasi ke User (pemilik / divisi) */

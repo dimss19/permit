@@ -17,7 +17,7 @@
         {{-- Status Filter --}}
         <select name="status" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
             <option value="">Semua Status</option>
-            @foreach(['Draft','Submitted','Review Staff','Review Manager','Review Senior Manager','Revision','Active','Closed'] as $s)
+            @foreach(['Draft','Submitted','Review Staff','Review Manager','Review Senior Manager','Revision','Active','Closed','Cancelled'] as $s)
                 <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
             @endforeach
         </select>
@@ -104,6 +104,7 @@
                                 'Revision'                 => 'bg-red-100 text-red-700',
                                 'Active'                   => 'bg-green-100 text-green-700',
                                 'Closed'                   => 'bg-slate-100 text-slate-600',
+                                'Cancelled'                => 'bg-red-600 text-white',
                             ];
                             $badge = $statusMap[$permit->status] ?? 'bg-gray-100 text-gray-600';
                             $canEdit = in_array($permit->status, ['Draft', 'Revision']);
@@ -121,7 +122,7 @@
                             <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5">
                                 <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $badge }}">
-                                    {{ $permit->status }}
+                                    {{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}
                                 </span>
                             </td>
                             <td class="px-6 py-3.5 text-gray-400 text-xs">

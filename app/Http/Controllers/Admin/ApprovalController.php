@@ -94,18 +94,33 @@ class ApprovalController extends Controller
         $action = $request->input('action'); 
 
         if ($action === 'approve') {
-            $permit->update([
-                'status' => $config['nextStatus'],
-                'catatan_revisi' => null 
+            $request->validate([
+                'tanda_tangan' => 'required|string',
             ]);
-            
+
+            $signatures = $permit->approval_signatures ?? [];
+            $signatures[] = [
+                'role' => $config['roleName'],
+                'name' => Auth::user()->name,
+                'signature' => $request->tanda_tangan,
+                'date' => now()->toDateTimeString(),
+            ];
+
+            $updateData = [
+                'status' => $config['nextStatus'],
+                'catatan_revisi' => null,
+                'approval_signatures' => $signatures,
+            ];
+
             // Jika Senior Manager approve, berarti permit Active, set tanggal aktif.
             if ($config['nextStatus'] === 'Active') {
-                $permit->update(['active_at' => now()]);
+                $updateData['active_at'] = now();
                 $message = 'Permit berhasil disetujui dan kini berstatus ACTIVE.';
             } else {
                 $message = 'Permit berhasil disetujui dan diteruskan ke ' . $config['nextRoleName'] . '.';
             }
+
+            $permit->update($updateData);
             
         } elseif ($action === 'revise') {
             $request->validate([
@@ -119,5 +134,53 @@ class ApprovalController extends Controller
         }
 
         return redirect('/admin/approvals')->with('success', $message);
+    }
+    public function showCancelForm($id)
+    {
+        $permit = Permit::findOrFail($id);
+        
+        // Hanya permit Active yang bisa dibatalkan
+        if ($permit->status !== 'Active') {
+            return redirect('/admin/history')->with('error', 'Hanya Permit berstatus Active yang dapat dibatalkan.');
+        }
+
+        return view('admin.approvals.cancel', compact('permit'));
+    }
+
+    public function cancel(Request $request, $id)
+    {
+        $request->validate([
+            'cancellation_reason' => 'required|string|max:500',
+            'tanda_tangan' => 'required|string',
+        ]);
+
+        $permit = Permit::findOrFail($id);
+
+        if ($permit->status !== 'Active') {
+            return redirect('/admin/history')->with('error', 'Hanya Permit berstatus Active yang dapat dibatalkan.');
+        }
+
+        $role = Auth::user()->role;
+        $roleName = $role === 'staff' ? 'Safety Officer' : ($role === 'senior-manager' ? 'SM QM & SHE' : 'Manager');
+        $nama = Auth::user()->name;
+
+        // Ambil array tanda tangan lama jika ada (untuk masa depan jika butuh 2 ttd)
+        $signatures = $permit->cancellation_signatures ?? [];
+        
+        $signatures[] = [
+            'role' => $roleName,
+            'name' => $nama,
+            'signature' => $request->tanda_tangan,
+            'date' => now()->toDateTimeString(),
+        ];
+
+        $permit->update([
+            'status' => 'Cancelled',
+            'cancelled_at' => now(),
+            'cancellation_reason' => $request->cancellation_reason,
+            'cancellation_signatures' => $signatures,
+        ]);
+
+        return redirect('/admin/history')->with('success', 'Izin kerja berhasil dibatalkan.');
     }
 }
