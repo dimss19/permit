@@ -55,15 +55,11 @@ Route::put('/manager/approvals/{id}', [\App\Http\Controllers\Manager\ApprovalCon
 Route::get('/manager/history', [\App\Http\Controllers\Manager\HistoryController::class, 'index']);
 
 // ===== SENIOR MANAGER =====
-Route::get('/senior-manager/dashboard', function () {
-    return view('senior_manager.dashboard');
-});
-Route::get('/senior-manager/approvals', function () {
-    return view('senior_manager.dashboard'); // placeholder
-});
-Route::get('/senior-manager/history', function () {
-    return view('senior_manager.dashboard'); // placeholder
-});
+Route::get('/senior-manager/dashboard', [\App\Http\Controllers\SeniorManager\DashboardController::class, 'index']);
+Route::get('/senior-manager/approvals', [\App\Http\Controllers\SeniorManager\ApprovalController::class, 'index']);
+Route::get('/senior-manager/approvals/{id}', [\App\Http\Controllers\SeniorManager\ApprovalController::class, 'show']);
+Route::put('/senior-manager/approvals/{id}', [\App\Http\Controllers\SeniorManager\ApprovalController::class, 'update']);
+Route::get('/senior-manager/history', [\App\Http\Controllers\SeniorManager\HistoryController::class, 'index']);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
