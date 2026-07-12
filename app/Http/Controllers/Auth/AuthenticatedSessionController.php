@@ -21,6 +21,7 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Handle an incoming authentication request.
+     * Redirect ke dashboard sesuai role pengguna.
      */
     public function store(LoginRequest $request): RedirectResponse
     {
@@ -28,7 +29,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $role = Auth::user()->role;
+
+        $redirectMap = [
+            'superadmin'     => '/superadmin/dashboard',
+            'divisi'         => '/divisi/dashboard',
+            'staff'          => '/staff/dashboard',
+            'manager'        => '/manager/dashboard',
+            'senior-manager' => '/senior-manager/dashboard',
+        ];
+
+        $destination = $redirectMap[$role] ?? '/dashboard';
+
+        return redirect()->intended($destination);
     }
 
     /**
