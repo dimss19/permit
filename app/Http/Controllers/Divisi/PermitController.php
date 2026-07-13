@@ -31,7 +31,7 @@ class PermitController extends Controller
         $lastNo = Permit::count() + 1;
         $noPermit = 'WP-' . date('Y') . '-' . str_pad($lastNo, 3, '0', STR_PAD_LEFT);
 
-        $status = $request->input('action') === 'submit' ? 'Submitted' : 'Draft';
+        $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
 
         Permit::create([
             'no_permit'             => $noPermit,
@@ -54,7 +54,7 @@ class PermitController extends Controller
             'apd'                   => $request->input('apd', []),
             'apd_lainnya'           => $request->apd_lainnya,
             'status'                => $status,
-            'submitted_at'          => $status === 'Submitted' ? now() : null,
+            'submitted_at'          => $status === 'Review Staff' ? now() : null,
         ]);
 
         $message = $status === 'Draft'
@@ -93,7 +93,7 @@ class PermitController extends Controller
             'lokasi'         => 'required|string|max:255',
         ]);
 
-        $status = $request->input('action') === 'submit' ? 'Submitted' : 'Draft';
+        $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
 
         $permit->update([
             'nama_pekerjaan'        => $request->nama_pekerjaan,
@@ -114,7 +114,7 @@ class PermitController extends Controller
             'apd'                   => $request->input('apd', []),
             'apd_lainnya'           => $request->apd_lainnya,
             'status'                => $status,
-            'submitted_at'          => $status === 'Submitted' ? now() : $permit->submitted_at,
+            'submitted_at'          => $status === 'Review Staff' ? now() : $permit->submitted_at,
         ]);
 
         $message = $status === 'Draft'
