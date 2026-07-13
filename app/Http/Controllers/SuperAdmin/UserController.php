@@ -36,6 +36,12 @@ class UserController extends Controller
         return view('superadmin.users.index', compact('users'));
     }
 
+    public function create()
+    {
+        $divisions = \App\Models\Division::orderBy('name')->get();
+        return view('superadmin.users.create', compact('divisions'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -54,7 +60,43 @@ class UserController extends Controller
             'is_active' => true,
         ]);
 
-        return redirect()->back()->with('success', 'Akun Divisi berhasil dibuat.');
+        return redirect('/superadmin/users')->with('success', 'Akun Divisi berhasil dibuat.');
+    }
+
+    public function edit(string $id)
+    {
+        $user = User::findOrFail($id);
+        $divisions = \App\Models\Division::orderBy('name')->get();
+        return view('superadmin.users.edit', compact('user', 'divisions'));
+    }
+
+    public function update(Request $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $rules = [
+            'name' => 'required|string|max:255',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'email' => 'required|string|email|max:255',
+        ];
+
+        if ($request->filled('password')) {
+            $rules['password'] = 'required|string|min:6|confirmed';
+        }
+
+        $request->validate($rules);
+
+        $user->name = $request->name;
+        $user->username = $request->username;
+        $user->email = $request->email;
+
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
+        }
+
+        $user->save();
+
+        return redirect('/superadmin/users')->with('success', 'Akun Divisi berhasil diperbarui.');
     }
 
     public function updateStatus(Request $request, $id)
@@ -73,15 +115,31 @@ class UserController extends Controller
     public function resetPassword(Request $request, $id)
     {
         $user = User::where('role', 'divisi')->findOrFail($id);
-
+        
         $request->validate([
-            'password' => 'required|string|min:6'
+            'password' => 'required|string|min:6',
         ]);
 
         $user->update([
             'password' => Hash::make($request->password)
         ]);
 
-        return redirect()->back()->with('success', "Password akun {$user->name} berhasil direset.");
+        return redirect()->back()->with('success', 'Password berhasil direset.');
+    }
+
+    public function destroy(string $id)
+    {
+        $user = User::findOrFail($id);
+        
+        // Cek jika user punya permit, maka tolak penghapusan. 
+        // Karena ada relasi ke Permits table. Kita bisa biarkan dihapus jika cascade, tapi default lebih baik tolak atau hapus.
+        // Di sini saya asumsikan kita bisa menghapusnya langsung. 
+        // Namun, jika ada error integrity constraint, lebih baik dibungkus try-catch.
+        try {
+            $user->delete();
+            return redirect('/superadmin/users')->with('success', 'Akun berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect('/superadmin/users')->withErrors(['Gagal menghapus akun. Akun ini mungkin sudah terikat dengan data Permit. Coba Nonaktifkan akun saja.']);
+        }
     }
 }

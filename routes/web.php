@@ -27,8 +27,15 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     
     // ===== SUPER ADMIN =====
     Route::get('/superadmin/dashboard', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'index']);
+    
+    // Kelola Divisi
+    Route::resource('/superadmin/divisions', \App\Http\Controllers\SuperAdmin\DivisionController::class)->except(['show']);
     Route::get('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index']);
+    Route::get('/superadmin/users/create', [\App\Http\Controllers\SuperAdmin\UserController::class, 'create']);
     Route::post('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'store']);
+    Route::get('/superadmin/users/{id}/edit', [\App\Http\Controllers\SuperAdmin\UserController::class, 'edit']);
+    Route::put('/superadmin/users/{id}', [\App\Http\Controllers\SuperAdmin\UserController::class, 'update']);
+    Route::delete('/superadmin/users/{id}', [\App\Http\Controllers\SuperAdmin\UserController::class, 'destroy']);
     Route::patch('/superadmin/users/{id}/status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'updateStatus']);
     Route::patch('/superadmin/users/{id}/reset-password', [\App\Http\Controllers\SuperAdmin\UserController::class, 'resetPassword']);
 

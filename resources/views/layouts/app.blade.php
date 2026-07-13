@@ -18,7 +18,28 @@
     <body class="font-sans antialiased bg-slate-50 text-gray-900 flex h-screen overflow-hidden">
 
         {{-- ===== SIDEBAR ===== --}}
-        @php $role = auth()->user()->role ?? ''; @endphp
+        @php 
+            $role = auth()->user()->role ?? '';
+            
+            $pendingCount = 0;
+            $pendingPermits = [];
+            if (in_array($role, ['staff', 'manager', 'senior-manager'])) {
+                $statusMap = [
+                    'staff' => 'Review Staff',
+                    'manager' => 'Review Manager',
+                    'senior-manager' => 'Review Senior Manager'
+                ];
+                $expectedStatus = $statusMap[$role] ?? null;
+                if ($expectedStatus) {
+                    $pendingPermits = \App\Models\Permit::with('user')
+                        ->where('status', $expectedStatus)
+                        ->orderBy('updated_at', 'desc')
+                        ->take(5)
+                        ->get();
+                    $pendingCount = \App\Models\Permit::where('status', $expectedStatus)->count();
+                }
+            }
+        @endphp
         <aside id="sidebar" class="w-64 bg-inka-navy text-white flex flex-col shrink-0 z-30 transition-transform duration-200">
 
             {{-- Logo --}}
@@ -41,7 +62,11 @@
                     </a>
                     <a href="/superadmin/users" class="sidebar-link {{ request()->is('superadmin/users*') ? 'active' : '' }}">
                         <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
-                        User Management
+                        Kelola Akun
+                    </a>
+                    <a href="/superadmin/divisions" class="sidebar-link {{ request()->is('superadmin/divisions*') ? 'active' : '' }}">
+                        <svg class="sidebar-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                        Kelola Divisi
                     </a>
                 @endif
 
@@ -101,10 +126,55 @@
         <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
             {{-- Header --}}
-            <header class="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0 shadow-sm">
+            <header class="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0 shadow-sm relative z-20">
                 <div class="flex items-center gap-3">
                     <h2 class="text-base font-semibold text-gray-800">{{ $title ?? 'Dashboard' }}</h2>
                 </div>
+                
+                {{-- Notification Bell --}}
+                @if(in_array($role, ['staff', 'manager', 'senior-manager']))
+                <div class="relative" x-data="{ open: false }">
+                    <button @click="open = !open" @click.away="open = false" class="relative p-2 text-gray-400 hover:text-inka-navy transition-colors rounded-full hover:bg-gray-50 focus:outline-none">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                        
+                        @if($pendingCount > 0)
+                        <span class="absolute top-1.5 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                        @endif
+                    </button>
+                    
+                    {{-- Dropdown --}}
+                    <div x-show="open" x-transition style="display: none;" class="absolute right-0 mt-2 w-80 bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden z-50">
+                        <div class="px-4 py-3 border-b border-gray-50 bg-gray-50/50">
+                            <h3 class="text-sm font-semibold text-gray-800">Notifikasi Approval</h3>
+                            <p class="text-[11px] text-gray-500">Anda memiliki {{ $pendingCount }} permit menunggu review.</p>
+                        </div>
+                        <div class="max-h-[300px] overflow-y-auto">
+                            @if($pendingCount > 0)
+                                @foreach($pendingPermits as $permit)
+                                <a href="/admin/approvals/{{ $permit->id }}" class="block px-4 py-3 border-b border-gray-50 hover:bg-orange-50/50 transition-colors">
+                                    <div class="flex justify-between items-start mb-1">
+                                        <span class="text-xs font-bold text-inka-navy">{{ $permit->no_permit }}</span>
+                                        <span class="text-[10px] text-gray-400">{{ $permit->updated_at->diffForHumans() }}</span>
+                                    </div>
+                                    <p class="text-xs text-gray-700 font-medium truncate">{{ $permit->nama_pekerjaan }}</p>
+                                    <p class="text-[11px] text-gray-500 truncate mt-0.5">{{ optional($permit->user)->name ?? 'Divisi' }}</p>
+                                </a>
+                                @endforeach
+                                @if($pendingCount > 5)
+                                <a href="/admin/approvals" class="block px-4 py-2.5 text-center text-xs font-semibold text-inka-navy hover:bg-gray-50 transition-colors">
+                                    Lihat Semua ({{ $pendingCount }})
+                                </a>
+                                @endif
+                            @else
+                                <div class="px-4 py-8 text-center">
+                                    <svg class="w-8 h-8 text-gray-200 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                    <p class="text-xs text-gray-500">Tidak ada notifikasi baru.</p>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+                @endif
             </header>
 
             {{-- Content --}}

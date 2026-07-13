@@ -10,10 +10,10 @@
             <p class="text-sm text-gray-500 mt-1">Kelola pendaftaran dan status akun Divisi</p>
         </div>
         <div>
-            <button @click="showCreateModal = true" class="inline-flex items-center gap-2 bg-inka-navy text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-opacity-90 transition-colors shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-inka-navy">
+            <a href="/superadmin/users/create" class="inline-flex items-center gap-2 bg-inka-navy text-white px-4 py-2.5 rounded-xl text-sm font-semibold hover:bg-opacity-90 transition-colors shadow-sm focus:ring-2 focus:ring-offset-2 focus:ring-inka-navy">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                 Tambah Akun Divisi
-            </button>
+            </a>
         </div>
     </div>
 
@@ -101,6 +101,21 @@
                         <td class="px-6 py-4 text-right">
                             <div class="flex items-center justify-end gap-2">
                                 
+                                {{-- Edit Btn --}}
+                                <a href="/superadmin/users/{{ $user->id }}/edit" title="Edit Akun"
+                                    class="p-2 text-gray-400 hover:text-inka-navy hover:bg-blue-50 rounded-lg transition-colors">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                </a>
+                                
+                                {{-- Delete Btn --}}
+                                <form action="/superadmin/users/{{ $user->id }}" method="POST" class="inline-block" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini secara permanen?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors" title="Hapus Akun">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                </form>
+                                
                                 {{-- Reset Password Btn --}}
                                 <button type="button" @click="openResetModal({{ $user->id }}, '{{ $user->name }}')" title="Reset Password"
                                     class="p-2 text-gray-400 hover:text-inka-navy hover:bg-blue-50 rounded-lg transition-colors">
@@ -149,55 +164,7 @@
 
     </div>
 
-    {{-- MODAL: Create User --}}
-    <div x-show="showCreateModal" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-            
-            <div x-show="showCreateModal" x-transition.opacity class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" @click="showCreateModal = false"></div>
 
-            <span class="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
-
-            <div x-show="showCreateModal" x-transition.scale.origin.bottom class="inline-block align-bottom bg-white rounded-2xl text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full">
-                <form action="{{ url('superadmin/users') }}" method="POST">
-                    @csrf
-                    <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
-                        <h3 class="text-lg leading-6 font-bold text-gray-900 mb-4" id="modal-title">Tambah Akun Divisi</h3>
-                        
-                        <div class="space-y-4">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Nama Divisi</label>
-                                <input type="text" name="name" required class="block w-full border-gray-300 rounded-xl focus:ring-inka-navy focus:border-inka-navy sm:text-sm px-3 py-2 border" placeholder="Contoh: Divisi Teknik">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Username</label>
-                                <input type="text" name="username" required class="block w-full border-gray-300 rounded-xl focus:ring-inka-navy focus:border-inka-navy sm:text-sm px-3 py-2 border" placeholder="Untuk login (unik)">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                                <input type="email" name="email" required class="block w-full border-gray-300 rounded-xl focus:ring-inka-navy focus:border-inka-navy sm:text-sm px-3 py-2 border" placeholder="Email kontak">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                                <input type="password" name="password" required minlength="6" class="block w-full border-gray-300 rounded-xl focus:ring-inka-navy focus:border-inka-navy sm:text-sm px-3 py-2 border" placeholder="Minimal 6 karakter">
-                            </div>
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">Konfirmasi Password</label>
-                                <input type="password" name="password_confirmation" required minlength="6" class="block w-full border-gray-300 rounded-xl focus:ring-inka-navy focus:border-inka-navy sm:text-sm px-3 py-2 border" placeholder="Masukkan ulang password">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse border-t border-gray-100">
-                        <button type="submit" class="w-full inline-flex justify-center rounded-xl border border-transparent shadow-sm px-4 py-2 bg-inka-navy text-base font-semibold text-white hover:bg-opacity-90 focus:outline-none sm:ml-3 sm:w-auto sm:text-sm">
-                            Simpan Akun
-                        </button>
-                        <button type="button" @click="showCreateModal = false" class="mt-3 w-full inline-flex justify-center rounded-xl border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm">
-                            Batal
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     {{-- MODAL: Reset Password --}}
     <div x-show="showResetModal" style="display: none;" class="fixed inset-0 z-50 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
@@ -245,7 +212,6 @@
 <script>
     document.addEventListener('alpine:init', () => {
         Alpine.data('userManagement', () => ({
-            showCreateModal: {{ request('create') ? 'true' : 'false' }},
             showResetModal: false,
             resetFormUrl: '',
             resetUserName: '',
