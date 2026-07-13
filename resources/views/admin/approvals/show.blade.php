@@ -234,7 +234,7 @@
     <div class="mt-5 bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-5">
         <h3 class="text-sm font-semibold text-gray-800 mb-4">Tindak Lanjut Review ({{ $config['roleName'] }})</h3>
         
-        <form action="/admin/approvals/{{ $permit->id }}" method="POST">
+        <form id="approval-form" method="POST" action="/admin/approvals/{{ $permit->id }}">
             @csrf
             @method('PUT')
             
@@ -292,7 +292,7 @@
             const placeholder = document.getElementById('signature-placeholder');
             const hiddenInput = document.getElementById('tanda-tangan-input');
             const container = document.getElementById('signature-container');
-            const form = document.querySelector('form');
+            const form = document.getElementById('approval-form');
             const ctx = canvas.getContext('2d');
 
             function resizeCanvas() {
