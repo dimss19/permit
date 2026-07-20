@@ -1,4 +1,4 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+<p align="center"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></p>
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -7,52 +7,330 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-## About Laravel
+# Work Permit Management System
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Sistem manajemen pengajuan izin kerja (Work Permit) berbasis web yang mendigitalisasi proses pengajuan, review, dan persetujuan izin kerja di lingkungan perusahaan.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## 📋 Prasyarat
 
-## Learning Laravel
+Sebelum memulai instalasi, pastikan **local server** Anda sudah memiliki aplikasi berikut:
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+| Aplikasi | Versi Minimal | Keterangan |
+|----------|--------------|------------|
+| **PHP** | ^8.3 | Bahasa pemrograman |
+| **Composer** | v2.x | Dependency manager PHP |
+| **Node.js** | ^18.x | Runtime JavaScript |
+| **NPM** | ^9.x | Package manager Node.js |
+| **MySQL** | ^8.0 | Database server |
+| **Web Server** | - | Apache / Nginx (bawaan Laragon/XAMPP) |
 
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+> 💡 **Rekomendasi:** Gunakan **[Laragon](https://laragon.org/)** untuk kemudahan instalasi di Windows. Laragon sudah menyertakan PHP, Composer, Apache/Nginx, dan MySQL sekaligus.
 
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
+---
 
-## Agentic Development
+## 🚀 Panduan Instalasi (Local Server)
 
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+Berikut adalah langkah-langkah instalasi untuk menjalankan aplikasi di **local server** (Laragon / XAMPP / LAMP).
+
+
+### 📦 1. Clone Repository
+
+Buka terminal (Git Bash / CMD / PowerShell) dan jalankan:
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+git clone https://github.com/dimss19/permit.git
+cd permit
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+Atau jika menggunakan Laragon, clone project ke folder `C:\laragon\www\`:
 
-## Contributing
+```bash
+cd C:\laragon\www
+git clone https://github.com/dimss19/permit.git
+cd permit
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Akses aplikasi melalui: `http://permit.test` (setelah setup Laragon).
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 🗄️ 2. Membuat Database di MySQL
 
-## Security Vulnerabilities
+Sebelum melanjutkan, Anda perlu membuat database terlebih dahulu.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+#### Opsi A — Melalui phpMyAdmin
 
-## License
+1. Buka **phpMyAdmin** di browser: `http://localhost/phpmyadmin`
+2. Klik tab **"Databases"** (atau **"New"** di sidebar kiri)
+3. Masukkan nama database, contoh: `work_permit`
+4. Pilih **utf8mb4_general_ci** sebagai collation
+5. Klik tombol **"Create"**
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+#### Opsi B — Melalui Command Line (MySQL CLI)
+
+Buka terminal dan jalankan perintah berikut:
+
+```bash
+# Login ke MySQL
+mysql -u root -p
+
+# Masukkan password MySQL jika diminta
+
+# Buat database baru
+CREATE DATABASE work_permit CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+# Verifikasi database telah dibuat
+SHOW DATABASES;
+
+# Keluar dari MySQL
+EXIT;
+```
+
+#### Opsi C — Melalui Laragon
+
+1. Buka **Laragon** > Klik kanan > **MySQL** > **Open MySQL CLI**
+2. Jalankan perintah SQL:
+
+```sql
+CREATE DATABASE work_permit CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+> ✅ Database `work_permit` berhasil dibuat dan siap digunakan.
+
+---
+
+### ⚙️ 3. Konfigurasi Environment
+
+Salin file `.env.example` menjadi `.env`:
+
+```bash
+cp .env.example .env
+```
+
+Buka file `.env` dan sesuaikan konfigurasi database dari **SQLite** (default) menjadi **MySQL**:
+
+```env
+# Ubah dari:
+DB_CONNECTION=sqlite
+
+# Menjadi:
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=work_permit
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+> ⚠️ **Catatan:** Jika Anda menggunakan password MySQL, isikan pada `DB_PASSWORD=`. Default Laragon/XAMPP biasanya tanpa password (`root` dengan password kosong).
+
+Sesuaikan juga `APP_URL` jika diperlukan:
+
+```env
+APP_URL=http://localhost
+```
+
+---
+
+### 🔧 4. Install Dependensi PHP (Composer)
+
+```bash
+composer install
+```
+
+Untuk environment production (tanpa dev dependencies):
+
+```bash
+composer install --optimize-autoloader --no-dev
+```
+
+---
+
+### 🔑 5. Generate Application Key
+
+```bash
+php artisan key:generate
+```
+
+---
+
+### 🔗 6. Storage Link
+
+Buat symlink storage agar file yang diunggah dapat diakses publik:
+
+```bash
+php artisan storage:link
+```
+
+---
+
+### 📊 7. Migrasi Database & Seeder
+
+Jalankan migrasi untuk membuat tabel-tabel beserta data awal (seeder):
+
+```bash
+php artisan migrate:fresh --seed
+```
+
+Perintah di atas akan:
+- Membuat seluruh tabel yang dibutuhkan
+- Mengisi data awal (seperti user, roles, dll.)
+
+> ⚠️ **Peringatan:** Perintah `migrate:fresh` akan menghapus semua tabel yang ada dan membuatnya kembali. Untuk migrasi biasa tanpa menghapus data, gunakan `php artisan migrate`.
+
+---
+
+### 🎨 8. Install & Build Assets (Tailwind / Vite)
+
+```bash
+npm install
+npm run build
+```
+
+Untuk development, Anda bisa menjalankan Vite dev server agar perubahan asset langsung terlihat:
+
+```bash
+npm run dev
+```
+
+---
+
+### ▶️ 9. Menjalankan Aplikasi
+
+#### Opsi A — Menggunakan Laragon
+
+1. Buka **Laragon**
+2. Klik tombol **"Start All"**
+3. Akses: `http://permit.test` (atau sesuai folder project Anda)
+
+#### Opsi B — Menggunakan PHP Artisan Serve
+
+```bash
+php artisan serve
+```
+
+Akses aplikasi di: `http://localhost:8000`
+
+#### Opsi C — Menggunakan Laravel Sail (Docker)
+
+Jika Anda lebih suka menggunakan Docker:
+
+```bash
+composer require laravel/sail --dev
+php artisan sail:install
+./vendor/bin/sail up
+```
+
+---
+
+## 🔄 Ringkasan Perintah Instalasi
+
+Untuk memudahkan, berikut ringkasan semua perintah dalam satu blok:
+
+```bash
+# 1. Clone repository
+git clone https://github.com/dimss19/permit.git
+cd permit
+
+# 2. Copy .env dan sesuaikan DB_CONNECTION ke mysql
+cp .env.example .env
+# >> Edit file .env: DB_CONNECTION=mysql, DB_DATABASE=work_permit
+
+# 3. Install dependencies
+composer install
+php artisan key:generate
+php artisan storage:link
+
+# 4. Jalankan migrasi dan seeder
+php artisan migrate:fresh --seed
+
+# 5. Build assets
+npm install
+npm run build
+
+# 6. Jalankan server
+php artisan serve
+```
+
+---
+
+## 🐳 Menjalankan Aplikasi (Development Mode)
+
+Untuk development, Anda bisa menjalankan semua service sekaligus:
+
+```bash
+composer run dev
+```
+
+Perintah ini akan menjalankan secara bersamaan:
+- `php artisan serve`
+- `php artisan queue:listen`
+- `php artisan pail` (log viewer)
+- `npm run dev` (Vite dev server)
+
+---
+
+## 🧪 Menjalankan Test
+
+```bash
+composer run test
+```
+
+Atau secara langsung:
+
+```bash
+php artisan test
+```
+
+---
+
+## 👤 Akun Default (Setelah Seeder)
+
+Setelah menjalankan `php artisan migrate:fresh --seed`, Anda dapat login menggunakan akun berikut:
+
+| Role | Email | Password |
+|------|-------|----------|
+| Super Admin | (sesuai seeder) | (sesuai seeder) |
+| Staff | (sesuai seeder) | (sesuai seeder) |
+| Divisi | (sesuai seeder) | (sesuai seeder) |
+
+> 🔍 Cek file seeder di `database/seeders/` untuk melihat detail akun yang dibuat.
+
+---
+
+## 📁 Struktur Direktori Utama
+
+```
+├── app/                   # Kode aplikasi (Controllers, Models, dll.)
+├── bootstrap/             # Bootstrap aplikasi
+├── config/                # File konfigurasi
+├── database/              # Migrations, seeders, factories
+├── public/                # Public directory (entry point)
+├── resources/             # Views, CSS, JS (Vue/React)
+├── routes/                # Route definitions
+├── storage/               # File storage (logs, cache, uploads)
+├── tests/                 # Unit & Feature tests
+├── vendor/                # Composer dependencies
+└── package.json           # Node.js dependencies
+```
+
+---
+
+## 🛠️ Troubleshooting
+
+| Masalah | Solusi |
+|---------|--------|
+| **Port 8000 sudah digunakan** | Gunakan port lain: `php artisan serve --port=8080` |
+| **Error koneksi database** | Pastikan MySQL sudah berjalan dan kredensial di `.env` sudah benar |
+| **Error "Class not found"** | Jalankan `composer dump-autoload` |
+| **Error 419 (CSRF)** | Pastikan session table sudah termigrasi: `php artisan migrate` |
+| **File upload tidak muncul** | Jalankan `php artisan storage:link` |
+| **Error Vite manifest** | Jalankan `npm install && npm run build` |
+
+---
+
+## 📄 License
+
+Project ini dibangun menggunakan framework [Laravel](https://laravel.com) yang merupakan open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
