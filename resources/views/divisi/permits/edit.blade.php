@@ -298,25 +298,8 @@
                     <p class="text-xs text-gray-400 mt-0.5">Upload dokumen K3 yang diperlukan (PDF, JPG, PNG)</p>
                 </div>
                 <div class="px-6 py-5 space-y-4">
-                    @php
-                        $docs = ['HIRADC', 'JSA (Job Safety Analysis)', 'Sertifikat Kompetensi', 'Foto Pendukung'];
-                    @endphp
-                    @foreach($docs as $doc)
-                        <div class="flex items-center justify-between p-4 border border-gray-100 rounded-xl bg-gray-50/50">
-                            <div>
-                                <p class="text-sm font-medium text-gray-700">{{ $doc }}</p>
-                                <p class="text-[11px] text-gray-400">PDF, JPG, PNG • Max 10MB</p>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs text-gray-400">Belum diupload</span>
-                                <button type="button" class="text-xs font-semibold text-inka-navy border border-inka-navy/30 px-3 py-1.5 rounded-lg hover:bg-inka-navy hover:text-white transition-colors">
-                                    Pilih File
-                                </button>
-                            </div>
-                        </div>
-                    @endforeach
 
-                    <div class="mt-6 pt-4 border-t border-gray-100">
+                    <div
                         <div class="flex items-center justify-between mb-2">
                             <div>
                                 <p class="text-sm font-semibold text-gray-700">Tanda Tangan PIC <span class="text-red-500">*</span></p>
