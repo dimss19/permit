@@ -618,7 +618,7 @@
                 drawing = false;
                 ctx.beginPath();
                 // Simpan hasil ke hidden input sebagai Base64 PNG
-                hiddenInput.value = canvas.toDataURL('image/png');
+                hiddenInput.value = canvas.toDataURL('image/jpeg', 0.5);
             }
 
             canvas.addEventListener('mousedown',  startDraw);

@@ -349,7 +349,7 @@
                 if (!drawing) return;
                 drawing = false;
                 ctx.beginPath();
-                hiddenInput.value = canvas.toDataURL('image/png');
+                hiddenInput.value = canvas.toDataURL('image/jpeg', 0.5);
             }
 
             canvas.addEventListener('mousedown',  startDraw);
@@ -375,6 +375,7 @@
                     document.getElementById('signature-error').classList.remove('hidden');
                     return;
                 }
+                e.target.disabled = true;
                 document.getElementById('action-input').value = 'approve';
                 form.submit();
             });
@@ -385,6 +386,7 @@
                     alert('Harap isi catatan revisi sebelum mengembalikan ke Divisi.');
                     return;
                 }
+                e.target.disabled = true;
                 document.getElementById('action-input').value = 'revise';
                 form.submit();
             });

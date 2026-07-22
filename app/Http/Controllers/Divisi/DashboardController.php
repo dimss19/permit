@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $userId = Auth::id() ?? \App\Models\User::where('role', 'divisi')->value('id');
+        $userId = Auth::id();
 
         // Widget counts — hanya permit milik divisi ini
         $counts = [

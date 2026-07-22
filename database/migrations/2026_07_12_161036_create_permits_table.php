@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('permits', function (Blueprint $table) {
             $table->id();
             $table->string('no_permit')->unique();
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete(); // pemilik (divisi)
+            $table->foreignId('user_id')->constrained()->nullOnDelete(); // pemilik (divisi)
             $table->string('nama_pekerjaan');
             $table->string('kontraktor');
             $table->string('lokasi')->nullable();

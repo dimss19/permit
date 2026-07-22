@@ -19,17 +19,18 @@ class PermitController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_pekerjaan' => 'required|string|max:255',
-            'kontraktor'     => 'required|string|max:255',
-            'lokasi'         => 'required|string|max:255',
+            'nama_pekerjaan'  => 'required|string|max:255',
+            'kontraktor'      => 'required|string|max:255',
+            'lokasi'          => 'required|string|max:255',
+            'tanggal_mulai'   => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
+            'tanda_tangan'    => $request->input('action') === 'submit' ? 'required|string' : 'nullable|string',
         ]);
 
-        $user = Auth::user()
-            ?? \App\Models\User::where('role', 'divisi')->first();
+        $user = Auth::user();
 
         // Auto-generate nomor permit
-        $lastNo = Permit::count() + 1;
-        $noPermit = 'WP-' . date('Y') . '-' . str_pad($lastNo, 3, '0', STR_PAD_LEFT);
+        $noPermit = 'WP-' . date('Y') . '-' . strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
 
         $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
 
@@ -41,7 +42,6 @@ class PermitController extends Controller
             'lokasi'                => $request->lokasi,
             'penanggung_jawab'      => $request->penanggung_jawab,
             'telepon'               => $request->telepon,
-            'perusahaan'            => $request->perusahaan,
             'tanggal_mulai'         => $request->tanggal_mulai,
             'tanggal_selesai'       => $request->tanggal_selesai,
             'klasifikasi_pekerjaan' => $request->input('klasifikasi_pekerjaan', []),
@@ -67,7 +67,7 @@ class PermitController extends Controller
     /** Tampilkan form edit (hanya untuk Draft/Revision) */
     public function edit($id)
     {
-        $userId = Auth::id() ?? \App\Models\User::where('role', 'divisi')->value('id');
+        $userId = Auth::id();
         $permit = Permit::where('user_id', $userId)->where('id', $id)->firstOrFail();
 
         if (!in_array($permit->status, ['Draft', 'Revision'])) {
@@ -80,7 +80,7 @@ class PermitController extends Controller
     /** Simpan update permit */
     public function update(Request $request, $id)
     {
-        $userId = Auth::id() ?? \App\Models\User::where('role', 'divisi')->value('id');
+        $userId = Auth::id();
         $permit = Permit::where('user_id', $userId)->where('id', $id)->firstOrFail();
 
         if (!in_array($permit->status, ['Draft', 'Revision'])) {
@@ -88,9 +88,12 @@ class PermitController extends Controller
         }
 
         $request->validate([
-            'nama_pekerjaan' => 'required|string|max:255',
-            'kontraktor'     => 'required|string|max:255',
-            'lokasi'         => 'required|string|max:255',
+            'nama_pekerjaan'  => 'required|string|max:255',
+            'kontraktor'      => 'required|string|max:255',
+            'lokasi'          => 'required|string|max:255',
+            'tanggal_mulai'   => 'nullable|date',
+            'tanggal_selesai' => 'nullable|date|after_or_equal:tanggal_mulai',
+            'tanda_tangan'    => $request->input('action') === 'submit' ? 'required|string' : 'nullable|string',
         ]);
 
         $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
@@ -101,7 +104,6 @@ class PermitController extends Controller
             'lokasi'                => $request->lokasi,
             'penanggung_jawab'      => $request->penanggung_jawab,
             'telepon'               => $request->telepon,
-            'perusahaan'            => $request->perusahaan,
             'tanggal_mulai'         => $request->tanggal_mulai,
             'tanggal_selesai'       => $request->tanggal_selesai,
             'klasifikasi_pekerjaan' => $request->input('klasifikasi_pekerjaan', []),

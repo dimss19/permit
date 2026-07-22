@@ -129,7 +129,7 @@
                 if (!drawing) return;
                 drawing = false;
                 ctx.beginPath();
-                hiddenInput.value = canvas.toDataURL('image/png');
+                hiddenInput.value = canvas.toDataURL('image/jpeg', 0.5);
             }
 
             canvas.addEventListener('mousedown',  startDraw);

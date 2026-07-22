@@ -30,7 +30,7 @@
         </a>
 
         {{-- Submitted --}}
-        <a href="/divisi/history?status=Submitted"
+        <a href="/divisi/history?status=Review Staff"
            class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-yellow-200 transition-all group">
             <div class="flex items-center justify-between mb-3">
                 <p class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Submitted</p>

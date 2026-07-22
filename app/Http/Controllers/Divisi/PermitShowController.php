@@ -11,8 +11,7 @@ class PermitShowController extends Controller
 {
     public function show($id)
     {
-        $userId = Auth::id()
-            ?? \App\Models\User::where('role', 'divisi')->value('id');
+        $userId = Auth::id();
 
         $permit = Permit::where('user_id', $userId)
                          ->where('id', $id)
@@ -23,8 +22,7 @@ class PermitShowController extends Controller
 
     public function downloadPdf($id)
     {
-        $userId = Auth::id()
-            ?? \App\Models\User::where('role', 'divisi')->value('id');
+        $userId = Auth::id();
 
         $permit = Permit::where('user_id', $userId)
                          ->where('id', $id)

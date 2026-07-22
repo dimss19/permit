@@ -114,7 +114,6 @@ class ApprovalController extends Controller
 
             // Jika Senior Manager approve, berarti permit Active, set tanggal aktif.
             if ($config['nextStatus'] === 'Active') {
-                $updateData['active_at'] = now();
                 $message = 'Permit berhasil disetujui dan kini berstatus ACTIVE.';
             } else {
                 $message = 'Permit berhasil disetujui dan diteruskan ke ' . $config['nextRoleName'] . '.';
