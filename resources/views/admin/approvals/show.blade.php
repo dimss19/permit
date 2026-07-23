@@ -56,31 +56,6 @@
     </div>
     @endif
 
-    @if($permit->status === 'Cancelled')
-    <div class="bg-red-50 border border-red-200 rounded-2xl px-6 py-5 mb-5">
-        <div class="flex items-center gap-2 mb-3">
-            <svg class="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
-            <h3 class="text-sm font-bold text-red-800">Izin Kerja Dibatalkan</h3>
-        </div>
-        <p class="text-sm text-red-700 mb-1"><strong>Alasan:</strong> {{ $permit->cancellation_reason }}</p>
-        <p class="text-xs text-red-600 mb-4">Dibatalkan pada: {{ $permit->cancelled_at ? $permit->cancelled_at->format('d/m/Y H:i') : '—' }}</p>
-        
-        @if($permit->cancellation_signatures && count($permit->cancellation_signatures) > 0)
-        <div class="mt-4 border-t border-red-200 pt-4">
-            <p class="text-xs font-semibold text-red-800 mb-3">Ditandatangani oleh:</p>
-            <div class="flex flex-wrap gap-4">
-                @foreach($permit->cancellation_signatures as $sig)
-                <div class="bg-white border border-red-200 rounded-xl p-3 w-48 text-center">
-                    <p class="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1">{{ $sig['role'] }}</p>
-                    <img src="{{ $sig['signature'] }}" alt="TTD" class="h-16 mx-auto mb-1">
-                    <p class="text-xs font-semibold text-gray-800">{{ $sig['name'] }}</p>
-                </div>
-                @endforeach
-            </div>
-        </div>
-        @endif
-    </div>
-    @endif
 
     {{-- Grid detail --}}
     <div class="grid grid-cols-1 md:grid-cols-2 gap-5">

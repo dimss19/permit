@@ -9,7 +9,7 @@
         </div>
         <select name="status" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
             <option value="">Semua Status</option>
-            @foreach(['Draft','Submitted','Review Staff','Review Manager','Review Senior Manager','Revision','Active','Closed','Cancelled'] as $s)
+            @foreach(['Draft','Submitted','Review Staff','Review Manager','Review Senior Manager','Revision','Active','Closed'] as $s)
                 <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
             @endforeach
         </select>
@@ -56,7 +56,6 @@
                                 'Revision'                 => 'bg-red-100 text-red-700',
                                 'Active'                   => 'bg-green-100 text-green-700',
                                 'Closed'                   => 'bg-slate-100 text-slate-600',
-                                'Cancelled'                => 'bg-red-600 text-white',
                             ];
                             $badge = $statusMap[$permit->status] ?? 'bg-gray-100 text-gray-600';
                         @endphp

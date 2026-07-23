@@ -61,8 +61,7 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'show']);
     Route::put('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'update']);
     Route::get('/admin/history', [\App\Http\Controllers\Admin\HistoryController::class, 'index']);
-    Route::get('/admin/approvals/{id}/cancel', [\App\Http\Controllers\Admin\ApprovalController::class, 'showCancelForm']);
-    Route::post('/admin/approvals/{id}/cancel', [\App\Http\Controllers\Admin\ApprovalController::class, 'cancel']);
+
 });
 
 Route::middleware('auth')->group(function () {
