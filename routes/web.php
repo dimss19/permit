@@ -54,12 +54,14 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/divisi/permits/{id}/pdf', [\App\Http\Controllers\Divisi\PermitShowController::class, 'downloadPdf']);
     Route::get('/divisi/permits/{id}/edit', [\App\Http\Controllers\Divisi\PermitController::class, 'edit']);
     Route::put('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitController::class, 'update']);
+    Route::get('/divisi/permits/{permitId}/documents/{documentId}/download', [\App\Http\Controllers\Divisi\PermitController::class, 'downloadDocument'])->name('permits.documents.download');
 
     // ===== ADMIN (Staff, Manager, Senior Manager) =====
     Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
     Route::get('/admin/approvals', [\App\Http\Controllers\Admin\ApprovalController::class, 'index']);
     Route::get('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'show']);
     Route::put('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'update']);
+    Route::get('/admin/approvals/{permitId}/documents/{documentId}/download', [\App\Http\Controllers\Admin\ApprovalController::class, 'downloadDocument'])->name('admin.permits.documents.download');
     Route::get('/admin/history', [\App\Http\Controllers\Admin\HistoryController::class, 'index']);
 
 });

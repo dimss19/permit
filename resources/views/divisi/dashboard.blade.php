@@ -125,6 +125,7 @@
                     <thead>
                         <tr class="text-sm text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
+                            <th class="px-6 py-3 font-semibold">Tipe</th>
                             <th class="px-6 py-3 font-semibold">Nama Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Kontraktor</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
@@ -157,6 +158,7 @@
                                     {{ $permit->no_permit }}
                                 </a>
                             </td>
+                            <td class="px-6 py-3.5"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
                             <td class="px-6 py-3.5 text-gray-500 text-sm">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5">

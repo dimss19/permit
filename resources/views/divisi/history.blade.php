@@ -22,12 +22,19 @@
             @endforeach
         </select>
 
+        {{-- Tipe Filter --}}
+        <select name="tipe" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
+            <option value="">Semua Tipe</option>
+            <option value="Internal" {{ request('tipe') === 'Internal' ? 'selected' : '' }}>Internal</option>
+            <option value="Eksternal" {{ request('tipe') === 'Eksternal' ? 'selected' : '' }}>Eksternal</option>
+        </select>
+
         <button type="submit"
             class="px-4 py-2 bg-inka-navy text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity">
             Cari
         </button>
 
-        @if(request('search') || request('status'))
+        @if(request('search') || request('status') || request('tipe'))
         <a href="/divisi/history" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">
             Reset
         </a>
@@ -84,6 +91,7 @@
                     <thead>
                         <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
+                            <th class="px-6 py-3 font-semibold">Tipe</th>
                             <th class="px-6 py-3 font-semibold">Nama Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Kontraktor</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
@@ -118,6 +126,7 @@
                                     {{ $permit->no_permit }}
                                 </a>
                             </td>
+                            <td class="px-6 py-3.5"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
                             <td class="px-6 py-3.5 text-gray-500 text-xs">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5">

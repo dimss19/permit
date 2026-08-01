@@ -66,6 +66,7 @@
                     <thead>
                         <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
+                            <th class="px-6 py-3 font-semibold">Tipe</th>
                             <th class="px-6 py-3 font-semibold">Nama Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Divisi</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
@@ -77,6 +78,7 @@
                         @foreach($permits as $permit)
                         <tr class="hover:bg-orange-50/30 transition-colors cursor-pointer" onclick="window.location='/admin/approvals/{{ $permit->id }}'">
                             <td class="px-6 py-3.5"><a href="/admin/approvals/{{ $permit->id }}" class="font-semibold text-inka-navy hover:underline" onclick="event.stopPropagation()">{{ $permit->no_permit }}</a></td>
+                            <td class="px-6 py-3.5"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
                             <td class="px-6 py-3.5 text-gray-700">{{ optional($permit->user)->name ?? '—' }}</td>
                             <td class="px-6 py-3.5">

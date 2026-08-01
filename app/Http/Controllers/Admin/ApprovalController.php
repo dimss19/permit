@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Permit;
+use App\Models\PermitDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ApprovalController extends Controller
 {
@@ -75,7 +77,7 @@ class ApprovalController extends Controller
     public function show($id)
     {
         $config = $this->getRoleConfig();
-        $permit = Permit::with('user')->findOrFail($id);
+        $permit = Permit::with(['user', 'documents'])->findOrFail($id);
         
         $canReview = $permit->status === $config['expectedStatus'];
 
@@ -133,5 +135,18 @@ class ApprovalController extends Controller
         }
 
         return redirect('/admin/approvals')->with('success', $message);
+    }
+
+    public function downloadDocument($permitId, $documentId)
+    {
+        $permit = Permit::findOrFail($permitId);
+        $doc = PermitDocument::where('permit_id', $permit->id)->where('id', $documentId)->firstOrFail();
+
+        $path = $doc->file_path;
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404);
+        }
+
+        return Storage::disk('local')->download($path, $doc->nama_dokumen . '.' . pathinfo($doc->file_path, PATHINFO_EXTENSION));
     }
 }

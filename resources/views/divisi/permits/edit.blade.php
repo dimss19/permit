@@ -1,33 +1,39 @@
 <x-app-layout>
     <x-slot name="title">Edit Draft Permit</x-slot>
 
+    @php
+        $canChangeTipe = in_array($permit->status, ['Draft', 'Revision']);
+    @endphp
+
     {{-- Step indicator --}}
     <div class="bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-4 mb-6">
         <div class="flex items-center justify-between" id="step-indicator">
             @php
                 $steps = [
-                    1 => 'Klasifikasi & Info',
-                    2 => 'Bahaya & Pencegahan',
-                    3 => 'APD',
-                    4 => 'Validasi Kerja',
-                    5 => 'Review & Submit',
+                    0 => 'Tipe Permit',
+                    1 => 'Dokumen',
+                    2 => 'Klasifikasi & Info',
+                    3 => 'Bahaya & Pencegahan',
+                    4 => 'APD',
+                    5 => 'Validasi Kerja',
+                    6 => 'Review & Submit',
                 ];
             @endphp
             @foreach($steps as $num => $label)
-                <div class="flex items-center {{ $num < 5 ? 'flex-1' : '' }}">
+                <div class="flex items-center {{ $num < 6 ? 'flex-1' : '' }}">
                     <div class="flex flex-col items-center">
                         <div class="step-circle w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-200
-                            {{ $num === 1 ? 'bg-inka-navy text-white border-inka-navy' : 'bg-white text-gray-400 border-gray-200' }}"
+                            {{ $num === 0 ? 'bg-inka-navy text-white border-inka-navy' : 'bg-white text-gray-400 border-gray-200' }}"
                             id="step-circle-{{ $num }}">
                             {{ $num }}
                         </div>
                         <span class="text-xs mt-1 font-medium text-center leading-tight
-                            {{ $num === 1 ? 'text-inka-navy' : 'text-gray-400' }}"
+                            {{ $num === 0 ? 'text-inka-navy' : 'text-gray-400' }}"
                             id="step-label-{{ $num }}">
                             {{ $label }}
                         </span>
                     </div>
-                    @if($num < 5)
+                    @if($num < 6)
                         <div class="flex-1 h-px mx-2 mt-[-12px] step-line bg-gray-200 transition-colors duration-200" id="step-line-{{ $num }}"></div>
                     @endif
                 </div>
@@ -36,7 +42,7 @@
     </div>
 
     {{-- Form --}}
-    <form action="/divisi/permits/{{ $permit->id }}" method="POST" id="permit-form">
+    <form action="/divisi/permits/{{ $permit->id }}" method="POST" id="permit-form" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -51,9 +57,98 @@
         </div>
 
         {{-- ========================================================
-             STEP 1 — A. KLASIFIKASI PEKERJAAN + B. INFORMASI PEKERJAAN
+             STEP 0 — TIPE PERMIT
              ======================================================== --}}
-        <div id="step-1" class="space-y-5">
+        <div id="step-0" class="space-y-5">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h3 class="text-base font-semibold text-gray-800">Tipe Permit</h3>
+                </div>
+                <div class="px-6 py-5">
+                    @if($canChangeTipe)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <button type="button" onclick="selectTipe('Internal')" id="btn-internal"
+                                class="tipe-btn group p-6 rounded-2xl border-2 {{ $permit->tipe === 'Internal' ? 'border-inka-navy bg-inka-navy/5' : 'border-gray-200' }} text-left transition-all">
+                                <div class="w-12 h-12 rounded-xl {{ $permit->tipe === 'Internal' ? 'bg-inka-navy/10' : 'bg-gray-100' }} flex items-center justify-center mb-3">
+                                    <svg class="w-6 h-6 {{ $permit->tipe === 'Internal' ? 'text-inka-navy' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                    </svg>
+                                </div>
+                                <p class="text-lg font-bold text-gray-800">Internal</p>
+                                <p class="text-sm text-gray-400 mt-1">Pekerjaan internal perusahaan</p>
+                            </button>
+                            <button type="button" onclick="selectTipe('Eksternal')" id="btn-eksternal"
+                                class="tipe-btn group p-6 rounded-2xl border-2 {{ $permit->tipe === 'Eksternal' ? 'border-inka-navy bg-inka-navy/5' : 'border-gray-200' }} text-left transition-all">
+                                <div class="w-12 h-12 rounded-xl {{ $permit->tipe === 'Eksternal' ? 'bg-blue-50' : 'bg-gray-100' }} flex items-center justify-center mb-3">
+                                    <svg class="w-6 h-6 {{ $permit->tipe === 'Eksternal' ? 'text-blue-600' : 'text-gray-500' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                                    </svg>
+                                </div>
+                                <p class="text-lg font-bold text-gray-800">Eksternal</p>
+                                <p class="text-sm text-gray-400 mt-1">Pekerjaan oleh kontraktor eksternal</p>
+                            </button>
+                        </div>
+                        <input type="hidden" name="tipe" id="tipe-input" value="{{ $permit->tipe }}">
+                    @else
+                        <div class="flex items-center gap-3">
+                            <x-permit-tipe-badge :tipe="$permit->tipe" />
+                            <span class="text-sm text-gray-400">Tipe tidak dapat diubah setelah submit.</span>
+                        </div>
+                        <input type="hidden" name="tipe" value="{{ $permit->tipe }}">
+                    @endif
+                </div>
+            </div>
+        </div>
+
+        {{-- ========================================================
+             STEP 1 — DOKUMEN PENDUKUNG (Eksternal Only)
+             ======================================================== --}}
+        <div id="step-1" class="hidden space-y-5">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">D</span>
+                    <h3 class="text-base font-semibold text-gray-800 mt-0.5">Dokumen Pendukung</h3>
+                    <p class="text-sm text-gray-400 mt-0.5">Upload dokumen pendukung untuk permit eksternal (max 10MB per file)</p>
+                </div>
+                <div class="px-6 py-5">
+                    {{-- Existing documents --}}
+                    @if($permit->documents->count())
+                        <div class="space-y-3 mb-4">
+                            @foreach($permit->documents as $doc)
+                            <div class="existing-doc flex items-center justify-between p-3 bg-gray-50 rounded-xl border border-gray-100">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-lg bg-blue-100 flex items-center justify-center">
+                                        <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-gray-700">{{ $doc->nama_dokumen }}</p>
+                                        <p class="text-xs text-gray-400">{{ strtoupper($doc->file_type) }} • {{ round($doc->file_size / 1024) }} KB</p>
+                                    </div>
+                                </div>
+                                <label class="flex items-center gap-2 cursor-pointer">
+                                    <input type="checkbox" name="hapus_dokumen[]" value="{{ $doc->id }}" class="rounded text-red-500 border-gray-300">
+                                    <span class="text-xs text-red-500">Hapus</span>
+                                </label>
+                            </div>
+                            @endforeach
+                        </div>
+                    @endif
+
+                    <div id="documents-list" class="space-y-4"></div>
+                    <button type="button" onclick="addDocument()" id="btn-add-doc"
+                        class="mt-4 inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-inka-navy border border-inka-navy rounded-xl hover:bg-inka-navy/5 transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                        Tambah Dokumen
+                    </button>
+                    <p id="doc-required-warning" class="text-sm text-red-500 mt-3 hidden">Minimal upload 1 dokumen pendukung.</p>
+                </div>
+            </div>
+        </div>
+
+        {{-- ========================================================
+             STEP 2 — A. KLASIFIKASI PEKERJAAN + B. INFORMASI PEKERJAAN
+             ======================================================== --}}
+        <div id="step-2" class="space-y-5 hidden">
 
             {{-- A. Klasifikasi Pekerjaan --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -192,9 +287,9 @@
         </div>
 
         {{-- ========================================================
-             STEP 2 — C. BAHAYA PEKERJAAN + D. TINDAKAN PENCEGAHAN
+             STEP 3 — C. BAHAYA PEKERJAAN + D. TINDAKAN PENCEGAHAN
              ======================================================== --}}
-        <div id="step-2" class="space-y-5 hidden">
+        <div id="step-3" class="space-y-5 hidden">
 
             {{-- C. Bahaya Pekerjaan --}}
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
@@ -289,9 +384,9 @@
         </div>
 
         {{-- ========================================================
-             STEP 3 — E. ALAT PELINDUNG DIRI (APD)
+             STEP 4 — E. ALAT PELINDUNG DIRI (APD)
              ======================================================== --}}
-        <div id="step-3" class="hidden">
+        <div id="step-4" class="hidden">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">E</span>
@@ -333,9 +428,9 @@
         </div>
 
         {{-- ========================================================
-             STEP 4 — F. VALIDASI KERJA
+             STEP 5 — F. VALIDASI KERJA (TANDA TANGAN)
              ======================================================== --}}
-        <div id="step-4" class="hidden">
+        <div id="step-5" class="hidden">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">F</span>
@@ -376,9 +471,9 @@
         </div>
 
         {{-- ========================================================
-             STEP 5 — REVIEW & SUBMIT
+             STEP 6 — REVIEW & SUBMIT
              ======================================================== --}}
-        <div id="step-5" class="hidden">
+        <div id="step-6" class="hidden">
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h3 class="text-base font-semibold text-gray-800">Review Pengajuan</h3>
@@ -432,33 +527,54 @@
     </style>
 
     <script>
-        let currentStep = 1;
-        const totalSteps = 5;
+        let currentStep = 0;
+        const totalSteps = 7;
+        let selectedTipe = '{{ $permit->tipe }}';
+
+        function selectTipe(tipe) {
+            selectedTipe = tipe;
+            document.getElementById('tipe-input').value = tipe;
+
+            document.querySelectorAll('.tipe-btn').forEach(btn => {
+                btn.classList.remove('border-inka-navy', 'bg-inka-navy/5');
+                btn.classList.add('border-gray-200');
+            });
+            const activeBtn = document.getElementById('btn-' + tipe.toLowerCase());
+            activeBtn.classList.add('border-inka-navy', 'bg-inka-navy/5');
+            activeBtn.classList.remove('border-gray-200');
+        }
 
         function changeStep(direction) {
-            const nextStep = currentStep + direction;
-            if (nextStep < 1 || nextStep > totalSteps) return;
+            let nextStep = currentStep + direction;
+            if (nextStep < 0 || nextStep >= totalSteps) return;
 
+            // Skip step 1 (documents) if Internal
+            if (direction > 0 && currentStep === 0 && selectedTipe === 'Internal') {
+                nextStep = 2;
+            }
+            if (direction < 0 && currentStep === 2 && selectedTipe === 'Internal') {
+                nextStep = 0;
+            }
+
+            // Validation before moving forward
             if (direction > 0) {
                 const stepEl = document.getElementById('step-' + currentStep);
-                const inputs = stepEl.querySelectorAll('input, select, textarea');
+                const inputs = stepEl.querySelectorAll('input[required], select[required], textarea[required]');
                 let valid = true;
 
                 inputs.forEach(i => i.setCustomValidity(''));
 
                 for (const input of inputs) {
                     if (!input.checkValidity()) {
-                        if (input.hasAttribute('required') && !input.value.trim()) {
-                            let labelName = 'bidang ini';
-                            const parent = input.closest('div');
-                            if (parent) {
-                                const labelEl = parent.querySelector('.form-label');
-                                if (labelEl) {
-                                    labelName = labelEl.innerText.replace('*', '').trim();
-                                }
+                        let labelName = 'bidang ini';
+                        const parent = input.closest('div');
+                        if (parent) {
+                            const labelEl = parent.querySelector('.form-label');
+                            if (labelEl) {
+                                labelName = labelEl.innerText.replace('*', '').trim();
                             }
-                            input.setCustomValidity('Harap isi ' + labelName);
                         }
+                        input.setCustomValidity('Harap isi ' + labelName);
                         input.reportValidity();
                         valid = false;
                         break;
@@ -468,50 +584,52 @@
                     const errorAlert = document.getElementById('form-error-alert');
                     errorAlert.classList.remove('hidden');
                     errorAlert.style.opacity = '1';
-
-                    inputs.forEach(input => {
-                        if (!input.checkValidity()) {
-                            input.classList.add('error');
-                        }
-
-                        input.addEventListener('input', function removeError() {
-                            input.classList.remove('error');
-                            input.setCustomValidity('');
-                            errorAlert.style.opacity = '0';
-                            setTimeout(() => errorAlert.classList.add('hidden'), 300);
-                            input.removeEventListener('input', removeError);
-                        });
-                    });
-
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
                 }
-            }
 
-            if (direction > 0 && currentStep === 4) {
-                if (!window._signatureHasDrawn || !window._signatureHasDrawn()) {
-                    document.getElementById('signature-error').classList.remove('hidden');
-                    document.getElementById('signature-canvas').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
+                // Validate document count for Eksternal when leaving step 1
+                if (currentStep === 1 && selectedTipe === 'Eksternal') {
+                    const existingDocs = document.querySelectorAll('.existing-doc').length;
+                    const newDocs = document.querySelectorAll('.doc-entry').length;
+                    if (existingDocs === 0 && newDocs === 0) {
+                        document.getElementById('doc-required-warning').classList.remove('hidden');
+                        return;
+                    }
+                }
+
+                // Validate signature when leaving step 5
+                if (currentStep === 5) {
+                    if (!window._signatureHasDrawn || !window._signatureHasDrawn()) {
+                        document.getElementById('signature-error').classList.remove('hidden');
+                        document.getElementById('signature-canvas').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        return;
+                    }
                 }
             }
 
+            // Hide current
             document.getElementById('step-' + currentStep).classList.add('hidden');
 
+            // Update step indicator
             updateStepIndicator(currentStep, nextStep);
 
             currentStep = nextStep;
 
+            // Show next
             document.getElementById('step-' + currentStep).classList.remove('hidden');
 
-            if (currentStep === 4 && typeof window._resizeSignature === 'function') {
+            // Resize canvas if we just entered step 5
+            if (currentStep === 5 && typeof window._resizeSignature === 'function') {
                 window._resizeSignature();
             }
 
-            document.getElementById('btn-prev').classList.toggle('hidden', currentStep === 1);
-            document.getElementById('btn-next').classList.toggle('hidden', currentStep === totalSteps);
+            // Update buttons
+            document.getElementById('btn-prev').classList.toggle('hidden', currentStep === 0);
+            document.getElementById('btn-next').classList.toggle('hidden', currentStep === totalSteps - 1);
 
-            if (currentStep === totalSteps) buildReview();
+            // Build review on step 6
+            if (currentStep === totalSteps - 1) buildReview();
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -537,6 +655,11 @@
             const form = document.getElementById('permit-form');
             const fd = new FormData(form);
             let html = '';
+
+            html += `<div class="p-3 bg-gray-50 rounded-xl mb-4">
+                <p class="text-sm text-gray-400">Tipe Permit</p>
+                <p class="font-semibold text-gray-800">${selectedTipe}</p>
+            </div>`;
 
             const namaP = fd.get('nama_pekerjaan') || '—';
             const lokasi = fd.get('lokasi') || '—';
@@ -570,6 +693,47 @@
             document.getElementById('review-content').innerHTML = html;
         }
 
+        // ===== DOKUMEN PENDUKUNG =====
+        let docCount = 0;
+        function addDocument() {
+            const list = document.getElementById('documents-list');
+            const idx = docCount;
+            const html = `
+                <div class="doc-entry p-4 border border-gray-100 rounded-xl space-y-3" id="doc-${idx}">
+                    <div class="flex items-center justify-between">
+                        <p class="text-sm font-semibold text-gray-600">Dokumen Baru ${idx + 1}</p>
+                        <button type="button" onclick="removeDocument(${idx})" class="text-sm text-red-500 hover:underline">Hapus</button>
+                    </div>
+                    <div>
+                        <label class="form-label">Nama Dokumen <span class="text-red-500">*</span></label>
+                        <input type="text" name="dokumen[${idx}][nama]" class="form-input" placeholder="Contoh: HIRADC" required>
+                    </div>
+                    <div>
+                        <label class="form-label">Deskripsi</label>
+                        <textarea name="dokumen[${idx}][deskripsi]" class="form-input" rows="2" placeholder="Deskripsi singkat dokumen..."></textarea>
+                    </div>
+                    <div>
+                        <label class="form-label">File <span class="text-red-500">*</span></label>
+                        <input type="file" name="dokumen[${idx}][file]" class="form-input" required>
+                        <p class="text-xs text-gray-400 mt-1">Maks 10MB. Format: PDF, gambar, Office, dll.</p>
+                    </div>
+                </div>
+            `;
+            list.insertAdjacentHTML('beforeend', html);
+            docCount++;
+            document.getElementById('doc-required-warning').classList.add('hidden');
+        }
+
+        function removeDocument(idx) {
+            const el = document.getElementById('doc-' + idx);
+            if (el) el.remove();
+            const existingDocs = document.querySelectorAll('.existing-doc').length;
+            const newDocs = document.querySelectorAll('.doc-entry').length;
+            if (existingDocs === 0 && newDocs === 0) {
+                document.getElementById('doc-required-warning').classList.remove('hidden');
+            }
+        }
+
         // ===== TANDA TANGAN DIGITAL (CANVAS) =====
         (function () {
             const canvas = document.getElementById('signature-canvas');
@@ -588,13 +752,16 @@
                 canvas.height = rect.height * dpr;
                 ctx.scale(dpr, dpr);
 
+                // Set white background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, rect.width, rect.height);
+
                 ctx.strokeStyle = '#111d33';
                 ctx.lineWidth   = 2;
                 ctx.lineCap     = 'round';
                 ctx.lineJoin    = 'round';
             }
             window.addEventListener('resize', resizeCanvas);
-
             window._resizeSignature = resizeCanvas;
 
             let drawing = false;
@@ -639,7 +806,7 @@
                 if (!drawing) return;
                 drawing = false;
                 ctx.beginPath();
-                hiddenInput.value = canvas.toDataURL('image/jpeg', 0.5);
+                hiddenInput.value = canvas.toDataURL('image/png');
             }
 
             canvas.addEventListener('mousedown',  startDraw);
@@ -652,7 +819,8 @@
 
             window.clearSignature = function () {
                 const dpr = window.devicePixelRatio || 1;
-                ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
                 hasDrawn = false;
                 hiddenInput.value = '';
                 placeholder.classList.remove('hidden');

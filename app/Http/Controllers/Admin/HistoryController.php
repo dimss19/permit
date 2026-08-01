@@ -25,6 +25,10 @@ class HistoryController extends Controller
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
+
+        if ($request->filled('tipe')) {
+            $query->where('tipe', $request->tipe);
+        }
         
         if ($request->filled('search')) {
             $q = $request->search;

@@ -37,6 +37,7 @@
         <div>
             <p class="text-xs text-gray-400 mb-1">Nomor Permit</p>
             <p class="text-xl font-bold text-gray-800">{{ $permit->no_permit }}</p>
+            <div class="mt-1"><x-permit-tipe-badge :tipe="$permit->tipe" /></div>
             <p class="text-xs text-gray-500 mt-1">Divisi: <span class="font-semibold text-gray-700">{{ optional($permit->user)->name ?? '—' }}</span></p>
         </div>
         <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold {{ $badge }}">
@@ -169,6 +170,38 @@
         </div>
     </div>
 
+    {{-- F. Dokumen Pendukung (Eksternal) --}}
+    @if($permit->tipe === 'Eksternal' && $permit->documents && count($permit->documents) > 0)
+    <div class="mt-5 bg-white rounded-2xl border border-gray-100 shadow-sm">
+        <div class="px-6 py-4 border-b border-gray-100">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">F</span>
+            <h3 class="text-sm font-semibold text-gray-800 mt-0.5">Dokumen Pendukung</h3>
+        </div>
+        <div class="px-6 py-4">
+            <div class="space-y-3">
+                @foreach($permit->documents as $doc)
+                <div class="flex items-center gap-4 p-3 bg-gray-50 rounded-xl border border-gray-100">
+                    <div class="w-10 h-10 rounded-lg bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0">
+                        <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-gray-800 truncate">{{ $doc->nama_dokumen }}</p>
+                        @if($doc->deskripsi)
+                            <p class="text-xs text-gray-500 mt-0.5 truncate">{{ $doc->deskripsi }}</p>
+                        @endif
+                        <p class="text-[10px] text-gray-400 mt-0.5">{{ strtoupper(pathinfo($doc->file_path, PATHINFO_EXTENSION)) }} &middot; {{ number_format($doc->file_size / 1024, 1) }} KB</p>
+                    </div>
+                    <a href="{{ route('admin.permits.documents.download', [$permit->id, $doc->id]) }}"
+                       class="shrink-0 p-2 text-blue-500 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-colors">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </a>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
     @if($permit->approval_signatures && count($permit->approval_signatures) > 0)
     <div class="mt-5 bg-white rounded-2xl border border-gray-100 shadow-sm px-6 py-5">
         <h3 class="text-sm font-semibold text-gray-800 mb-4">Riwayat Persetujuan (Approval)</h3>
@@ -277,7 +310,9 @@
                 canvas.width  = rect.width  * dpr;
                 canvas.height = rect.height * dpr;
                 ctx.scale(dpr, dpr);
-                ctx.strokeStyle = '#0f172a'; // slate-900
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, rect.width, rect.height);
+                ctx.strokeStyle = '#0f172a';
                 ctx.lineWidth   = 2;
                 ctx.lineCap     = 'round';
                 ctx.lineJoin    = 'round';
@@ -324,7 +359,7 @@
                 if (!drawing) return;
                 drawing = false;
                 ctx.beginPath();
-                hiddenInput.value = canvas.toDataURL('image/jpeg', 0.5);
+                hiddenInput.value = canvas.toDataURL('image/png');
             }
 
             canvas.addEventListener('mousedown',  startDraw);
@@ -338,6 +373,8 @@
             window.clearSignature = function () {
                 const dpr = window.devicePixelRatio || 1;
                 ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
                 hasDrawn = false;
                 hiddenInput.value = '';
                 placeholder.classList.remove('hidden');

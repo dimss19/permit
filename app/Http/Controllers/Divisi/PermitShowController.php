@@ -13,7 +13,8 @@ class PermitShowController extends Controller
     {
         $userId = Auth::id();
 
-        $permit = Permit::where('user_id', $userId)
+        $permit = Permit::with('documents')
+                         ->where('user_id', $userId)
                          ->where('id', $id)
                          ->firstOrFail();
 

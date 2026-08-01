@@ -81,7 +81,9 @@
                 canvas.width  = rect.width  * dpr;
                 canvas.height = rect.height * dpr;
                 ctx.scale(dpr, dpr);
-                ctx.strokeStyle = '#991b1b'; // Red color for cancellation signature
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, rect.width, rect.height);
+                ctx.strokeStyle = '#991b1b';
                 ctx.lineWidth   = 2;
                 ctx.lineCap     = 'round';
                 ctx.lineJoin    = 'round';
@@ -129,7 +131,7 @@
                 if (!drawing) return;
                 drawing = false;
                 ctx.beginPath();
-                hiddenInput.value = canvas.toDataURL('image/jpeg', 0.5);
+                hiddenInput.value = canvas.toDataURL('image/png');
             }
 
             canvas.addEventListener('mousedown',  startDraw);
@@ -143,6 +145,8 @@
             window.clearSignature = function () {
                 const dpr = window.devicePixelRatio || 1;
                 ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width / dpr, canvas.height / dpr);
                 hasDrawn = false;
                 hiddenInput.value = '';
                 placeholder.classList.remove('hidden');

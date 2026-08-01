@@ -12,6 +12,7 @@ class Permit extends Model
     protected $fillable = [
         'no_permit',
         'user_id',
+        'tipe',
         'nama_pekerjaan',
         'kontraktor',
         'lokasi',
@@ -29,6 +30,7 @@ class Permit extends Model
         'pencegahan_lainnya',
         'apd',
         'apd_lainnya',
+        'tanda_tangan',
         'status',
         'submitted_at',
         'closed_at',
@@ -53,12 +55,19 @@ class Permit extends Model
         'cancelled_at'          => 'datetime',
         'cancellation_signatures' => 'array',
         'approval_signatures'   => 'array',
+        'tipe'                  => 'string',
     ];
 
     /** Relasi ke User (pemilik / divisi) */
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    /** Relasi ke dokumen pendukung */
+    public function documents()
+    {
+        return $this->hasMany(PermitDocument::class);
     }
 
     /** Scope: permit milik user tertentu */

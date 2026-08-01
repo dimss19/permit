@@ -13,8 +13,13 @@
                 <option value="{{ $s }}" {{ request('status') === $s ? 'selected' : '' }}>{{ $s }}</option>
             @endforeach
         </select>
+        <select name="tipe" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
+            <option value="">Semua Tipe</option>
+            <option value="Internal" {{ request('tipe') === 'Internal' ? 'selected' : '' }}>Internal</option>
+            <option value="Eksternal" {{ request('tipe') === 'Eksternal' ? 'selected' : '' }}>Eksternal</option>
+        </select>
         <button type="submit" class="px-4 py-2 bg-inka-navy text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity">Cari</button>
-        @if(request('search') || request('status'))
+        @if(request('search') || request('status') || request('tipe'))
         <a href="/admin/history" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Reset</a>
         @endif
     </form>
@@ -37,6 +42,7 @@
                     <thead>
                         <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
+                            <th class="px-6 py-3 font-semibold">Tipe</th>
                             <th class="px-6 py-3 font-semibold">Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Divisi</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
@@ -61,6 +67,7 @@
                         @endphp
                         <tr class="hover:bg-blue-50/30 transition-colors">
                             <td class="px-6 py-3.5"><span class="font-semibold text-gray-800">{{ $permit->no_permit }}</span></td>
+                            <td class="px-6 py-3.5"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
                             <td class="px-6 py-3.5 text-gray-700">{{ optional($permit->user)->name ?? '—' }}</td>
                             <td class="px-6 py-3.5"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $badge }}">{{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}</span></td>
