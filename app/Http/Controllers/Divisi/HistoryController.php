@@ -11,8 +11,7 @@ class HistoryController extends Controller
 {
     public function index(Request $request)
     {
-        $userId = Auth::id()
-            ?? \App\Models\User::where('role', 'divisi')->value('id');
+        $userId = Auth::id();
 
         $query = Permit::where('user_id', $userId)
                         ->orderByDesc('created_at');

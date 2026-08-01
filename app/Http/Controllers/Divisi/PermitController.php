@@ -36,7 +36,7 @@ class PermitController extends Controller
                 'dokumen'               => 'required|array|min:1',
                 'dokumen.*.nama'        => 'required|string|max:255',
                 'dokumen.*.deskripsi'   => 'nullable|string|max:500',
-                'dokumen.*.file'        => 'required|file|max:10240',
+                'dokumen.*.file'        => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif',
             ]);
         }
 
@@ -68,9 +68,12 @@ class PermitController extends Controller
             'apd'                   => $request->input('apd', []),
             'apd_lainnya'           => $request->apd_lainnya,
             'tanda_tangan'          => $request->input('tanda_tangan'),
-            'status'                => $status,
-            'submitted_at'          => $status === 'Review Staff' ? now() : null,
         ]);
+
+        $permit->forceFill([
+            'status'       => $status,
+            'submitted_at' => $status === 'Review Staff' ? now() : null,
+        ])->save();
 
         // Simpan dokumen pendukung untuk tipe Eksternal
         if ($request->input('tipe') === 'Eksternal' && $request->hasFile('dokumen')) {
@@ -145,7 +148,7 @@ class PermitController extends Controller
                 $request->validate([
                     'dokumen.*.nama'      => 'required|string|max:255',
                     'dokumen.*.deskripsi' => 'nullable|string|max:500',
-                    'dokumen.*.file'      => 'required|file|max:10240',
+                    'dokumen.*.file'      => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif',
                 ]);
             }
         }
@@ -183,9 +186,12 @@ class PermitController extends Controller
             'apd'                   => $request->input('apd', []),
             'apd_lainnya'           => $request->apd_lainnya,
             'tanda_tangan'          => $request->input('tanda_tangan') ?? $permit->tanda_tangan,
-            'status'                => $status,
-            'submitted_at'          => $status === 'Review Staff' ? now() : $permit->submitted_at,
         ]);
+
+        $permit->forceFill([
+            'status'       => $status,
+            'submitted_at' => $status === 'Review Staff' ? now() : $permit->submitted_at,
+        ])->save();
 
         // Simpan dokumen baru untuk tipe Eksternal
         if ($newTipe === 'Eksternal' && $request->hasFile('dokumen')) {

@@ -64,12 +64,12 @@ class CancellationController extends Controller
         ];
 
         // Langsung batalkan permit
-        $permit->update([
+        $permit->forceFill([
             'status' => 'Cancelled',
             'cancelled_at' => now(),
             'cancellation_reason' => $request->cancellation_reason,
             'cancellation_signatures' => $signatures,
-        ]);
+        ])->save();
 
         return redirect('/divisi/history')->with('success', 'Izin kerja berhasil dibatalkan secara langsung.');
     }

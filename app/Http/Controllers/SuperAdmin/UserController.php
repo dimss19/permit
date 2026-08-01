@@ -56,9 +56,10 @@ class UserController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+        ])->forceFill([
             'role' => 'divisi',
             'is_active' => true,
-        ]);
+        ])->save();
 
         return redirect('/superadmin/users')->with('success', 'Akun Divisi berhasil dibuat.');
     }

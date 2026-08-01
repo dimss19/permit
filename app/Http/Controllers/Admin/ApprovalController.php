@@ -108,30 +108,29 @@ class ApprovalController extends Controller
                 'date' => now()->toDateTimeString(),
             ];
 
-            $updateData = [
+            $permit->forceFill([
                 'status' => $config['nextStatus'],
                 'catatan_revisi' => null,
                 'approval_signatures' => $signatures,
-            ];
+            ])->save();
 
-            // Jika Senior Manager approve, berarti permit Active, set tanggal aktif.
             if ($config['nextStatus'] === 'Active') {
                 $message = 'Permit berhasil disetujui dan kini berstatus ACTIVE.';
             } else {
                 $message = 'Permit berhasil disetujui dan diteruskan ke ' . $config['nextRoleName'] . '.';
             }
 
-            $permit->update($updateData);
-            
         } elseif ($action === 'revise') {
             $request->validate([
                 'catatan_revisi' => 'required|string|max:500'
             ]);
-            $permit->update([
+            $permit->forceFill([
                 'status' => 'Revision',
-                'catatan_revisi' => $request->catatan_revisi
-            ]);
+                'catatan_revisi' => $request->catatan_revisi,
+            ])->save();
             $message = 'Permit dikembalikan ke Divisi untuk direvisi.';
+        } else {
+            return redirect('/admin/approvals')->with('error', 'Aksi tidak valid.');
         }
 
         return redirect('/admin/approvals')->with('success', $message);
@@ -139,7 +138,15 @@ class ApprovalController extends Controller
 
     public function downloadDocument($permitId, $documentId)
     {
+        $config = $this->getRoleConfig();
         $permit = Permit::findOrFail($permitId);
+
+        // Hanya izinkan download dari permit yang sedang dalam status review
+        $allowedStatuses = ['Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed'];
+        if (!in_array($permit->status, $allowedStatuses)) {
+            abort(403, 'Permit tidak tersedia untuk diakses.');
+        }
+
         $doc = PermitDocument::where('permit_id', $permit->id)->where('id', $documentId)->firstOrFail();
 
         $path = $doc->file_path;

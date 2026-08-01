@@ -31,14 +31,6 @@ class Permit extends Model
         'apd',
         'apd_lainnya',
         'tanda_tangan',
-        'status',
-        'submitted_at',
-        'closed_at',
-        'catatan_revisi',
-        'cancelled_at',
-        'cancellation_reason',
-        'cancellation_signatures',
-        'approval_signatures',
     ];
 
     protected $casts = [

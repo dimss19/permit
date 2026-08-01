@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\Divisi\DashboardController as DivisiDashboard;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -23,12 +22,9 @@ Route::get('/dashboard', function () {
     return redirect($map[Auth::user()->role] ?? '/');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'prevent-back-history'])->group(function () {
-    
-    // ===== SUPER ADMIN =====
+// ===== SUPER ADMIN (role:superadmin) =====
+Route::middleware(['auth', 'prevent-back-history', 'role:superadmin'])->group(function () {
     Route::get('/superadmin/dashboard', [\App\Http\Controllers\SuperAdmin\DashboardController::class, 'index']);
-    
-    // Kelola Divisi
     Route::resource('/superadmin/divisions', \App\Http\Controllers\SuperAdmin\DivisionController::class)->except(['show']);
     Route::get('/superadmin/users', [\App\Http\Controllers\SuperAdmin\UserController::class, 'index']);
     Route::get('/superadmin/users/create', [\App\Http\Controllers\SuperAdmin\UserController::class, 'create']);
@@ -38,15 +34,14 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::delete('/superadmin/users/{id}', [\App\Http\Controllers\SuperAdmin\UserController::class, 'destroy']);
     Route::patch('/superadmin/users/{id}/status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'updateStatus']);
     Route::patch('/superadmin/users/{id}/reset-password', [\App\Http\Controllers\SuperAdmin\UserController::class, 'resetPassword']);
+});
 
-    // ===== DIVISI (Pekerja / Pemohon) =====
+// ===== DIVISI (role:divisi) =====
+Route::middleware(['auth', 'prevent-back-history', 'role:divisi'])->group(function () {
     Route::get('/divisi/dashboard', [\App\Http\Controllers\Divisi\DashboardController::class, 'index']);
-    
-    // Fitur Pembatalan Permit
     Route::get('/divisi/cancellations', [\App\Http\Controllers\Divisi\CancellationController::class, 'index']);
     Route::get('/divisi/cancellations/{id}', [\App\Http\Controllers\Divisi\CancellationController::class, 'show']);
     Route::post('/divisi/cancellations/{id}', [\App\Http\Controllers\Divisi\CancellationController::class, 'cancel']);
-
     Route::get('/divisi/history', [\App\Http\Controllers\Divisi\HistoryController::class, 'index']);
     Route::get('/divisi/permits/create', [\App\Http\Controllers\Divisi\PermitController::class, 'create']);
     Route::post('/divisi/permits', [\App\Http\Controllers\Divisi\PermitController::class, 'store']);
@@ -55,15 +50,16 @@ Route::middleware(['auth', 'prevent-back-history'])->group(function () {
     Route::get('/divisi/permits/{id}/edit', [\App\Http\Controllers\Divisi\PermitController::class, 'edit']);
     Route::put('/divisi/permits/{id}', [\App\Http\Controllers\Divisi\PermitController::class, 'update']);
     Route::get('/divisi/permits/{permitId}/documents/{documentId}/download', [\App\Http\Controllers\Divisi\PermitController::class, 'downloadDocument'])->name('permits.documents.download');
+});
 
-    // ===== ADMIN (Staff, Manager, Senior Manager) =====
+// ===== ADMIN (role:staff, manager, senior-manager) =====
+Route::middleware(['auth', 'prevent-back-history', 'role:staff,manager,senior-manager'])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
     Route::get('/admin/approvals', [\App\Http\Controllers\Admin\ApprovalController::class, 'index']);
     Route::get('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'show']);
     Route::put('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'update']);
     Route::get('/admin/approvals/{permitId}/documents/{documentId}/download', [\App\Http\Controllers\Admin\ApprovalController::class, 'downloadDocument'])->name('admin.permits.documents.download');
     Route::get('/admin/history', [\App\Http\Controllers\Admin\HistoryController::class, 'index']);
-
 });
 
 Route::middleware('auth')->group(function () {
