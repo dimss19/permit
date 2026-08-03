@@ -8,8 +8,8 @@
                 $steps = [
                     0 => 'Tipe Permit',
                     1 => 'Dokumen',
-                    2 => 'Klasifikasi',
-                    3 => 'Bahaya & Penceg.',
+                    2 => 'Klasifikasi & Info',
+                    3 => 'Bahaya & Pencegahan',
                     4 => 'APD',
                     5 => 'Validasi Kerja',
                     6 => 'Review & Submit',
@@ -23,7 +23,7 @@
                             id="step-circle-{{ $num }}">
                             {{ $num }}
                         </div>
-                        <span class="text-xs mt-1 font-medium text-center leading-tight
+                        <span class="text-xs mt-1 font-medium text-center leading-tight whitespace-nowrap
                             {{ $num === 0 ? 'text-inka-navy' : 'text-gray-400' }}"
                             id="step-label-{{ $num }}">
                             {{ $label }}
