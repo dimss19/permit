@@ -199,14 +199,6 @@ class PermitController extends Controller
             'tanda_tangan'          => $request->input('tanda_tangan') ?? $permit->tanda_tangan,
         ]);
 
-        // Validasi minimal 1 dokumen untuk tipe Eksternal (setelah hapus & tambah dokumen)
-        if ($request->input('tipe') === 'Eksternal') {
-            $finalCount = $permit->documents()->count();
-            if ($finalCount === 0) {
-                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
-            }
-        }
-
         // Simpan dokumen baru untuk tipe Eksternal
         if ($newTipe === 'Eksternal') {
             $dokumenInput = $request->input('dokumen', []);
@@ -229,6 +221,14 @@ class PermitController extends Controller
                     'file_type'    => $ext,
                     'file_size'    => $file->getSize(),
                 ]);
+            }
+        }
+
+        // Validasi minimal 1 dokumen untuk tipe Eksternal (setelah hapus & tambah dokumen)
+        if ($request->input('tipe') === 'Eksternal') {
+            $finalCount = $permit->documents()->count();
+            if ($finalCount === 0) {
+                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
             }
         }
 
