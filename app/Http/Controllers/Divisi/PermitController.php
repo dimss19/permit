@@ -142,12 +142,7 @@ class PermitController extends Controller
 
         // Validasi dokumen untuk tipe Eksternal
         if ($request->input('tipe') === 'Eksternal') {
-            $existingCount = $permit->documents()->count();
             $hasNewDocs = !empty($request->file('dokumen'));
-
-            if ($existingCount === 0 && !$hasNewDocs) {
-                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
-            }
 
             if ($hasNewDocs) {
                 $request->validate([
@@ -231,6 +226,13 @@ class PermitController extends Controller
                     Storage::disk('local')->delete($doc->file_path);
                     $doc->delete();
                 }
+            }
+        }
+
+        if ($request->input('tipe') === 'Eksternal') {
+            $finalCount = $permit->documents()->count();
+            if ($finalCount === 0) {
+                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
             }
         }
 
