@@ -89,7 +89,7 @@
         .flow-line {
             position: absolute; top: 24px; left: 9%; right: 9%; height: 2px;
             background: repeating-linear-gradient(90deg, var(--border) 0 8px, transparent 8px 14px);
-            z-index: 0;
+            z-index: 0; 
         }
 
         .flow-step { text-align: center; }

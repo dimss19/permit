@@ -320,7 +320,7 @@
                     </tr>
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM QM & SHE</div>
+                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM GA</div>
                             <div class="text-center" style="padding: 2px;">{{ $sm }}</div>
                         </td>
                         <td class="text-center" style="border: none; height: 35px; vertical-align: middle;">
@@ -366,7 +366,7 @@
                     </tr>
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM QM & SHE</div>
+                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM GA</div>
                             <div class="text-center" style="padding: 2px;">{{ $csm }}</div>
                         </td>
                         <td class="text-center" style="border: none; height: 35px; vertical-align: middle;">
