@@ -291,11 +291,11 @@
                     </tr>
                     @php
                         $sigs = is_string($permit->approval_signatures) ? json_decode($permit->approval_signatures, true) : ($permit->approval_signatures ?? []);
-                        $pemohon = $permit->penanggung_jawab; $pemohon_sig = '';
+                        $pemohon = $permit->penanggung_jawab;
+                        $pemohon_sig = $permit->tanda_tangan ?? '';
                         $so = ''; $so_sig = '';
                         $sm = ''; $sm_sig = '';
                         foreach($sigs as $s) {
-                            if($s['role'] == 'Divisi' || $s['role'] == 'Pemohon') { $pemohon = $s['name']; $pemohon_sig = $s['signature']; }
                             if($s['role'] == 'Staff' || $s['role'] == 'Safety Officer') { $so = $s['name']; $so_sig = $s['signature']; }
                             if($s['role'] == 'Manager' || $s['role'] == 'Senior Manager' || str_contains($s['role'], 'QM & SHE')) { $sm = $s['name']; $sm_sig = $s['signature']; }
                         }
