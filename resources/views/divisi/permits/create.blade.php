@@ -17,7 +17,7 @@
             @endphp
             @foreach($steps as $num => $label)
                 <div class="flex items-center {{ $num < 6 ? 'flex-1' : '' }}">
-                    <div class="flex flex-col items-center">
+                    <div class="w-24 flex flex-col items-center">
                         <div class="step-circle w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold border-2 transition-all duration-200
                             {{ $num === 0 ? 'bg-inka-navy text-white border-inka-navy' : 'bg-white text-gray-400 border-gray-200' }}"
                             id="step-circle-{{ $num }}">
