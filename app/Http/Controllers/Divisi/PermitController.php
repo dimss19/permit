@@ -178,13 +178,6 @@ class PermitController extends Controller
             }
         }
 
-        if ($request->input('tipe') === 'Eksternal') {
-            $finalCount = $permit->documents()->count();
-            if ($finalCount === 0) {
-                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
-            }
-        }
-
         $permit->update([
             'tipe'                  => $newTipe,
             'nama_pekerjaan'        => $request->nama_pekerjaan,
@@ -206,10 +199,13 @@ class PermitController extends Controller
             'tanda_tangan'          => $request->input('tanda_tangan') ?? $permit->tanda_tangan,
         ]);
 
-        $permit->forceFill([
-            'status'       => $status,
-            'submitted_at' => $status === 'Review Staff' ? now() : $permit->submitted_at,
-        ])->save();
+        // Validasi minimal 1 dokumen untuk tipe Eksternal (setelah hapus & tambah dokumen)
+        if ($request->input('tipe') === 'Eksternal') {
+            $finalCount = $permit->documents()->count();
+            if ($finalCount === 0) {
+                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
+            }
+        }
 
         // Simpan dokumen baru untuk tipe Eksternal
         if ($newTipe === 'Eksternal') {
@@ -235,6 +231,11 @@ class PermitController extends Controller
                 ]);
             }
         }
+
+        $permit->forceFill([
+            'status'       => $status,
+            'submitted_at' => $status === 'Review Staff' ? now() : $permit->submitted_at,
+        ])->save();
 
         $message = $status === 'Draft'
             ? 'Perubahan permit berhasil disimpan sebagai Draft.'
