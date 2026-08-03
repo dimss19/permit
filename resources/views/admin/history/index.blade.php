@@ -48,6 +48,7 @@
                             <th class="px-6 py-3 font-semibold">Status</th>
                             <th class="px-6 py-3 font-semibold">Tanggal Submit</th>
                             <th class="px-6 py-3 font-semibold text-right">Aksi</th>
+                            <th class="px-6 py-3 font-semibold text-right">PDF</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
@@ -74,6 +75,10 @@
                             <td class="px-6 py-3.5 text-gray-400 text-xs">{{ $permit->submitted_at ? $permit->submitted_at->format('d/m/Y') : '—' }}</td>
                             <td class="px-6 py-3.5 text-right">
                                 <a href="/admin/approvals/{{ $permit->id }}" class="inline-block px-3 py-1.5 border border-gray-200 text-gray-600 text-[11px] font-bold rounded-lg hover:border-inka-navy hover:text-inka-navy transition-colors ml-1">Detail</a>
+                            </td>
+                            <td class="px-6 py-3.5 text-right">
+                                <a href="/admin/permits/{{ $permit->id }}/pdf" target="_blank"
+                                   class="inline-block px-3 py-1.5 border border-red-200 text-red-600 text-[11px] font-bold rounded-lg hover:border-red-400 hover:text-red-700 transition-colors">PDF</a>
                             </td>
                         </tr>
                         @endforeach

@@ -34,6 +34,7 @@ Route::middleware(['auth', 'prevent-back-history', 'role:superadmin'])->group(fu
     Route::delete('/superadmin/users/{id}', [\App\Http\Controllers\SuperAdmin\UserController::class, 'destroy']);
     Route::patch('/superadmin/users/{id}/status', [\App\Http\Controllers\SuperAdmin\UserController::class, 'updateStatus']);
     Route::patch('/superadmin/users/{id}/reset-password', [\App\Http\Controllers\SuperAdmin\UserController::class, 'resetPassword']);
+    Route::get('/superadmin/permits/{id}/pdf', [\App\Http\Controllers\SuperAdmin\PermitController::class, 'downloadPdf']);
 });
 
 // ===== DIVISI (role:divisi) =====
@@ -60,6 +61,7 @@ Route::middleware(['auth', 'prevent-back-history', 'role:staff,manager,senior-ma
     Route::put('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'update']);
     Route::get('/admin/approvals/{permitId}/documents/{documentId}/download', [\App\Http\Controllers\Admin\ApprovalController::class, 'downloadDocument'])->name('admin.permits.documents.download');
     Route::get('/admin/history', [\App\Http\Controllers\Admin\HistoryController::class, 'index']);
+    Route::get('/admin/permits/{id}/pdf', [\App\Http\Controllers\Admin\ApprovalController::class, 'downloadPdf']);
 });
 
 Route::middleware('auth')->group(function () {

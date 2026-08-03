@@ -33,7 +33,6 @@ class PermitShowController extends Controller
             ->setPaper('A4', 'portrait')
             ->setOptions(['defaultFont' => 'sans-serif']);
 
-        // Menampilkan di browser atau unduh
-        return $pdf->stream('Permit-' . str_replace('/', '-', $permit->no_permit) . '.pdf');
+        return $pdf->download('Permit-' . str_replace('/', '-', $permit->no_permit) . '.pdf');
     }
 }

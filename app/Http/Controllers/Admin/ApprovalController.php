@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permit;
 use App\Models\PermitDocument;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -134,6 +135,17 @@ class ApprovalController extends Controller
         }
 
         return redirect('/admin/approvals')->with('success', $message);
+    }
+
+    public function downloadPdf($id)
+    {
+        $permit = Permit::findOrFail($id);
+
+        $pdf = Pdf::loadView('divisi.permits.pdf', compact('permit'))
+            ->setPaper('A4', 'portrait')
+            ->setOptions(['defaultFont' => 'sans-serif']);
+
+        return $pdf->download('Permit-' . str_replace('/', '-', $permit->no_permit) . '.pdf');
     }
 
     public function downloadDocument($permitId, $documentId)
