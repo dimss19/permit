@@ -76,16 +76,22 @@ class PermitController extends Controller
         ])->save();
 
         // Simpan dokumen pendukung untuk tipe Eksternal
-        if ($request->input('tipe') === 'Eksternal' && $request->hasFile('dokumen')) {
-            foreach ($request->file('dokumen') as $doc) {
-                $file = $doc['file'];
+        if ($request->input('tipe') === 'Eksternal') {
+            $dokumenInput = $request->input('dokumen', []);
+            $dokumenFiles = $request->file('dokumen', []);
+
+            foreach ($dokumenInput as $i => $doc) {
+                if (!isset($dokumenFiles[$i]['file'])) {
+                    continue;
+                }
+                $file = $dokumenFiles[$i]['file'];
                 $ext = $file->getClientOriginalExtension();
                 $filename = time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
                 $path = $file->storeAs('permits/' . $permit->id, $filename);
 
                 PermitDocument::create([
                     'permit_id'    => $permit->id,
-                    'nama_dokumen' => $doc['nama'],
+                    'nama_dokumen' => $doc['nama'] ?? 'Dokumen',
                     'deskripsi'    => $doc['deskripsi'] ?? null,
                     'file_path'    => $path,
                     'file_type'    => $ext,
@@ -137,8 +143,7 @@ class PermitController extends Controller
         // Validasi dokumen untuk tipe Eksternal
         if ($request->input('tipe') === 'Eksternal') {
             $existingCount = $permit->documents()->count();
-            $newDocs = $request->input('dokumen', []);
-            $hasNewDocs = $request->hasFile('dokumen');
+            $hasNewDocs = !empty($request->file('dokumen'));
 
             if ($existingCount === 0 && !$hasNewDocs) {
                 return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
@@ -194,16 +199,22 @@ class PermitController extends Controller
         ])->save();
 
         // Simpan dokumen baru untuk tipe Eksternal
-        if ($newTipe === 'Eksternal' && $request->hasFile('dokumen')) {
-            foreach ($request->file('dokumen') as $doc) {
-                $file = $doc['file'];
+        if ($newTipe === 'Eksternal') {
+            $dokumenInput = $request->input('dokumen', []);
+            $dokumenFiles = $request->file('dokumen', []);
+
+            foreach ($dokumenInput as $i => $doc) {
+                if (!isset($dokumenFiles[$i]['file'])) {
+                    continue;
+                }
+                $file = $dokumenFiles[$i]['file'];
                 $ext = $file->getClientOriginalExtension();
                 $filename = time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
                 $path = $file->storeAs('permits/' . $permit->id, $filename);
 
                 PermitDocument::create([
                     'permit_id'    => $permit->id,
-                    'nama_dokumen' => $doc['nama'],
+                    'nama_dokumen' => $doc['nama'] ?? 'Dokumen',
                     'deskripsi'    => $doc['deskripsi'] ?? null,
                     'file_path'    => $path,
                     'file_type'    => $ext,
