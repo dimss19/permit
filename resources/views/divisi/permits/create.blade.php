@@ -8,8 +8,8 @@
                 $steps = [
                     0 => 'Tipe Permit',
                     1 => 'Dokumen',
-                    2 => 'Klasifikasi & Info',
-                    3 => 'Bahaya & Pencegahan',
+                    2 => 'Klasifikasi',
+                    3 => 'Bahaya & Penceg.',
                     4 => 'APD',
                     5 => 'Validasi Kerja',
                     6 => 'Review & Submit',
