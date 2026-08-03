@@ -167,6 +167,24 @@ class PermitController extends Controller
             $permit->documents()->delete();
         }
 
+        // Handle hapus dokumen individual
+        if ($request->has('hapus_dokumen')) {
+            foreach ($request->input('hapus_dokumen') as $docId) {
+                $doc = PermitDocument::where('permit_id', $permit->id)->find($docId);
+                if ($doc) {
+                    Storage::disk('local')->delete($doc->file_path);
+                    $doc->delete();
+                }
+            }
+        }
+
+        if ($request->input('tipe') === 'Eksternal') {
+            $finalCount = $permit->documents()->count();
+            if ($finalCount === 0) {
+                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
+            }
+        }
+
         $permit->update([
             'tipe'                  => $newTipe,
             'nama_pekerjaan'        => $request->nama_pekerjaan,
@@ -215,24 +233,6 @@ class PermitController extends Controller
                     'file_type'    => $ext,
                     'file_size'    => $file->getSize(),
                 ]);
-            }
-        }
-
-        // Handle hapus dokumen individual
-        if ($request->has('hapus_dokumen')) {
-            foreach ($request->input('hapus_dokumen') as $docId) {
-                $doc = PermitDocument::where('permit_id', $permit->id)->find($docId);
-                if ($doc) {
-                    Storage::disk('local')->delete($doc->file_path);
-                    $doc->delete();
-                }
-            }
-        }
-
-        if ($request->input('tipe') === 'Eksternal') {
-            $finalCount = $permit->documents()->count();
-            if ($finalCount === 0) {
-                return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
             }
         }
 
