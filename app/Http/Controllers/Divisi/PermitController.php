@@ -40,6 +40,16 @@ class PermitController extends Controller
             ]);
         }
 
+        // Idempotency check: prevent duplicate submissions
+        $idempotencyKey = $request->input('idempotency_key');
+        if ($idempotencyKey) {
+            $sessionKey = 'permit_idempotency_' . $idempotencyKey;
+            if (session()->has($sessionKey)) {
+                return back()->withErrors(['idempotency' => 'Permintaan duplikat terdeteksi. Permit sudah diproses.'])->withInput();
+            }
+            session()->put($sessionKey, true);
+        }
+
         $user = Auth::user();
 
         // Auto-generate nomor permit
@@ -151,6 +161,16 @@ class PermitController extends Controller
                     'dokumen.*.file'      => 'required|file|max:10240|mimes:pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif',
                 ]);
             }
+        }
+
+        // Idempotency check: prevent duplicate submissions
+        $idempotencyKey = $request->input('idempotency_key');
+        if ($idempotencyKey) {
+            $sessionKey = 'permit_idempotency_' . $idempotencyKey;
+            if (session()->has($sessionKey)) {
+                return back()->withErrors(['idempotency' => 'Permintaan duplikat terdeteksi. Permit sudah diproses.'])->withInput();
+            }
+            session()->put($sessionKey, true);
         }
 
         $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
