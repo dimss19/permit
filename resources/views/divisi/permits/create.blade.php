@@ -780,20 +780,56 @@
     </script>
 
     <script>
-        // Double-submit prevention
-        document.getElementById('permit-form').addEventListener('submit', function (e) {
+        // Track clicked action and prevent double-submit
+        (function () {
+            let activeAction = 'draft';
+
             const draftBtn = document.getElementById('btn-draft');
             const submitBtn = document.getElementById('btn-submit');
-            if (draftBtn.disabled || submitBtn.disabled) {
-                e.preventDefault();
-                return false;
+
+            if (draftBtn) {
+                draftBtn.addEventListener('click', function () { activeAction = 'draft'; });
             }
-            draftBtn.disabled = true;
-            submitBtn.disabled = true;
-            draftBtn.querySelector('.btn-text').classList.add('hidden');
-            draftBtn.querySelector('.btn-loading').classList.remove('hidden');
-            submitBtn.querySelector('.btn-text').classList.add('hidden');
-            submitBtn.querySelector('.btn-loading').classList.remove('hidden');
-        });
+            if (submitBtn) {
+                submitBtn.addEventListener('click', function () { activeAction = 'submit'; });
+            }
+
+            const form = document.getElementById('permit-form');
+            if (form) {
+                form.addEventListener('submit', function (e) {
+                    if (form.dataset.submitting === 'true') {
+                        e.preventDefault();
+                        return false;
+                    }
+                    form.dataset.submitting = 'true';
+
+                    // Ensure action hidden input exists and receives the intended action value
+                    let actionInput = form.querySelector('input[name="action"]');
+                    if (!actionInput) {
+                        actionInput = document.createElement('input');
+                        actionInput.type = 'hidden';
+                        actionInput.name = 'action';
+                        form.appendChild(actionInput);
+                    }
+
+                    if (e.submitter && e.submitter.name === 'action' && e.submitter.value) {
+                        actionInput.value = e.submitter.value;
+                    } else {
+                        actionInput.value = activeAction;
+                    }
+
+                    if (draftBtn) {
+                        draftBtn.disabled = true;
+                        draftBtn.querySelector('.btn-text')?.classList.add('hidden');
+                        draftBtn.querySelector('.btn-loading')?.classList.remove('hidden');
+                    }
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        submitBtn.querySelector('.btn-text')?.classList.add('hidden');
+                        submitBtn.querySelector('.btn-loading')?.classList.remove('hidden');
+                    }
+                });
+            }
+        })();
     </script>
 </x-app-layout>

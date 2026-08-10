@@ -388,22 +388,28 @@
             };
 
             document.getElementById('btn-approve').addEventListener('click', function(e) {
+                if (form.dataset.submitting === 'true') return;
                 if (!hasDrawn) {
                     document.getElementById('signature-error').classList.remove('hidden');
                     return;
                 }
-                e.target.disabled = true;
+                form.dataset.submitting = 'true';
+                document.getElementById('btn-approve').disabled = true;
+                document.getElementById('btn-revise').disabled = true;
                 document.getElementById('action-input').value = 'approve';
                 form.submit();
             });
             
             document.getElementById('btn-revise').addEventListener('click', function(e) {
+                if (form.dataset.submitting === 'true') return;
                 const catatan = document.getElementById('catatan_revisi').value;
                 if (!catatan.trim()) {
                     alert('Harap isi catatan revisi sebelum mengembalikan ke Divisi.');
                     return;
                 }
-                e.target.disabled = true;
+                form.dataset.submitting = 'true';
+                document.getElementById('btn-approve').disabled = true;
+                document.getElementById('btn-revise').disabled = true;
                 document.getElementById('action-input').value = 'revise';
                 form.submit();
             });

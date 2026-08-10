@@ -12,8 +12,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // 1. Update ENUM 'status' to include 'Cancelled'
-        DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed', 'Cancelled') DEFAULT 'Draft'");
+        // 1. Update ENUM 'status' to include 'Cancelled' (MySQL only, SQLite ignores enums)
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed', 'Cancelled') DEFAULT 'Draft'");
+        }
 
         // 2. Add 'approval_signatures' column
         Schema::table('permits', function (Blueprint $table) {
@@ -30,8 +32,8 @@ return new class extends Migration
             $table->dropColumn('approval_signatures');
         });
 
-        // Note: reverting ENUM in MySQL might fail if there are 'Cancelled' records.
-        // It's safer to leave the ENUM as is on rollback or manually handle it.
-        DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed') DEFAULT 'Draft'");
+        if (DB::getDriverName() === 'mysql') {
+            DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed') DEFAULT 'Draft'");
+        }
     }
 };

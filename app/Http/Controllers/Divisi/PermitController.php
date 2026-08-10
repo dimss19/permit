@@ -7,6 +7,7 @@ use App\Models\Permit;
 use App\Models\PermitDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 class PermitController extends Controller
@@ -45,70 +46,73 @@ class PermitController extends Controller
         if ($idempotencyKey) {
             $sessionKey = 'permit_idempotency_' . $idempotencyKey;
             if (session()->has($sessionKey)) {
-                return back()->withErrors(['idempotency' => 'Permintaan duplikat terdeteksi. Permit sudah diproses.'])->withInput();
+                return redirect('/divisi/dashboard')->with('info', 'Permit sudah berhasil diajukan / diproses.');
             }
             session()->put($sessionKey, true);
         }
 
         $user = Auth::user();
-
-        // Auto-generate nomor permit
-        $noPermit = 'WP-' . date('Y') . '-' . strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
-
         $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
 
-        $permit = Permit::create([
-            'no_permit'             => $noPermit,
-            'user_id'               => $user->id,
-            'tipe'                  => $request->input('tipe', 'Internal'),
-            'nama_pekerjaan'        => $request->nama_pekerjaan,
-            'kontraktor'            => $request->kontraktor,
-            'lokasi'                => $request->lokasi,
-            'penanggung_jawab'      => $request->penanggung_jawab,
-            'telepon'               => $request->telepon,
-            'tanggal_mulai'         => $request->tanggal_mulai,
-            'tanggal_selesai'       => $request->tanggal_selesai,
-            'klasifikasi_pekerjaan' => $request->input('klasifikasi_pekerjaan', []),
-            'daftar_pekerja'        => $request->input('daftar_pekerja', []),
-            'peralatan_kerja'       => $request->input('peralatan_kerja', []),
-            'bahaya_pekerjaan'      => $request->input('bahaya_pekerjaan', []),
-            'bahaya_lainnya'        => $request->bahaya_lainnya,
-            'tindakan_pencegahan'   => $request->input('tindakan_pencegahan', []),
-            'pencegahan_lainnya'    => $request->pencegahan_lainnya,
-            'apd'                   => $request->input('apd', []),
-            'apd_lainnya'           => $request->apd_lainnya,
-            'tanda_tangan'          => $request->input('tanda_tangan'),
-        ]);
+        $permit = DB::transaction(function () use ($request, $user, $status) {
+            // Auto-generate nomor permit
+            $noPermit = 'WP-' . date('Y') . '-' . strtoupper(substr(bin2hex(random_bytes(4)), 0, 8));
 
-        $permit->forceFill([
-            'status'       => $status,
-            'submitted_at' => $status === 'Review Staff' ? now() : null,
-        ])->save();
+            $permit = Permit::create([
+                'no_permit'             => $noPermit,
+                'user_id'               => $user->id,
+                'tipe'                  => $request->input('tipe', 'Internal'),
+                'nama_pekerjaan'        => $request->nama_pekerjaan,
+                'kontraktor'            => $request->kontraktor,
+                'lokasi'                => $request->lokasi,
+                'penanggung_jawab'      => $request->penanggung_jawab,
+                'telepon'               => $request->telepon,
+                'tanggal_mulai'         => $request->tanggal_mulai,
+                'tanggal_selesai'       => $request->tanggal_selesai,
+                'klasifikasi_pekerjaan' => $request->input('klasifikasi_pekerjaan', []),
+                'daftar_pekerja'        => $request->input('daftar_pekerja', []),
+                'peralatan_kerja'       => $request->input('peralatan_kerja', []),
+                'bahaya_pekerjaan'      => $request->input('bahaya_pekerjaan', []),
+                'bahaya_lainnya'        => $request->bahaya_lainnya,
+                'tindakan_pencegahan'   => $request->input('tindakan_pencegahan', []),
+                'pencegahan_lainnya'    => $request->pencegahan_lainnya,
+                'apd'                   => $request->input('apd', []),
+                'apd_lainnya'           => $request->apd_lainnya,
+                'tanda_tangan'          => $request->input('tanda_tangan'),
+            ]);
 
-        // Simpan dokumen pendukung untuk tipe Eksternal
-        if ($request->input('tipe') === 'Eksternal') {
-            $dokumenInput = $request->input('dokumen', []);
-            $dokumenFiles = $request->file('dokumen', []);
+            $permit->forceFill([
+                'status'       => $status,
+                'submitted_at' => $status === 'Review Staff' ? now() : null,
+            ])->save();
 
-            foreach ($dokumenInput as $i => $doc) {
-                if (!isset($dokumenFiles[$i]['file'])) {
-                    continue;
+            // Simpan dokumen pendukung untuk tipe Eksternal
+            if ($request->input('tipe') === 'Eksternal') {
+                $dokumenInput = $request->input('dokumen', []);
+                $dokumenFiles = $request->file('dokumen', []);
+
+                foreach ($dokumenInput as $i => $doc) {
+                    if (!isset($dokumenFiles[$i]['file'])) {
+                        continue;
+                    }
+                    $file = $dokumenFiles[$i]['file'];
+                    $ext = $file->getClientOriginalExtension();
+                    $filename = time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
+                    $path = $file->storeAs('permits/' . $permit->id, $filename);
+
+                    PermitDocument::create([
+                        'permit_id'    => $permit->id,
+                        'nama_dokumen' => $doc['nama'] ?? 'Dokumen',
+                        'deskripsi'    => $doc['deskripsi'] ?? null,
+                        'file_path'    => $path,
+                        'file_type'    => $ext,
+                        'file_size'    => $file->getSize(),
+                    ]);
                 }
-                $file = $dokumenFiles[$i]['file'];
-                $ext = $file->getClientOriginalExtension();
-                $filename = time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
-                $path = $file->storeAs('permits/' . $permit->id, $filename);
-
-                PermitDocument::create([
-                    'permit_id'    => $permit->id,
-                    'nama_dokumen' => $doc['nama'] ?? 'Dokumen',
-                    'deskripsi'    => $doc['deskripsi'] ?? null,
-                    'file_path'    => $path,
-                    'file_type'    => $ext,
-                    'file_size'    => $file->getSize(),
-                ]);
             }
-        }
+
+            return $permit;
+        });
 
         $message = $status === 'Draft'
             ? 'Permit berhasil disimpan sebagai Draft.'
@@ -168,81 +172,88 @@ class PermitController extends Controller
         if ($idempotencyKey) {
             $sessionKey = 'permit_idempotency_' . $idempotencyKey;
             if (session()->has($sessionKey)) {
-                return back()->withErrors(['idempotency' => 'Permintaan duplikat terdeteksi. Permit sudah diproses.'])->withInput();
+                return redirect('/divisi/dashboard')->with('info', 'Permit sudah berhasil diajukan / diproses.');
             }
             session()->put($sessionKey, true);
         }
 
         $status = $request->input('action') === 'submit' ? 'Review Staff' : 'Draft';
 
-        // Handle perubahan tipe
-        $oldTipe = $permit->tipe;
-        $newTipe = $request->input('tipe');
+        DB::transaction(function () use ($request, $permit, $status) {
+            // Handle perubahan tipe
+            $oldTipe = $permit->tipe;
+            $newTipe = $request->input('tipe');
 
-        // Jika tipe berubah dari Eksternal ke Internal, hapus semua dokumen
-        if ($oldTipe === 'Eksternal' && $newTipe === 'Internal') {
-            foreach ($permit->documents as $doc) {
-                Storage::disk('local')->delete($doc->file_path);
-            }
-            $permit->documents()->delete();
-        }
-
-        // Handle hapus dokumen individual
-        if ($request->has('hapus_dokumen')) {
-            foreach ($request->input('hapus_dokumen') as $docId) {
-                $doc = PermitDocument::where('permit_id', $permit->id)->find($docId);
-                if ($doc) {
+            // Jika tipe berubah dari Eksternal ke Internal, hapus semua dokumen
+            if ($oldTipe === 'Eksternal' && $newTipe === 'Internal') {
+                foreach ($permit->documents as $doc) {
                     Storage::disk('local')->delete($doc->file_path);
-                    $doc->delete();
+                }
+                $permit->documents()->delete();
+            }
+
+            // Handle hapus dokumen individual
+            if ($request->has('hapus_dokumen')) {
+                foreach ($request->input('hapus_dokumen') as $docId) {
+                    $doc = PermitDocument::where('permit_id', $permit->id)->find($docId);
+                    if ($doc) {
+                        Storage::disk('local')->delete($doc->file_path);
+                        $doc->delete();
+                    }
                 }
             }
-        }
 
-        $permit->update([
-            'tipe'                  => $newTipe,
-            'nama_pekerjaan'        => $request->nama_pekerjaan,
-            'kontraktor'            => $request->kontraktor,
-            'lokasi'                => $request->lokasi,
-            'penanggung_jawab'      => $request->penanggung_jawab,
-            'telepon'               => $request->telepon,
-            'tanggal_mulai'         => $request->tanggal_mulai,
-            'tanggal_selesai'       => $request->tanggal_selesai,
-            'klasifikasi_pekerjaan' => $request->input('klasifikasi_pekerjaan', []),
-            'daftar_pekerja'        => $request->input('daftar_pekerja', []),
-            'peralatan_kerja'       => $request->input('peralatan_kerja', []),
-            'bahaya_pekerjaan'      => $request->input('bahaya_pekerjaan', []),
-            'bahaya_lainnya'        => $request->bahaya_lainnya,
-            'tindakan_pencegahan'   => $request->input('tindakan_pencegahan', []),
-            'pencegahan_lainnya'    => $request->pencegahan_lainnya,
-            'apd'                   => $request->input('apd', []),
-            'apd_lainnya'           => $request->apd_lainnya,
-            'tanda_tangan'          => $request->input('tanda_tangan') ?? $permit->tanda_tangan,
-        ]);
+            $permit->update([
+                'tipe'                  => $newTipe,
+                'nama_pekerjaan'        => $request->nama_pekerjaan,
+                'kontraktor'            => $request->kontraktor,
+                'lokasi'                => $request->lokasi,
+                'penanggung_jawab'      => $request->penanggung_jawab,
+                'telepon'               => $request->telepon,
+                'tanggal_mulai'         => $request->tanggal_mulai,
+                'tanggal_selesai'       => $request->tanggal_selesai,
+                'klasifikasi_pekerjaan' => $request->input('klasifikasi_pekerjaan', []),
+                'daftar_pekerja'        => $request->input('daftar_pekerja', []),
+                'peralatan_kerja'       => $request->input('peralatan_kerja', []),
+                'bahaya_pekerjaan'      => $request->input('bahaya_pekerjaan', []),
+                'bahaya_lainnya'        => $request->bahaya_lainnya,
+                'tindakan_pencegahan'   => $request->input('tindakan_pencegahan', []),
+                'pencegahan_lainnya'    => $request->pencegahan_lainnya,
+                'apd'                   => $request->input('apd', []),
+                'apd_lainnya'           => $request->apd_lainnya,
+                'tanda_tangan'          => $request->input('tanda_tangan') ?? $permit->tanda_tangan,
+            ]);
 
-        // Simpan dokumen baru untuk tipe Eksternal
-        if ($newTipe === 'Eksternal') {
-            $dokumenInput = $request->input('dokumen', []);
-            $dokumenFiles = $request->file('dokumen', []);
+            // Simpan dokumen baru untuk tipe Eksternal
+            if ($newTipe === 'Eksternal') {
+                $dokumenInput = $request->input('dokumen', []);
+                $dokumenFiles = $request->file('dokumen', []);
 
-            foreach ($dokumenInput as $i => $doc) {
-                if (!isset($dokumenFiles[$i]['file'])) {
-                    continue;
+                foreach ($dokumenInput as $i => $doc) {
+                    if (!isset($dokumenFiles[$i]['file'])) {
+                        continue;
+                    }
+                    $file = $dokumenFiles[$i]['file'];
+                    $ext = $file->getClientOriginalExtension();
+                    $filename = time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
+                    $path = $file->storeAs('permits/' . $permit->id, $filename);
+
+                    PermitDocument::create([
+                        'permit_id'    => $permit->id,
+                        'nama_dokumen' => $doc['nama'] ?? 'Dokumen',
+                        'deskripsi'    => $doc['deskripsi'] ?? null,
+                        'file_path'    => $path,
+                        'file_type'    => $ext,
+                        'file_size'    => $file->getSize(),
+                    ]);
                 }
-                $file = $dokumenFiles[$i]['file'];
-                $ext = $file->getClientOriginalExtension();
-                $filename = time() . '-' . bin2hex(random_bytes(4)) . '.' . $ext;
-                $path = $file->storeAs('permits/' . $permit->id, $filename);
-
-                PermitDocument::create([
-                    'permit_id'    => $permit->id,
-                    'nama_dokumen' => $doc['nama'] ?? 'Dokumen',
-                    'deskripsi'    => $doc['deskripsi'] ?? null,
-                    'file_path'    => $path,
-                    'file_type'    => $ext,
-                    'file_size'    => $file->getSize(),
-                ]);
             }
-        }
+
+            $permit->forceFill([
+                'status'       => $status,
+                'submitted_at' => $status === 'Review Staff' ? now() : $permit->submitted_at,
+            ])->save();
+        });
 
         // Validasi minimal 1 dokumen untuk tipe Eksternal (setelah hapus & tambah dokumen)
         if ($request->input('tipe') === 'Eksternal') {
@@ -251,11 +262,6 @@ class PermitController extends Controller
                 return back()->withErrors(['tipe' => 'Minimal upload 1 dokumen pendukung untuk permit eksternal.']);
             }
         }
-
-        $permit->forceFill([
-            'status'       => $status,
-            'submitted_at' => $status === 'Review Staff' ? now() : $permit->submitted_at,
-        ])->save();
 
         $message = $status === 'Draft'
             ? 'Perubahan permit berhasil disimpan sebagai Draft.'

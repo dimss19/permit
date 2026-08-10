@@ -32,12 +32,12 @@
                 $expectedStatus = $statusMap[$role] ?? null;
                 if ($expectedStatus) {
                     try {
+                        $pendingCount = \App\Models\Permit::where('status', $expectedStatus)->count();
                         $pendingPermits = \App\Models\Permit::with('user')
                             ->where('status', $expectedStatus)
                             ->orderBy('updated_at', 'desc')
                             ->take(5)
                             ->get();
-                        $pendingCount = $pendingPermits->count();
                     } catch (\Throwable $e) {
                         $pendingPermits = [];
                         $pendingCount = 0;
