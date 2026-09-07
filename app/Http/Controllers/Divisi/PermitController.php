@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Divisi;
 
 use App\Http\Controllers\Controller;
+use App\Models\Classification;
 use App\Models\Permit;
 use App\Models\PermitDocument;
 use Illuminate\Http\Request;
@@ -85,6 +86,12 @@ class PermitController extends Controller
                 'status'       => $status,
                 'submitted_at' => $status === 'Review Staff' ? now() : null,
             ])->save();
+
+            $klasifikasiSelected = (array) $request->input('klasifikasi_pekerjaan', []);
+            if (!empty($klasifikasiSelected)) {
+                $cIds = Classification::whereIn('code', $klasifikasiSelected)->pluck('id');
+                $permit->classifications()->sync($cIds);
+            }
 
             // Simpan dokumen pendukung untuk tipe Eksternal
             if ($request->input('tipe') === 'Eksternal') {
@@ -223,6 +230,10 @@ class PermitController extends Controller
                 'apd_lainnya'           => $request->apd_lainnya,
                 'tanda_tangan'          => $request->input('tanda_tangan') ?? $permit->tanda_tangan,
             ]);
+
+            $klasifikasiSelected = (array) $request->input('klasifikasi_pekerjaan', []);
+            $cIds = Classification::whereIn('code', $klasifikasiSelected)->pluck('id');
+            $permit->classifications()->sync($cIds);
 
             // Simpan dokumen baru untuk tipe Eksternal
             if ($newTipe === 'Eksternal') {

@@ -31,6 +31,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->addDays(1),
                 'tanggal_selesai'  => Carbon::now()->addDays(5),
                 'status'           => 'Active',
+                'klasifikasi_pekerjaan' => ['ketinggian', 'panas'],
                 'submitted_at'     => Carbon::now()->subDays(3),
             ],
             [
@@ -44,6 +45,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->addDays(2),
                 'tanggal_selesai'  => Carbon::now()->addDays(4),
                 'status'           => 'Submitted',
+                'klasifikasi_pekerjaan' => ['tegangan_tinggi'],
                 'submitted_at'     => Carbon::now()->subDays(1),
             ],
             [
@@ -57,6 +59,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->subDays(10),
                 'tanggal_selesai'  => Carbon::now()->subDays(5),
                 'status'           => 'Closed',
+                'klasifikasi_pekerjaan' => ['panas', 'ruang_terbatas'],
                 'submitted_at'     => Carbon::now()->subDays(12),
                 'closed_at'        => Carbon::now()->subDays(5),
             ],
@@ -71,6 +74,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => null,
                 'tanggal_selesai'  => null,
                 'status'           => 'Draft',
+                'klasifikasi_pekerjaan' => ['ruang_terbatas'],
                 'submitted_at'     => null,
             ],
             [
@@ -84,6 +88,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->addDays(3),
                 'tanggal_selesai'  => Carbon::now()->addDays(7),
                 'status'           => 'Revision',
+                'klasifikasi_pekerjaan' => ['ketinggian'],
                 'submitted_at'     => Carbon::now()->subDays(2),
                 'catatan_revisi'   => 'Dokumen JSA belum dilampirkan. Mohon dilengkapi sebelum diajukan kembali.',
             ],
@@ -98,6 +103,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->addDays(2),
                 'tanggal_selesai'  => Carbon::now()->addDays(8),
                 'status'           => 'Review Staff',
+                'klasifikasi_pekerjaan' => ['ketinggian'],
                 'submitted_at'     => Carbon::now()->subHours(5),
             ],
             [
@@ -111,6 +117,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->addDays(1),
                 'tanggal_selesai'  => Carbon::now()->addDays(2),
                 'status'           => 'Review Manager',
+                'klasifikasi_pekerjaan' => ['tegangan_tinggi', 'ketinggian'],
                 'submitted_at'     => Carbon::now()->subDays(1),
                 'approval_signatures' => [
                     [
@@ -132,6 +139,7 @@ class PermitSeeder extends Seeder
                 'tanggal_mulai'    => Carbon::now()->addDays(4),
                 'tanggal_selesai'  => Carbon::now()->addDays(6),
                 'status'           => 'Review Senior Manager',
+                'klasifikasi_pekerjaan' => ['galian', 'ketinggian'],
                 'submitted_at'     => Carbon::now()->subDays(2),
                 'approval_signatures' => [
                     [
@@ -150,11 +158,16 @@ class PermitSeeder extends Seeder
             ],
         ];
 
-        foreach ($permits as $permit) {
-            Permit::updateOrCreate(
-                ['no_permit' => $permit['no_permit']],
-                $permit
+        foreach ($permits as $permitData) {
+            $p = Permit::updateOrCreate(
+                ['no_permit' => $permitData['no_permit']],
+                $permitData
             );
+
+            if (!empty($permitData['klasifikasi_pekerjaan'])) {
+                $classificationIds = \App\Models\Classification::whereIn('code', $permitData['klasifikasi_pekerjaan'])->pluck('id');
+                $p->classifications()->sync($classificationIds);
+            }
         }
 
         $this->command->info('PermitSeeder: ' . count($permits) . ' data permit berhasil dibuat.');

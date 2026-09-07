@@ -62,6 +62,12 @@ class Permit extends Model
         return $this->hasMany(PermitDocument::class);
     }
 
+    /** Relasi ke master klasifikasi pekerjaan */
+    public function classifications()
+    {
+        return $this->belongsToMany(Classification::class);
+    }
+
     /** Scope: permit milik user tertentu */
     public function scopeByDivisi($query, $userId)
     {

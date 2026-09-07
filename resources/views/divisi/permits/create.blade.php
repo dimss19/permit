@@ -123,14 +123,19 @@
                 </div>
                 <div class="px-6 py-5 grid grid-cols-2 md:grid-cols-3 gap-3">
                     @php
-                        $klasifikasi = [
-                            'panas'          => 'Pekerjaan Panas',
-                            'ketinggian'     => 'Pekerjaan Ketinggian',
-                            'ruang_terbatas' => 'Ruang Terbatas',
-                            'galian'         => 'Pekerjaan Galian',
-                            'tegangan_tinggi'=> 'Pekerjaan Tegangan Tinggi',
-                            'radiasi'        => 'Radiasi',
-                        ];
+                        $dbKlasifikasi = \App\Models\Classification::all();
+                        if ($dbKlasifikasi->isNotEmpty()) {
+                            $klasifikasi = $dbKlasifikasi->pluck('name', 'code')->toArray();
+                        } else {
+                            $klasifikasi = [
+                                'panas'          => 'Pekerjaan Panas',
+                                'ketinggian'     => 'Pekerjaan Ketinggian',
+                                'ruang_terbatas' => 'Ruang Terbatas',
+                                'galian'         => 'Pekerjaan Galian',
+                                'tegangan_tinggi'=> 'Pekerjaan Tegangan Tinggi',
+                                'radiasi'        => 'Radiasi',
+                            ];
+                        }
                     @endphp
                     @foreach($klasifikasi as $key => $label)
                         <label class="flex items-center gap-3 p-3 rounded-xl border border-gray-100 hover:border-inka-navy/30 hover:bg-blue-50/30 cursor-pointer transition-colors">

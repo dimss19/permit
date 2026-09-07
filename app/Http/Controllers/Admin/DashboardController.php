@@ -22,7 +22,7 @@ class DashboardController extends Controller
                 'revision' => Permit::where('status', 'Revision')->count(),
                 'today' => Permit::where('status', 'Review Staff')->whereDate('updated_at', $today)->count(),
             ];
-            $permits = Permit::with('user')
+            $permits = Permit::with(['user', 'classifications'])
                 ->where('status', 'Review Staff')
                 ->orderBy('submitted_at', 'asc')
                 ->get();
@@ -32,7 +32,7 @@ class DashboardController extends Controller
                 'pending' => Permit::where('status', 'Review Manager')->count(),
                 'today' => Permit::where('status', 'Review Manager')->whereDate('updated_at', $today)->count(),
             ];
-            $permits = Permit::with('user')
+            $permits = Permit::with(['user', 'classifications'])
                 ->where('status', 'Review Manager')
                 ->orderBy('updated_at', 'asc')
                 ->get();
@@ -42,7 +42,7 @@ class DashboardController extends Controller
                 'pending' => Permit::where('status', 'Review Senior Manager')->count(),
                 'active_today' => Permit::where('status', 'Active')->whereDate('updated_at', $today)->count(),
             ];
-            $permits = Permit::with('user')
+            $permits = Permit::with(['user', 'classifications'])
                 ->where('status', 'Review Senior Manager')
                 ->orderBy('updated_at', 'asc')
                 ->get();

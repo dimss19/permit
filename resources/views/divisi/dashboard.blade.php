@@ -126,10 +126,11 @@
                         <tr class="text-sm text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
                             <th class="px-6 py-3 font-semibold">Tipe</th>
-                            <th class="px-6 py-3 font-semibold">Nama Pekerjaan</th>
+                            <th class="px-6 py-3 font-semibold">Klasifikasi Pekerjaan</th>
+                            <th class="px-6 py-3 font-semibold">Divisi</th>
                             <th class="px-6 py-3 font-semibold">Kontraktor</th>
-                            <th class="px-6 py-3 font-semibold">Status</th>
-                            <th class="px-6 py-3 font-semibold">Tgl. Submit</th>
+                            <th class="px-6 py-3 font-semibold">Lokasi</th>
+                            <th class="px-6 py-3 font-semibold">Tanggal Permit</th>
                             <th class="px-6 py-3 font-semibold text-right">Aksi</th>
                         </tr>
                     </thead>
@@ -151,25 +152,25 @@
                         @endphp
                         <tr class="hover:bg-blue-50/30 transition-colors cursor-pointer"
                             onclick="window.location='/divisi/permits/{{ $permit->id }}'">
-                            <td class="px-6 py-3.5">
+                            <td class="px-6 py-3.5 whitespace-nowrap">
                                 <a href="/divisi/permits/{{ $permit->id }}"
-                                   class="font-semibold text-inka-navy hover:underline"
+                                   class="font-semibold text-inka-navy hover:underline block"
                                    onclick="event.stopPropagation()">
                                     {{ $permit->no_permit }}
                                 </a>
-                            </td>
-                            <td class="px-6 py-3.5"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
-                            <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
-                            <td class="px-6 py-3.5 text-gray-500 text-sm">{{ $permit->kontraktor }}</td>
-                            <td class="px-6 py-3.5">
-                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $badge }}">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $badge }} mt-1">
                                     {{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}
                                 </span>
                             </td>
-                            <td class="px-6 py-3.5 text-gray-500 text-sm">
-                                {{ $permit->submitted_at ? $permit->submitted_at->format('d/m/Y') : '—' }}
+                            <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
+                            <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
+                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? Auth::user()->name }}</td>
+                            <td class="px-6 py-3.5 text-gray-600 text-sm">{{ $permit->kontraktor }}</td>
+                            <td class="px-6 py-3.5 text-gray-600 text-sm">{{ $permit->lokasi ?? '—' }}</td>
+                            <td class="px-6 py-3.5 whitespace-nowrap">
+                                <x-permit-tanggal :permit="$permit" />
                             </td>
-                            <td class="px-6 py-3.5 text-right" onclick="event.stopPropagation()">
+                            <td class="px-6 py-3.5 text-right whitespace-nowrap" onclick="event.stopPropagation()">
                                 <a href="/divisi/permits/{{ $permit->id }}"
                                    class="inline-flex items-center gap-1 text-sm font-semibold text-inka-navy hover:underline">
                                     {{ $canEdit ? 'Edit' : 'Lihat Detail' }}

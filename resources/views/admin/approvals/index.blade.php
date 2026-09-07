@@ -67,35 +67,35 @@
                         <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
                             <th class="px-6 py-3 font-semibold">Tipe</th>
-                            <th class="px-6 py-3 font-semibold">Nama Pekerjaan</th>
+                            <th class="px-6 py-3 font-semibold">Klasifikasi Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Divisi</th>
+                            <th class="px-6 py-3 font-semibold">Kontraktor</th>
+                            <th class="px-6 py-3 font-semibold">Lokasi</th>
                             <th class="px-6 py-3 font-semibold">Status</th>
-                            <th class="px-6 py-3 font-semibold">{{ $config['dateColumnLabel'] }}</th>
+                            <th class="px-6 py-3 font-semibold">Tanggal Permit</th>
                             <th class="px-6 py-3 font-semibold text-right">Aksi</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-gray-50">
                         @foreach($permits as $permit)
                         <tr class="hover:bg-orange-50/30 transition-colors cursor-pointer" onclick="window.location='/admin/approvals/{{ $permit->id }}'">
-                            <td class="px-6 py-3.5"><a href="/admin/approvals/{{ $permit->id }}" class="font-semibold text-inka-navy hover:underline" onclick="event.stopPropagation()">{{ $permit->no_permit }}</a></td>
-                            <td class="px-6 py-3.5"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
-                            <td class="px-6 py-3.5 text-gray-700">{{ $permit->nama_pekerjaan }}</td>
-                            <td class="px-6 py-3.5 text-gray-700">{{ optional($permit->user)->name ?? '—' }}</td>
-                            <td class="px-6 py-3.5">
+                            <td class="px-6 py-3.5 whitespace-nowrap"><a href="/admin/approvals/{{ $permit->id }}" class="font-semibold text-inka-navy hover:underline" onclick="event.stopPropagation()">{{ $permit->no_permit }}</a></td>
+                            <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
+                            <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
+                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? '—' }}</td>
+                            <td class="px-6 py-3.5 text-gray-600 text-xs">{{ $permit->kontraktor }}</td>
+                            <td class="px-6 py-3.5 text-gray-600 text-xs">{{ $permit->lokasi ?? '—' }}</td>
+                            <td class="px-6 py-3.5 whitespace-nowrap">
                                 @if($permit->status === $config['expectedStatus'])
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-orange-100 text-orange-700">Menunggu Anda</span>
                                 @else
                                     <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-red-100 text-red-700">{{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}</span>
                                 @endif
                             </td>
-                            <td class="px-6 py-3.5 text-gray-500 text-xs">
-                                @if($config['sortCol'] === 'submitted_at')
-                                    {{ $permit->submitted_at ? $permit->submitted_at->format('d/m/Y') : '—' }}
-                                @else
-                                    {{ $permit->updated_at ? $permit->updated_at->format('d/m/Y') : '—' }}
-                                @endif
+                            <td class="px-6 py-3.5 whitespace-nowrap">
+                                <x-permit-tanggal :permit="$permit" />
                             </td>
-                            <td class="px-6 py-3.5 text-right">
+                            <td class="px-6 py-3.5 text-right whitespace-nowrap">
                                 @if($permit->status === $config['expectedStatus'])
                                 <a href="/admin/approvals/{{ $permit->id }}" class="inline-flex items-center bg-inka-navy text-white text-[11px] font-semibold px-3 py-1.5 rounded-lg hover:opacity-90 transition-colors">
                                     Review

@@ -5,7 +5,12 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('welcome');
+    $permits = \App\Models\Permit::with(['user', 'classifications'])
+        ->whereNotIn('status', ['Draft'])
+        ->orderByRaw('COALESCE(submitted_at, created_at) DESC')
+        ->paginate(5);
+
+    return view('welcome', compact('permits'));
 });
 
 Route::get('/dashboard', function () {

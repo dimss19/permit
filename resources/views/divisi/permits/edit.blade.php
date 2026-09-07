@@ -160,14 +160,19 @@
                 </div>
                 <div class="px-6 py-5 grid grid-cols-2 md:grid-cols-3 gap-3">
                     @php
-                        $klasifikasi = [
-                            'panas'          => 'Pekerjaan Panas',
-                            'ketinggian'     => 'Pekerjaan Ketinggian',
-                            'ruang_terbatas' => 'Ruang Terbatas',
-                            'galian'         => 'Pekerjaan Galian',
-                            'tegangan_tinggi'=> 'Pekerjaan Tegangan Tinggi',
-                            'radiasi'        => 'Radiasi',
-                        ];
+                        $dbKlasifikasi = \App\Models\Classification::all();
+                        if ($dbKlasifikasi->isNotEmpty()) {
+                            $klasifikasi = $dbKlasifikasi->pluck('name', 'code')->toArray();
+                        } else {
+                            $klasifikasi = [
+                                'panas'          => 'Pekerjaan Panas',
+                                'ketinggian'     => 'Pekerjaan Ketinggian',
+                                'ruang_terbatas' => 'Ruang Terbatas',
+                                'galian'         => 'Pekerjaan Galian',
+                                'tegangan_tinggi'=> 'Pekerjaan Tegangan Tinggi',
+                                'radiasi'        => 'Radiasi',
+                            ];
+                        }
                         $selectedKlasifikasi = old('klasifikasi_pekerjaan', $permit->klasifikasi_pekerjaan ?? []);
                     @endphp
                     @foreach($klasifikasi as $key => $label)

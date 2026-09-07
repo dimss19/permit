@@ -23,7 +23,8 @@ class DashboardController extends Controller
         ];
 
         // 5 permit terbaru milik divisi ini, urut terbaru di atas
-        $permits = Permit::where('user_id', $userId)
+        $permits = Permit::with('classifications')
+                          ->where('user_id', $userId)
                           ->orderByDesc('created_at')
                           ->limit(5)
                           ->get();

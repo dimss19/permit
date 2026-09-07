@@ -28,6 +28,8 @@
 
         html { scroll-behavior: smooth; }
 
+        [x-cloak] { display: none !important; }
+
         ::selection { background: var(--amber-500); color: var(--navy-950); }
 
         .nav {
@@ -235,6 +237,14 @@
                 <span class="block text-[10px] font-semibold text-[var(--ink-600)] tracking-wide">INKA MADIUN</span>
             </div>
         </div>
+        <div class="hidden md:flex items-center gap-6 mr-4 text-sm font-semibold text-[var(--ink-600)]">
+            <a href="#alur" class="hover:text-[var(--navy-950)] transition-colors">Alur Pengajuan</a>
+            <a href="#monitoring" class="hover:text-[var(--navy-950)] transition-colors flex items-center gap-1.5 text-inka-navy font-bold">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Monitoring Permit
+            </a>
+            <a href="#tentang" class="hover:text-[var(--navy-950)] transition-colors">Tentang Kami</a>
+        </div>
         <div class="flex items-center gap-2.5">
             @auth
                 <a href="{{ route('dashboard') }}" class="btn btn-solid">Dashboard</a>
@@ -267,8 +277,11 @@
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
             @endauth
+            <a href="#monitoring" class="btn btn-outline-light btn-lg">
+                Monitoring Permit
+            </a>
             <a href="#alur" class="btn btn-outline-light btn-lg">
-                Lihat Alur Pengajuan
+                Alur Pengajuan
             </a>
         </div>
         <p class="text-xs text-[var(--steel-300)] mt-[18px] hero-animate" id="hero-note">
@@ -324,6 +337,295 @@
     </div>
 </section>
 
+<!-- ================= MONITORING PERMIT TERKINI ================= -->
+<section class="py-20 px-6 bg-[var(--paper)]" id="monitoring" x-data="{
+    isModalOpen: false,
+    activePermit: {
+        no_permit: '',
+        tipe: '',
+        nama_pekerjaan: '',
+        divisi: '',
+        kontraktor: '',
+        lokasi: '',
+        tanggal_permit: '',
+        penanggung_jawab: '',
+        status: '',
+        status_badge: '',
+        klasifikasi: []
+    },
+    openModal(data) {
+        this.activePermit = data;
+        this.isModalOpen = true;
+        document.body.style.overflow = 'hidden';
+    },
+    closeModal() {
+        this.isModalOpen = false;
+        document.body.style.overflow = '';
+    }
+}">
+    <div class="max-w-[1140px] mx-auto">
+        <div class="max-w-[640px] mx-auto text-center mb-10 reveal">
+            <div class="sec-tag inline-flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Monitoring Real-Time
+            </div>
+            <h2 class="text-[28px] font-extrabold tracking-[-.01em] mb-3 text-[var(--navy-950)]">
+                Monitoring Izin Kerja (Safety Permit)
+            </h2>
+            <p class="text-[14.5px] text-[var(--ink-600)]">
+                Pantau daftar izin kerja risiko tinggi di lingkungan PT INKA (Persero) Madiun secara transparan dan mudah.
+            </p>
+        </div>
+
+        <!-- Table Card -->
+        <div class="bg-white rounded-2xl border border-[var(--border)] shadow-sm overflow-hidden reveal">
+            <div class="px-6 py-4 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-gray-50/50">
+                <div class="flex items-center gap-3">
+                    <div class="w-9 h-9 rounded-xl bg-blue-50 text-inka-navy border border-blue-100 flex items-center justify-center font-bold">
+                        <svg class="w-5 h-5 text-inka-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-gray-900">Daftar Permit Kerja Terkini</h3>
+                        <p class="text-xs text-gray-500">Menampilkan 5 permit terbaru dengan update berkala</p>
+                    </div>
+                </div>
+                <div class="text-xs font-semibold text-gray-500 bg-white px-3 py-1.5 rounded-lg border border-gray-200">
+                    Total: <span class="text-inka-navy font-bold">{{ $permits->total() }}</span> Permit Terdaftar
+                </div>
+            </div>
+
+            @if($permits->isEmpty())
+                <div class="py-16 text-center text-gray-400">
+                    <svg class="w-12 h-12 mx-auto text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    <p class="text-sm font-semibold text-gray-600">Belum ada permit kerja yang terdaftar.</p>
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead>
+                            <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/70">
+                                <th class="px-5 py-3.5 font-semibold">No. Permit</th>
+                                <th class="px-5 py-3.5 font-semibold">Tipe</th>
+                                <th class="px-5 py-3.5 font-semibold">Klasifikasi Pekerjaan</th>
+                                <th class="px-5 py-3.5 font-semibold">Divisi</th>
+                                <th class="px-5 py-3.5 font-semibold">Kontraktor</th>
+                                <th class="px-5 py-3.5 font-semibold">Lokasi</th>
+                                <th class="px-5 py-3.5 font-semibold">Tanggal Permit</th>
+                                <th class="px-5 py-3.5 font-semibold text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-100">
+                            @foreach($permits as $permit)
+                            @php
+                                $klasArr = [];
+                                if ($permit->relationLoaded('classifications') && $permit->classifications->isNotEmpty()) {
+                                    $klasArr = $permit->classifications->pluck('name')->toArray();
+                                } elseif (!empty($permit->klasifikasi_pekerjaan) && is_array($permit->klasifikasi_pekerjaan)) {
+                                    $nameMap = [
+                                        'panas'          => 'Pekerjaan Panas',
+                                        'ketinggian'     => 'Pekerjaan Ketinggian',
+                                        'ruang_terbatas' => 'Ruang Terbatas',
+                                        'galian'         => 'Pekerjaan Galian',
+                                        'tegangan_tinggi'=> 'Pekerjaan Tegangan Tinggi',
+                                        'radiasi'        => 'Radiasi',
+                                    ];
+                                    foreach ($permit->klasifikasi_pekerjaan as $k) {
+                                        $klasArr[] = $nameMap[$k] ?? ucwords(str_replace('_', ' ', $k));
+                                    }
+                                }
+
+                                $mulai = $permit->tanggal_mulai ? $permit->tanggal_mulai->format('d/m/Y') : null;
+                                $selesai = $permit->tanggal_selesai ? $permit->tanggal_selesai->format('d/m/Y') : null;
+                                if ($mulai && $selesai) {
+                                    $tglDisplay = ($mulai === $selesai) ? $mulai : "$mulai – $selesai";
+                                } elseif ($mulai) {
+                                    $tglDisplay = $mulai;
+                                } elseif ($selesai) {
+                                    $tglDisplay = $selesai;
+                                } elseif ($permit->submitted_at) {
+                                    $tglDisplay = $permit->submitted_at->format('d/m/Y');
+                                } else {
+                                    $tglDisplay = '—';
+                                }
+
+                                $statusMap = [
+                                    'Draft'                    => 'bg-gray-100 text-gray-600',
+                                    'Submitted'                => 'bg-blue-100 text-blue-700',
+                                    'Review Staff'             => 'bg-orange-100 text-orange-700',
+                                    'Review Manager'           => 'bg-orange-100 text-orange-700',
+                                    'Review Senior Manager'    => 'bg-orange-100 text-orange-700',
+                                    'Revision'                 => 'bg-red-100 text-red-700',
+                                    'Active'                   => 'bg-green-100 text-green-700',
+                                    'Closed'                   => 'bg-slate-100 text-slate-600',
+                                    'Cancelled'                => 'bg-red-600 text-white',
+                                ];
+                                $statusBadge = $statusMap[$permit->status] ?? 'bg-gray-100 text-gray-600';
+
+                                $modalPayload = [
+                                    'no_permit' => $permit->no_permit,
+                                    'tipe' => $permit->tipe,
+                                    'nama_pekerjaan' => $permit->nama_pekerjaan,
+                                    'divisi' => optional($permit->user)->name ?? '—',
+                                    'kontraktor' => $permit->kontraktor,
+                                    'lokasi' => $permit->lokasi ?? '—',
+                                    'tanggal_permit' => $tglDisplay,
+                                    'penanggung_jawab' => $permit->penanggung_jawab ?? '—',
+                                    'status' => $permit->status,
+                                    'status_badge' => $statusBadge,
+                                    'klasifikasi' => $klasArr,
+                                ];
+                            @endphp
+                            <tr class="hover:bg-blue-50/20 transition-colors">
+                                <td class="px-5 py-3.5 whitespace-nowrap font-bold text-inka-navy">
+                                    {{ $permit->no_permit }}
+                                </td>
+                                <td class="px-5 py-3.5 whitespace-nowrap">
+                                    <x-permit-tipe-badge :tipe="$permit->tipe" />
+                                </td>
+                                <td class="px-5 py-3.5">
+                                    <x-permit-klasifikasi-badges :permit="$permit" />
+                                </td>
+                                <td class="px-5 py-3.5 font-medium text-gray-800 whitespace-nowrap">
+                                    {{ optional($permit->user)->name ?? '—' }}
+                                </td>
+                                <td class="px-5 py-3.5 text-gray-600 text-xs">
+                                    {{ $permit->kontraktor }}
+                                </td>
+                                <td class="px-5 py-3.5 text-gray-600 text-xs">
+                                    {{ $permit->lokasi ?? '—' }}
+                                </td>
+                                <td class="px-5 py-3.5 whitespace-nowrap">
+                                    <x-permit-tanggal :permit="$permit" />
+                                </td>
+                                <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                                    <button type="button"
+                                            @click="openModal({{ json_encode($modalPayload) }})"
+                                            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-inka-navy text-white hover:opacity-90 transition-all shadow-sm">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                        Lihat Detail
+                                    </button>
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                @if($permits->hasPages())
+                    <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+                        {{ $permits->fragment('monitoring')->links() }}
+                    </div>
+                @endif
+            @endif
+        </div>
+    </div>
+
+    <!-- Modal Pratinjau Publik (Read-Only) -->
+    <div x-show="isModalOpen"
+         x-cloak
+         class="fixed inset-0 z-50 overflow-y-auto flex items-center justify-center p-4 sm:p-6"
+         role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div x-show="isModalOpen"
+             x-transition:enter="ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity"
+             @click="closeModal()"></div>
+
+        <!-- Dialog Window -->
+        <div x-show="isModalOpen"
+             x-transition:enter="ease-out duration-200"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             x-transition:leave="ease-in duration-150"
+             x-transition:leave-start="opacity-100 scale-100"
+             x-transition:leave-end="opacity-0 scale-95"
+             class="relative w-full max-w-2xl bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-10 my-8">
+            
+            <!-- Modal Header -->
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/90 flex items-center justify-between">
+                <div class="flex items-center gap-2.5 flex-wrap">
+                    <span class="font-bold text-gray-900 text-lg" x-text="activePermit.no_permit"></span>
+                    <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-blue-700" x-text="activePermit.tipe"></span>
+                    <span class="px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                          :class="activePermit.status_badge || 'bg-gray-100 text-gray-600'"
+                          x-text="activePermit.status"></span>
+                </div>
+                <button @click="closeModal()" class="w-8 h-8 rounded-lg hover:bg-gray-200/60 text-gray-400 hover:text-gray-700 flex items-center justify-center transition-colors">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+                <!-- Klasifikasi Badges -->
+                <div>
+                    <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Klasifikasi Pekerjaan</p>
+                    <div class="flex flex-wrap gap-1.5">
+                        <template x-for="k in activePermit.klasifikasi" :key="k">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-semibold bg-blue-50 text-blue-700 border border-blue-200/70" x-text="k"></span>
+                        </template>
+                        <template x-if="!activePermit.klasifikasi || activePermit.klasifikasi.length === 0">
+                            <span class="text-sm text-gray-400 italic">Tidak ada klasifikasi pekerjaan</span>
+                        </template>
+                    </div>
+                </div>
+
+                <!-- Details Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-50/70 rounded-xl p-4 border border-gray-100 text-sm">
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Uraian / Nama Pekerjaan</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.nama_pekerjaan || '—'"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Divisi Pengaju</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.divisi"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Kontraktor Pelaksana</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.kontraktor"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Lokasi Pekerjaan</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.lokasi"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Tanggal Permit (Periode Pengerjaan)</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.tanggal_permit"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Penanggung Jawab Lapangan</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.penanggung_jawab"></p>
+                    </div>
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200/70 rounded-xl p-3.5 flex items-start gap-3">
+                    <svg class="w-5 h-5 text-amber-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p class="text-xs text-amber-800 leading-relaxed">
+                        Data di atas adalah ringkasan monitoring publik. Dokumen teknis (JSA/HIRADC/APD) dan tanda tangan verifikasi dapat diakses oleh user berwenang melalui dashboard sistem.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="px-6 py-3.5 border-t border-gray-100 bg-gray-50 flex items-center justify-between gap-3">
+                <button type="button" @click="closeModal()" class="px-4 py-2 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-200/60 transition-colors">
+                    Tutup
+                </button>
+                <a href="{{ route('login') }}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-semibold bg-inka-navy text-white hover:opacity-90 transition-opacity">
+                    <span>Login Sistem</span>
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+                </a>
+            </div>
+
+        </div>
+    </div>
+</section>
+
 <!-- ================= TENTANG KAMI ================= -->
 <section class="py-20 px-6 bg-white border-y border-[var(--border)]" id="tentang">
     <div class="max-w-[1080px] mx-auto about-grid grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -364,6 +666,7 @@
                     <h5 class="text-[11.5px] font-bold uppercase tracking-wide text-[var(--steel-300)] mb-3.5">Navigasi</h5>
                     <ul class="flex flex-col gap-2.5">
                         <li><a href="#alur" class="text-sm text-white/85 hover:text-white transition-opacity">Alur Pengajuan</a></li>
+                        <li><a href="#monitoring" class="text-sm text-white/85 hover:text-white transition-opacity">Monitoring Permit</a></li>
                         <li><a href="#tentang" class="text-sm text-white/85 hover:text-white transition-opacity">Tentang Kami</a></li>
                         <li><a href="{{ route('login') }}" class="text-sm text-white/85 hover:text-white transition-opacity">Login</a></li>
                     </ul>

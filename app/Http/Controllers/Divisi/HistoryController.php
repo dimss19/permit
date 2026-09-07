@@ -13,7 +13,8 @@ class HistoryController extends Controller
     {
         $userId = Auth::id();
 
-        $query = Permit::where('user_id', $userId)
+        $query = Permit::with('classifications')
+                        ->where('user_id', $userId)
                         ->orderByDesc('created_at');
 
         // Filter by status

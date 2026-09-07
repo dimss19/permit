@@ -51,7 +51,7 @@ class ApprovalController extends Controller
     public function index(Request $request)
     {
         $config = $this->getRoleConfig();
-        $query = Permit::with('user');
+        $query = Permit::with(['user', 'classifications']);
 
         if ($request->date === 'today') {
             $query->whereDate('updated_at', today())->where('status', $config['expectedStatus']);
