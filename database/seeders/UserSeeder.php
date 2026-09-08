@@ -44,7 +44,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
             ],
             [
-                'name' => 'Senior Manager GA',
+                'name' => 'Wahyu Meidianto',
                 'username' => 'seniormanager_hse',
                 'email' => 'seniormanager@inka.co.id',
                 'role' => 'senior-manager',

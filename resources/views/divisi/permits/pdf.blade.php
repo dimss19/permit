@@ -325,7 +325,8 @@
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
                             <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Senior Manager GA</div>
-                            <div class="text-center" style="padding: 2px;">{{ $sm }}</div>
+                            <!-- ponytail: nama SM dikunci, hanya ada 1 senior manager -->
+                            <div class="text-center" style="padding: 2px;">Wahyu Meidianto</div>
                         </td>
                         <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
                             @if($sm_sig)<img src="{{ $sm_sig }}" style="max-height: 30px;">@endif
@@ -371,7 +372,8 @@
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
                             <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM GA</div>
-                            <div class="text-center" style="padding: 2px;">{{ $csm }}</div>
+                            <!-- ponytail: nama SM dikunci, hanya ada 1 senior manager -->
+                            <div class="text-center" style="padding: 2px;">Wahyu Meidianto</div>
                         </td>
                         <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
                             @if($csm_sig)<img src="{{ $csm_sig }}" style="max-height: 30px;">@endif
