@@ -8,7 +8,7 @@ Route::get('/', function () {
     $permits = \App\Models\Permit::with(['user', 'classifications'])
         ->whereNotIn('status', ['Draft'])
         ->orderByRaw('COALESCE(submitted_at, created_at) DESC')
-        ->paginate(5);
+        ->paginate(10);
 
     return view('welcome', compact('permits'));
 });

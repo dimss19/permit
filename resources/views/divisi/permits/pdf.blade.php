@@ -36,7 +36,7 @@
                         $type = pathinfo($path, PATHINFO_EXTENSION);
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                        echo '<img src="'.$base64.'" class="logo" alt="Logo INKA">';
+                        echo '<img src="'.$base64.'" class="logo" style="display:block; margin:0 auto;" alt="Logo INKA">';
                     } else {
                         echo '<h1 style="color:#d32f2f; margin:0;">INKA</h1>';
                     }
@@ -98,12 +98,16 @@
     <table style="margin-bottom: 5px; border-bottom: none;">
         <tr>
             <td width="55%" style="padding: 0; border: none; border-right: 1px solid #000;">
-                <table style="border: none;">
-                    <tr><td width="40%" style="border: none; border-bottom: 1px solid #000;">Pekerjaan</td><td style="border: none; border-bottom: 1px solid #000;">: {{ $permit->nama_pekerjaan }}</td></tr>
-                    <tr><td style="border: none; border-bottom: 1px solid #000;">Lokasi</td><td style="border: none; border-bottom: 1px solid #000;">: {{ $permit->lokasi }}</td></tr>
-                    <tr><td style="border: none; border-bottom: 1px solid #000;">Manager / Penanggung Jawab</td><td style="border: none; border-bottom: 1px solid #000;">: {{ $permit->penanggung_jawab }}</td></tr>
-                    <tr><td style="border: none; border-bottom: 1px solid #000;">No. Telpon</td><td style="border: none; border-bottom: 1px solid #000;">: {{ $permit->telepon }}</td></tr>
-                    <tr><td style="border: none;">Perusahaan</td><td style="border: none;">: {{ $permit->kontraktor }}</td></tr>
+                <table style="border: none; width: 100%;">
+                    <table style="border: none;"> 
+                        <table style="border: none;">
+                            <tr><td width="40%" style="border: none;">Pekerjaan</td><td style="border: none;">: {{ $permit->nama_pekerjaan }}</td></tr>
+                            <tr><td style="border: none;">Lokasi</td><td style="border: none;">: {{ $permit->lokasi }}</td></tr>
+                            <tr><td style="border: none;">Manager / Penanggung Jawab</td><td style="border: none;">: {{ $permit->penanggung_jawab }}</td></tr>
+                            <tr><td style="border: none;">No. Telpon</td><td style="border: none;">: {{ $permit->telepon }}</td></tr>
+                            <tr><td style="border: none;">Perusahaan</td><td style="border: none;">: {{ $permit->kontraktor }}</td></tr>
+                        </table>
+                    </table>
                 </table>
             </td>
             <td width="45%" style="padding: 0; border: none;">
@@ -124,12 +128,12 @@
                 <table style="border: none;">
                     <tr>
                         <th width="80%" style="background-color: #ccc; border: none; border-bottom: 1px solid #000; border-right: 1px solid #000;">Daftar Pekerjaan</th>
-                        <th width="20%" style="background-color: #ccc; border: none; border-bottom: 1px solid #000;">Jumlah</th>
+                        <th width="20%" style="background-color: #ccc; border: none; border-bottom: 1px solid #000; border-right: 1px solid #000;">Jumlah</th>
                     </tr>
                     @foreach($pList as $p)
                         <tr>
                             <td style="border: none; border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 2px 4px;">{{ $p[1] }}</td>
-                            <td class="text-center" style="border: none; border-bottom: 1px solid #000; padding: 2px 4px;">{{ $dp[$p[0]] ?? '' }}</td>
+                            <td class="text-center" style="border: none; border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 2px 4px;">{{ $dp[$p[0]] ?? '' }}</td>
                         </tr>
                     @endforeach
                 </table>
@@ -150,13 +154,13 @@
             $pk = array_pad($pk, 3, ['alat'=>'', 'jumlah_alat'=>'', 'material'=>'', 'jumlah_material'=>'']);
         @endphp
         @foreach($pk as $row)
-        <tr>
-            <td style="height: 18px; padding: 2px 4px;">{{ $row['alat'] ?? '' }}</td>
-            <td class="text-center" style="padding: 2px 4px;">{{ $row['jumlah_alat'] ?? '' }}</td>
-            <td style="padding: 2px 4px;">{{ $row['material'] ?? '' }}</td>
-            <td class="text-center" style="padding: 2px 4px;">{{ $row['jumlah_material'] ?? '' }}</td>
-        </tr>
-        @endforeach
+            <tr>
+                <td class="text-center" style="height: 18px; padding: 2px 4px;">{{ $row['alat'] ?? '' }}</td>
+                <td class="text-center" style="padding: 2px 4px;">{{ $row['jumlah_alat'] ?? '' }}</td>
+                <td class="text-center" style="padding: 2px 4px;">{{ $row['material'] ?? '' }}</td>
+                <td class="text-center" style="padding: 2px 4px;">{{ $row['jumlah_material'] ?? '' }}</td>
+            </tr>
+         @endforeach
     </table>
 
     <!-- C. BAHAYA PEKERJAAN -->
@@ -284,7 +288,7 @@
                 <div style="margin-top: 5px;">Selesai Tgl : {{ $permit->tanggal_selesai ? \Carbon\Carbon::parse($permit->tanggal_selesai)->format('d/m/Y') : '......................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->tanggal_selesai ? \Carbon\Carbon::parse($permit->tanggal_selesai)->format('H:i') : '......................' }}</div>
             </td>
             <td width="40%" style="padding: 0; border: none;">
-                <table style="border: none; width: 100%; border-left: 1px solid #000;">
+                <table style="border: none; width: 100%; border-left: 1px solid #000; border-right: 1px solid #000; border-top: 1px solid #000;">
                     <tr>
                         <td width="50%" class="text-center" style="background-color: #ccc; border: none; border-bottom: 1px solid #000; border-right: 1px solid #000;">Nama</td>
                         <td width="50%" class="text-center" style="background-color: #ccc; border: none; border-bottom: 1px solid #000;">Tanda Tangan</td>
@@ -319,11 +323,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="border: none; border-right: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM GA</div>
+                        <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
+                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Senior Manager GA</div>
                             <div class="text-center" style="padding: 2px;">{{ $sm }}</div>
                         </td>
-                        <td class="text-center" style="border: none; height: 35px; vertical-align: middle;">
+                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
                             @if($sm_sig)<img src="{{ $sm_sig }}" style="max-height: 30px;">@endif
                         </td>
                     </tr>
@@ -341,7 +345,7 @@
                 <div style="margin-top: 15px;">Tanggal &nbsp;: {{ $permit->cancelled_at ? \Carbon\Carbon::parse($permit->cancelled_at)->format('d/m/Y') : '..................................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->cancelled_at ? \Carbon\Carbon::parse($permit->cancelled_at)->format('H:i') : '......................' }}</div>
             </td>
             <td width="40%" style="padding: 0; border: none;">
-                <table style="border: none; width: 100%; border-left: 1px solid #000;">
+                <table style="border: none; width: 100%; border-left: 1px solid #000; border-right: 1px solid #000; border-top: 1px solid #000;">
                     <tr>
                         <td width="50%" class="text-center" style="background-color: #ccc; border: none; border-bottom: 1px solid #000; border-right: 1px solid #000;">Nama</td>
                         <td width="50%" class="text-center" style="background-color: #ccc; border: none; border-bottom: 1px solid #000;">Tanda Tangan</td>
@@ -365,11 +369,11 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="border: none; border-right: 1px solid #000; padding: 0;">
+                        <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
                             <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM GA</div>
                             <div class="text-center" style="padding: 2px;">{{ $csm }}</div>
                         </td>
-                        <td class="text-center" style="border: none; height: 35px; vertical-align: middle;">
+                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
                             @if($csm_sig)<img src="{{ $csm_sig }}" style="max-height: 30px;">@endif
                         </td>
                     </tr>
@@ -379,8 +383,7 @@
     </table>
 
     <!-- Footer Notes -->
-    <div style="margin-top: 5px;">Ket : Warna Putih untuk K3LH; Salinan MERAH untuk Pemohon; Salinan KUNING untuk Lokasi Tempat Kerja</div>
-    <div style="margin-top: 5px; font-weight: bold;">Form K3LH : IV-01.012 Rev. A</div>
+     <div style="margin-top: 5px; font-weight: bold;">Form K3LH : IV-01.012 Rev. A</div>
 
 </body>
 </html>

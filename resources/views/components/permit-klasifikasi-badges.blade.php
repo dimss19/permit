@@ -42,7 +42,7 @@
                 $displayName = $nameMap[$code] ?? (is_string($val) && !isset($nameMap[$val]) ? $val : ($nameMap[$val] ?? ucwords(str_replace('_', ' ', $code))));
                 $color = $colorMap[$code] ?? 'bg-slate-50 text-slate-700 border-slate-200';
             @endphp
-            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[11px] font-semibold border {{ $color }}">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-semibold border {{ $color }}">
                 {{ $displayName }}
             </span>
         @endforeach

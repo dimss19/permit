@@ -238,11 +238,11 @@
             </div>
         </div>
         <div class="hidden md:flex items-center gap-6 mr-4 text-sm font-semibold text-[var(--ink-600)]">
-            <a href="#alur" class="hover:text-[var(--navy-950)] transition-colors">Alur Pengajuan</a>
             <a href="#monitoring" class="hover:text-[var(--navy-950)] transition-colors flex items-center gap-1.5 text-inka-navy font-bold">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
                 Monitoring Permit
             </a>
+            <a href="#alur" class="hover:text-[var(--navy-950)] transition-colors">Alur Pengajuan</a>
             <a href="#tentang" class="hover:text-[var(--navy-950)] transition-colors">Tentang Kami</a>
         </div>
         <div class="flex items-center gap-2.5">
@@ -287,53 +287,6 @@
         <p class="text-xs text-[var(--steel-300)] mt-[18px] hero-animate" id="hero-note">
             Untuk pegawai/admin divisi INKA. Kontraktor yang ingin bekerja sama tidak mendaftar sendiri — silakan hubungi divisi terkait di INKA Madiun.
         </p>
-    </div>
-</section>
-
-<!-- ================= ALUR PENGAJUAN ================= -->
-<section class="py-20 px-6" id="alur">
-    <div class="max-w-[1080px] mx-auto">
-        <div class="max-w-[560px] mx-auto text-center mb-[46px] reveal">
-            <div class="sec-tag">Alur Pengajuan</div>
-            <h2 class="text-[28px] font-extrabold tracking-[-.01em] mb-3 text-[var(--navy-950)]">Bagaimana Kontraktor Bisa Bekerja Sama dengan INKA</h2>
-            <p class="text-[14.5px] text-[var(--ink-600)]">Kontraktor tidak mendaftar sendiri — seluruh data dan pengajuan izin kerja diinput oleh divisi terkait melalui dashboard internal.</p>
-        </div>
-
-        <div class="flow">
-            <div class="flow-line"></div>
-            <div class="flow-grid grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
-                <div class="flow-step reveal" style="transition-delay:0ms">
-                    <div class="sn">1</div>
-                    <h4>Kontraktor Hubungi Divisi</h4>
-                    <p>Kontraktor yang ingin bekerja sama menghubungi PIC divisi INKA yang bersangkutan.</p>
-                </div>
-                <div class="flow-step reveal" style="transition-delay:80ms">
-                    <div class="sn">2</div>
-                    <h4>Divisi Input Data Kontraktor</h4>
-                    <p>Admin divisi menambahkan data perusahaan &amp; PIC kontraktor lewat dashboard.</p>
-                </div>
-                <div class="flow-step reveal" style="transition-delay:160ms">
-                    <div class="sn">3</div>
-                    <h4>Identifikasi Pekerjaan</h4>
-                    <p>Klasifikasi pekerjaan, bahaya, serta APD didiskusikan bersama kontraktor.</p>
-                </div>
-                <div class="flow-step reveal" style="transition-delay:240ms">
-                    <div class="sn">4</div>
-                    <h4>Lengkapi Berkas K3</h4>
-                    <p>Divisi melampirkan dokumen pendukung seperti HIRADC, JSA, atau HSE Plan.</p>
-                </div>
-                <div class="flow-step reveal" style="transition-delay:320ms">
-                    <div class="sn">5</div>
-                    <h4>Ajukan &amp; Verifikasi</h4>
-                    <p>Divisi mengajukan izin kerja untuk diverifikasi Safety Officer sebelum pekerjaan dimulai.</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="flow-note reveal-scale" style="transition-delay:200ms">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-            <span><strong>Penting:</strong> kontraktor tidak memiliki akun dan tidak mendaftar sendiri di sistem ini. Seluruh data kontraktor serta pengajuan izin kerja risiko tinggi diinput dan dikelola oleh divisi INKA yang bekerja sama dengannya.</span>
-        </div>
     </div>
 </section>
 
@@ -386,7 +339,7 @@
                     </div>
                     <div>
                         <h3 class="text-base font-bold text-gray-900">Daftar Permit Kerja Terkini</h3>
-                        <p class="text-xs text-gray-500">Menampilkan 5 permit terbaru dengan update berkala</p>
+                        <p class="text-xs text-gray-500">Menampilkan 10 permit terbaru dengan update berkala</p>
                     </div>
                 </div>
                 <div class="text-xs font-semibold text-gray-500 bg-white px-3 py-1.5 rounded-lg border border-gray-200">
@@ -626,6 +579,53 @@
     </div>
 </section>
 
+<!-- ================= ALUR PENGAJUAN ================= -->
+<section class="py-20 px-6" id="alur">
+    <div class="max-w-[1080px] mx-auto">
+        <div class="max-w-[560px] mx-auto text-center mb-[46px] reveal">
+            <div class="sec-tag">Alur Pengajuan</div>
+            <h2 class="text-[28px] font-extrabold tracking-[-.01em] mb-3 text-[var(--navy-950)]">Bagaimana Kontraktor Bisa Bekerja Sama dengan INKA</h2>
+            <p class="text-[14.5px] text-[var(--ink-600)]">Kontraktor tidak mendaftar sendiri — seluruh data dan pengajuan izin kerja diinput oleh divisi terkait melalui dashboard internal.</p>
+        </div>
+
+        <div class="flow">
+            <div class="flow-line"></div>
+            <div class="flow-grid grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
+                <div class="flow-step reveal" style="transition-delay:0ms">
+                    <div class="sn">1</div>
+                    <h4>Kontraktor Hubungi Divisi</h4>
+                    <p>Kontraktor yang ingin bekerja sama menghubungi PIC divisi INKA yang bersangkutan.</p>
+                </div>
+                <div class="flow-step reveal" style="transition-delay:80ms">
+                    <div class="sn">2</div>
+                    <h4>Divisi Input Data Kontraktor</h4>
+                    <p>Admin divisi menambahkan data perusahaan &amp; PIC kontraktor lewat dashboard.</p>
+                </div>
+                <div class="flow-step reveal" style="transition-delay:160ms">
+                    <div class="sn">3</div>
+                    <h4>Identifikasi Pekerjaan</h4>
+                    <p>Klasifikasi pekerjaan, bahaya, serta APD didiskusikan bersama kontraktor.</p>
+                </div>
+                <div class="flow-step reveal" style="transition-delay:240ms">
+                    <div class="sn">4</div>
+                    <h4>Lengkapi Berkas K3</h4>
+                    <p>Divisi melampirkan dokumen pendukung seperti HIRADC, JSA, atau HSE Plan.</p>
+                </div>
+                <div class="flow-step reveal" style="transition-delay:320ms">
+                    <div class="sn">5</div>
+                    <h4>Ajukan &amp; Verifikasi</h4>
+                    <p>Divisi mengajukan izin kerja untuk diverifikasi Safety Officer sebelum pekerjaan dimulai.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-note reveal-scale" style="transition-delay:200ms">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
+            <span><strong>Penting:</strong> kontraktor tidak memiliki akun dan tidak mendaftar sendiri di sistem ini. Seluruh data kontraktor serta pengajuan izin kerja risiko tinggi diinput dan dikelola oleh divisi INKA yang bekerja sama dengannya.</span>
+        </div>
+    </div>
+</section>
+
 <!-- ================= TENTANG KAMI ================= -->
 <section class="py-20 px-6 bg-white border-y border-[var(--border)]" id="tentang">
     <div class="max-w-[1080px] mx-auto about-grid grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -665,8 +665,8 @@
                 <div>
                     <h5 class="text-[11.5px] font-bold uppercase tracking-wide text-[var(--steel-300)] mb-3.5">Navigasi</h5>
                     <ul class="flex flex-col gap-2.5">
-                        <li><a href="#alur" class="text-sm text-white/85 hover:text-white transition-opacity">Alur Pengajuan</a></li>
                         <li><a href="#monitoring" class="text-sm text-white/85 hover:text-white transition-opacity">Monitoring Permit</a></li>
+                        <li><a href="#alur" class="text-sm text-white/85 hover:text-white transition-opacity">Alur Pengajuan</a></li>
                         <li><a href="#tentang" class="text-sm text-white/85 hover:text-white transition-opacity">Tentang Kami</a></li>
                         <li><a href="{{ route('login') }}" class="text-sm text-white/85 hover:text-white transition-opacity">Login</a></li>
                     </ul>
