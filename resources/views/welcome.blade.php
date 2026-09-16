@@ -42,7 +42,9 @@
 
         .hero {
             position: relative;
-            background: linear-gradient(180deg, rgba(13,21,38,.94), rgba(18,32,64,.97)), var(--navy-950);
+            background: linear-gradient(180deg, rgba(13,21,38,.5), rgba(18,32,64,.6)), url('{{ asset('assets/images/bg-landingpage.jpeg') }}');
+            background-size: 120%;
+            background-position: center 58%;
             color: #fff; overflow: hidden; padding: 86px 0; text-align: center;
         }
 
@@ -59,8 +61,8 @@
 
         .eyebrow {
             display: inline-flex; align-items: center; gap: 7px;
-            background: rgba(245,166,35,.13); border: 1px solid rgba(245,166,35,.35);
-            color: var(--amber-500); font-size: 12px; font-weight: 600;
+            background: rgba(255,255,255,.15); border: 1px solid rgba(255,255,255,.35);
+            color: #fff; font-size: 12px; font-weight: 600;
             padding: 6px 14px; border-radius: 20px; margin-bottom: 20px;
             letter-spacing: .02em;
         }
@@ -258,13 +260,12 @@
 <!-- ================= HERO ================= -->
 <section class="hero">
     <div class="max-w-[660px] mx-auto px-6 hero-inner">
-        <div class="eyebrow hero-animate" id="hero-eyebrow"><span class="dot"></span> SISTEM ONLINE · MONITORING REAL-TIME</div>
-        <h1 class="text-[38px] md:text-[42px] leading-[1.2] font-extrabold tracking-[-.01em] mb-4 hero-animate" id="hero-title">
-            Kelola Izin Kerja Risiko Tinggi <span class="text-[var(--amber-500)]">Kontraktor Anda</span> dengan Lebih Aman
+        <div class="eyebrow hero-animate" id="hero-eyebrow"><span class="dot"></span> SISTEM ONLINE · MONITORING REALTIME</div>
+        <h1 class="text-[38px] md:text-[50px] leading-[1.2] font-extrabold tracking-[-.01em] mb-4 hero-animate" id="hero-title">
+            SIMONIKA  <span class="text-[var(--amber-500)]">MADIUN</span>
         </h1>
-        <p class="text-[15.5px] text-[var(--steel-300)] mb-8 hero-animate" id="hero-sub">
-            Safety Permit INKA Madiun membantu setiap divisi mengelola data kontraktor, mengajukan, memverifikasi, dan memantau izin kerja risiko tinggi secara digital — cepat, tercatat rapi, dan sesuai standar K3.
-        </p>
+        <p class="text-[15.5px] text-white/100 mb-8 hero-animate" id="hero-sub">
+        Sistem Informasi Monitoring dan Izin Kerja INKA Madiun        </p>
         <div class="flex gap-3 justify-center flex-wrap hero-animate" id="hero-actions">
             @auth
                 <a href="{{ route('dashboard') }}" class="btn btn-amber btn-lg">
@@ -284,7 +285,7 @@
                 Alur Pengajuan
             </a>
         </div>
-        <p class="text-xs text-[var(--steel-300)] mt-[18px] hero-animate" id="hero-note">
+        <p class="text-xs text-white/100 mt-[20px] hero-animate" id="hero-note">
             Untuk pegawai/admin divisi INKA. Kontraktor yang ingin bekerja sama tidak mendaftar sendiri — silakan hubungi divisi terkait di INKA Madiun.
         </p>
     </div>
