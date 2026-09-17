@@ -262,7 +262,7 @@
     <div class="max-w-[660px] mx-auto px-6 hero-inner">
         <div class="eyebrow hero-animate" id="hero-eyebrow"><span class="dot"></span> SISTEM ONLINE · MONITORING REALTIME</div>
         <h1 class="text-[38px] md:text-[50px] leading-[1.2] font-extrabold tracking-[-.01em] mb-4 hero-animate" id="hero-title">
-            SIMONIKA  <span class="text-[var(--amber-500)]">MADIUN</span>
+            SIMONIKA  <span class="text-[var(--amber-500)]"> </span>
         </h1>
         <p class="text-[15.5px] text-white/100 mb-8 hero-animate" id="hero-sub">
         Sistem Informasi Monitoring dan Izin Kerja INKA Madiun        </p>
@@ -288,6 +288,41 @@
         <p class="text-xs text-white/100 mt-[20px] hero-animate" id="hero-note">
             Untuk pegawai/admin divisi INKA. Kontraktor yang ingin bekerja sama tidak mendaftar sendiri — silakan hubungi divisi terkait di INKA Madiun.
         </p>
+    </div>
+</section>
+
+<section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-6">
+        <p class="text-center italic text-black-500 mb-10">
+            Pastikan setiap pekerjaan dimulai dengan izin yang tervalidasi demi lingkungan kerja yang aman dan tertib.
+        </p>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
+            <div>
+                <img src="{{ asset('assets/images/brief1.jpeg') }}" alt="Galeri 1" class="w-full h-40 object-cover rounded-lg shadow-sm">
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 1</p>
+            </div>
+            <div>
+                <img src="{{ asset('assets/images/brief2.jpeg') }}" alt="Galeri 2" class="w-full h-40 object-cover rounded-lg shadow-sm">
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 2</p>
+            </div>
+            <div>
+                <img src="{{ asset('assets/images/brief3.jpeg') }}" alt="Galeri 3" class="w-full h-40 object-cover rounded-lg shadow-sm">
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 3</p>
+            </div>
+            <div>
+                <img src="{{ asset('assets/images/brief4.jpeg') }}" alt="Galeri 4" class="w-full h-40 object-cover rounded-lg shadow-sm">
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 4</p>
+            </div>
+            <div>
+                <img src="{{ asset('assets/images/brief5.jpeg') }}" alt="Galeri 5" class="w-full h-40 object-cover rounded-lg shadow-sm">
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 5</p>
+            </div>
+            <div>
+                <img src="{{ asset('assets/images/brief6.jpeg') }}" alt="Galeri 6" class="w-full h-40 object-cover rounded-lg shadow-sm">
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 6</p>
+            </div>
+        </div>
     </div>
 </section>
 
