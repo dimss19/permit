@@ -22,7 +22,6 @@ Route::get('/dashboard', function () {
         'divisi'         => '/divisi/dashboard',
         'staff'          => '/admin/dashboard',
         'manager'        => '/admin/dashboard',
-        'senior-manager' => '/admin/dashboard',
     ];
     return redirect($map[Auth::user()->role] ?? '/');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -58,8 +57,8 @@ Route::middleware(['auth', 'prevent-back-history', 'role:divisi'])->group(functi
     Route::get('/divisi/permits/{permitId}/documents/{documentId}/download', [\App\Http\Controllers\Divisi\PermitController::class, 'downloadDocument'])->name('permits.documents.download');
 });
 
-// ===== ADMIN (role:staff, manager, senior-manager) =====
-Route::middleware(['auth', 'prevent-back-history', 'role:staff,manager,senior-manager'])->group(function () {
+// ===== ADMIN (role:staff, manager) =====
+Route::middleware(['auth', 'prevent-back-history', 'role:staff,manager'])->group(function () {
     Route::get('/admin/dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'index']);
     Route::get('/admin/approvals', [\App\Http\Controllers\Admin\ApprovalController::class, 'index']);
     Route::get('/admin/approvals/{id}', [\App\Http\Controllers\Admin\ApprovalController::class, 'show']);
