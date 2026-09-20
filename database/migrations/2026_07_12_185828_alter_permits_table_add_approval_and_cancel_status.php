@@ -14,7 +14,7 @@ return new class extends Migration
     {
         // 1. Update ENUM 'status' to include 'Cancelled' (MySQL only, SQLite ignores enums)
         if (DB::getDriverName() === 'mysql') {
-            DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed', 'Cancelled') DEFAULT 'Draft'");
+            DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Revision', 'Active', 'Closed', 'Cancelled') DEFAULT 'Draft'");
         }
 
         // 2. Add 'approval_signatures' column
@@ -33,7 +33,7 @@ return new class extends Migration
         });
 
         if (DB::getDriverName() === 'mysql') {
-            DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed') DEFAULT 'Draft'");
+            DB::statement("ALTER TABLE permits MODIFY status ENUM('Draft', 'Submitted', 'Review Staff', 'Review Manager', 'Revision', 'Active', 'Closed') DEFAULT 'Draft'");
         }
     }
 };
