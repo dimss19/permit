@@ -12,7 +12,7 @@
             'Active'                   => 'bg-green-100 text-green-700',
             'Closed'                   => 'bg-slate-100 text-slate-600',
         ];
-        $badge = $statusMap[$permit->status] ?? 'bg-gray-1 00 text-gray-600';
+        $badge = $statusMap[$permit->status] ?? 'bg-gray-100 text-gray-600';
     @endphp
 
     {{-- Breadcrumb + aksi --}}

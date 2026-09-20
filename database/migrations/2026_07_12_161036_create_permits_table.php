@@ -24,7 +24,6 @@ return new class extends Migration
                 'Submitted',
                 'Review Staff',
                 'Review Manager',
-                'Review Senior Manager',
                 'Revision',
                 'Active',
                 'Closed',
