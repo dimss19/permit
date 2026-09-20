@@ -23,11 +23,10 @@
             
             $pendingCount = 0;
             $pendingPermits = [];
-            if (in_array($role, ['staff', 'manager', 'senior-manager'])) {
+            if (in_array($role, ['staff', 'manager'])) {
                 $statusMap = [
                     'staff' => 'Review Staff',
-                    'manager' => 'Review Manager',
-                    'senior-manager' => 'Review Senior Manager'
+                    'manager' => 'Review Manager'
                 ];
                 $expectedStatus = $statusMap[$role] ?? null;
                 if ($expectedStatus) {

@@ -142,7 +142,6 @@
                                 'Submitted'                => 'bg-blue-100 text-blue-700',
                                 'Review Staff'             => 'bg-orange-100 text-orange-700',
                                 'Review Manager'           => 'bg-orange-100 text-orange-700',
-                                'Review Senior Manager'    => 'bg-orange-100 text-orange-700',
                                 'Revision'                 => 'bg-red-100 text-red-700',
                                 'Active'                   => 'bg-green-100 text-green-700',
                                 'Closed'                   => 'bg-slate-100 text-slate-600',
