@@ -301,7 +301,7 @@
                         $sm = ''; $sm_sig = '';
                         foreach($sigs as $s) {
                             if($s['role'] == 'Staff' || $s['role'] == 'Safety Officer') { $so = $s['name']; $so_sig = $s['signature']; }
-                            if($s['role'] == 'Manager' || $s['role'] == 'Senior Manager' || str_contains($s['role'], 'QM & SHE')) { $sm = $s['name']; $sm_sig = $s['signature']; }
+                            if($s['role'] == 'Manager' || str_contains($s['role'], 'QM & SHE')) { $sm = $s['name']; $sm_sig = $s['signature']; }
                         }
                     @endphp
                     <tr>
@@ -320,16 +320,6 @@
                         </td>
                         <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
                             @if($so_sig)<img src="{{ $so_sig }}" style="max-height: 30px;">@endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Senior Manager GA</div>
-                            <!-- ponytail: nama SM dikunci, hanya ada 1 senior manager -->
-                            <div class="text-center" style="padding: 2px;">Wahyu Meidianto</div>
-                        </td>
-                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
-                            @if($sm_sig)<img src="{{ $sm_sig }}" style="max-height: 30px;">@endif
                         </td>
                     </tr>
                 </table>
