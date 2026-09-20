@@ -25,7 +25,7 @@ Stack: Laravel 13 • PHP 8.3 • Blade • Tailwind v3 • Alpine.js • MySQL 
 5. Logika inti: `no_permit`, tanda tangan, dokumen, PDF
 6. Routes & Controller per role
 7. Status permit & alur approval
-8. **User Flow** per role (publik → divisi → staff → manager → senior-manager → superadmin)
+8. **User Flow** per role (publik → divisi → staff → manager → superadmin)
 9. Views / UI per role + wizard 7 langkah
 10. Keamanan & cara menjalankan
 
@@ -36,7 +36,7 @@ Stack: Laravel 13 • PHP 8.3 • Blade • Tailwind v3 • Alpine.js • MySQL 
 Digitalisasi **pengajuan + verifikasi berlapis izin kerja risiko tinggi** kontraktor di PT INKA Madiun.
 
 - **Divisi** mengajukan permit (klasifikasi, pekerja, peralatan, bahaya, pencegahan, APD, dokumen, tanda tangan).
-- **Staff → Manager → Senior Manager HSE** mereview berurutan sampai `Active`.
+- **Staff → Manager HSE** mereview berurutan sampai `Active`.
 - **Superadmin** hanya mengelola akun divisi + master divisi.
 - **Publik** (tanpa login) melihat landing + tabel monitoring permit non-Draft.
 - Seluruh teks UI **Bahasa Indonesia**.
@@ -73,7 +73,7 @@ app/
     Auth/            # login/logout (Breeze kustom)
     SuperAdmin/      # Dashboard, User, Division, Permit(pdf)
     Divisi/          # Dashboard, Permit, PermitShow, History, Cancellation
-    Admin/           # Dashboard, Approval, History (staff/manager/senior-manager)
+    Admin/           # Dashboard, Approval, History (staff/manager)
   Http/Middleware/   # EnsureRole.php, PreventBackHistory.php
   Http/Requests/Auth/LoginRequest.php
   Models/            # User, Permit, PermitDocument, Classification, Division
@@ -100,13 +100,13 @@ Aturan repo: route kebanyakan **tanpa nama**, view pakai URL hardcoded (`/divisi
 | `routes/auth.php` | `GET/POST /login` (guest), `POST /logout` (auth) |
 | `database/seeders/UserSeeder.php` | 5 akun demo, semua password `password` |
 
-Akun demo: `superadmin` • `divisi_teknik` • `staff_hse` • `manager_hse` • `seniormanager_hse` (`@inka.co.id`).
+Akun demo: `superadmin` • `divisi_teknik` • `staff_hse` • `manager_hse` (`@inka.co.id`).
 
 ---
 
 ## 5. Role, Redirect & Middleware
 
-5 role di `users.role`: `superadmin | divisi | staff | manager | senior-manager`.
+4 role di `users.role`: `superadmin | divisi | staff | manager`.
 
 **Redirect map ganda — wajib sinkron:**
 
@@ -116,7 +116,7 @@ Akun demo: `superadmin` • `divisi_teknik` • `staff_hse` • `manager_hse` �
 ```php
 superadmin => /superadmin/dashboard
 divisi     => /divisi/dashboard
-staff, manager, senior-manager => /admin/dashboard
+staff, manager => /admin/dashboard
 ```
 
 **Middleware** (`bootstrap/app.php:14-18`):
@@ -172,7 +172,7 @@ Skema detail: `database/migrations/2026_07_12_*`, `2026_08_01_*`, `2026_09_07_*`
 - **Dokumen** (`PermitDocument`, tabel `permit_documents`): tiap file `max 10MB`, `mimes: pdf,doc,docx,xls,xlsx,jpg,jpeg,png,gif`. Simpan `storeAs('permits/{id}', time-rand.ext)` disk `local`. Download dicek ganda `permit.user_id + doc.permit_id`.
 - **PDF** (`Barryvdh\DomPDF`, view `divisi/permits/pdf.blade.php`, A4 portrait, nama `Permit-{no_permit}.pdf`):
   - `Divisi\PermitShowController@downloadPdf` — pemilik bebas unduh tanpa gate status.
-  - `Admin\ApprovalController@downloadPdf` + `SuperAdmin\PermitController@downloadPdf` — gate 6 status (`Review Staff/Manager/Senior Manager, Revision, Active, Closed`); tolak `Draft/Cancelled/Submitted` → 403.
+  - `Admin\ApprovalController@downloadPdf` + `SuperAdmin\PermitController@downloadPdf` — gate 5 status (`Review Staff/Manager, Revision, Active, Closed`); tolak `Draft/Cancelled/Submitted` → 403.
 
 ---
 
@@ -221,16 +221,16 @@ Migrasi `2026_07_12_161036 + 2026_07_12_185828`:
 
 ```text
 Draft | Submitted | Review Staff | Review Manager |
-Review Senior Manager | Revision | Active | Closed | Cancelled
+Revision | Active | Closed | Cancelled
 ```
 
 | Status | Makna |
 |---|---|
 | `Draft` | Milik divisi, bisa edit |
 | `Submitted` | **Orphan, jangan dipakai logika** — submit langsung ke `Review Staff`, filter ini bisa 0 |
-| `Review Staff/Manager/Senior Manager` | Antrean tiap level |
+| `Review Staff/Manager` | Antrean tiap level |
 | `Revision` | Dikembalikan + `catatan_revisi` wajib, bisa edit & submit ulang dari awal |
-| `Active` | Disetujui senior-manager (terminal sukses) |
+| `Active` | Disetujui manager (terminal sukses) |
 | `Closed` | Ada kolom `closed_at` tapi **belum ada kode yang menulisnya** (hanya seeder) |
 | `Cancelled` | Dibatalkan divisi (`cancelled_at + reason`), langsung tanpa approval |
 
@@ -245,8 +245,7 @@ Perhatian: tidak ada kolom `active_at` meski dirujuk `ApprovalController` (bug t
 | Approver | Harus di status | `approve` → | `revise` → |
 |---|---|---|---|
 | staff | `Review Staff` | `Review Manager` | `Revision` |
-| manager | `Review Manager` | `Review Senior Manager` | `Revision` |
-| senior-manager | `Review Senior Manager` | `Active` | `Revision` |
+| manager | `Review Manager` | `Active` | `Revision` |
 
 - `approve` wajib `tanda_tangan`, `revise` wajib `catatan_revisi (max 500)`, status tak cocok → redirect error (tidak bisa lompat antrean).
 - Approve menambah `approval_signatures[]` + reset `catatan_revisi=null`.
@@ -264,18 +263,17 @@ flowchart TD
   LOGIN --> DASH{dashboard redirect}
   DASH -->|superadmin| SA[/superadmin/dashboard/]
   DASH -->|divisi| DIV[/divisi/dashboard/]
-  DASH -->|staff/manager/senior| ADM[/admin/dashboard/]
+  DASH -->|staff/manager| ADM[/admin/dashboard/]
   DIV --> BUAT[Buat Permit wizard] --> PILIH{action}
   PILIH -->|draft| DRAFT[(Draft)]
   PILIH -->|submit| RS[(Review Staff)]
   DRAFT -->|edit+submit| RS
   RS -->|staff approve| RM[(Review Manager)]
-  RM -->|manager approve| RSM[(Review Senior Manager)]
-  RSM -->|senior approve| ACT[(Active)]
-  RS & RM & RSM -->|revise + catatan| REV[(Revision)]
+  RM -->|manager approve| ACT[(Active)]
+  RS & RM -->|revise + catatan| REV[(Revision)]
   REV -->|divisi edit+submit| RS
   DIV -->|cancel kapan pun| CAN[(Cancelled)]
-  RS & RM & RSM & ACT --> ADM_REV[Review di /admin/approvals]
+  RS & RM & ACT --> ADM_REV[Review di /admin/approvals]
   SA --> KELOLA[Kelola akun divisi + master divisi]
 ```
 
@@ -339,30 +337,16 @@ File: `Admin\ApprovalController@index/show/update`, `admin/approvals/*.blade.php
 Login → /admin/dashboard (pending = Review Manager)
 → /admin/approvals (antrean Review Manager)
 → /admin/approvals/{id}:
-  • Setujui + TTD → Review Senior Manager
+  • Setujui & Aktifkan + TTD → Active (terminal)
   • Kembalikan + catatan → Revision
 → history + PDF sama seperti staff
 ```
 
-Bedanya dengan staff: tidak ada widget "Permit Direvisi" khusus, antrean berbeda, tombol approve bertuliskan "Setujui & Lanjutkan ke Senior Manager".
+Bedanya dengan staff: tidak ada widget "Permit Direvisi" khusus, antrean berbeda, tombol approve bertuliskan "Setujui & Aktifkan".
 
 ---
 
-## 19. USER FLOW — Senior Manager (Reviewer 3)
-
-```text
-Login → /admin/dashboard (pending = Review Senior Manager + Active hari ini)
-→ /admin/approvals → /admin/approvals/{id}:
-  • Setujui & Aktifkan + TTD → Active (terminal)
-  • Kembalikan + catatan → Revision
-→ history global + unduh PDF
-```
-
-Setelah `Active`, alur `Active → Closed` belum ada tombol/kode (hanya kolom `closed_at` + data seeder).
-
----
-
-## 20. USER FLOW — Superadmin
+## 19. USER FLOW — Superadmin
 
 ```text
 Login → /superadmin/dashboard (Total Divisi / Aktif / Nonaktif + 5 akun terbaru)
@@ -378,7 +362,7 @@ Tidak ada dashboard permit / approval untuk superadmin.
 
 ---
 
-## 21. Views Publik — `welcome.blade.php`
+## 20. Views Publik — `welcome.blade.php`
 
 - Hero: gradient navy + `bg-landingpage.jpeg` (`background-size 120%, center 58%`), eyebrow putih, judul `SIMONIKA MADIUN`, sub *"Sistem Informasi Monitoring dan Izin Kerja INKA Madiun"*.
 - Section `#monitoring`: tabel permit + modal Alpine `openModal(data)` read-only.
@@ -388,7 +372,7 @@ Tidak ada dashboard permit / approval untuk superadmin.
 
 ---
 
-## 22. Views Divisi — Wizard 7 Langkah
+## 21. Views Divisi — Wizard 7 Langkah
 
 `divisi/permits/create.blade.php` (±840 baris), `edit.blade.php` = prefill + `hapus_dokumen[]`.
 
@@ -410,7 +394,7 @@ Nav `Kembali/Selanjutnya`, skip Step 1 bila Internal, `idempotency_key` anti dou
 
 ---
 
-## 23. Views Approval & Detail
+## 22. Views Approval & Detail
 
 **Detail** (`divisi/permits/show.blade.php` ≈ `admin/approvals/show.blade.php`):
 
@@ -423,7 +407,7 @@ Nav `Kembali/Selanjutnya`, skip Step 1 bila Internal, `idempotency_key` anti dou
 
 ---
 
-## 24. Views Superadmin + Komponen & Tema
+## 23. Views Superadmin + Komponen & Tema
 
 **Superadmin**: `dashboard.blade.php` (widget + tabel akun), `users/index|create|edit`, `divisions/index|form`.
 
@@ -435,7 +419,7 @@ Nav `Kembali/Selanjutnya`, skip Step 1 bila Internal, `idempotency_key` anti dou
 
 ---
 
-## 25. Keamanan & Validasi Penting
+## 24. Keamanan & Validasi Penting
 
 - **IDOR guard**: controller divisi selalu `where user_id Auth::id()` / `scopeByDivisi`; download dokumen cek `permit.user_id + doc.permit_id`.
 - **Gate status**: approval hanya bila `status == expectedStatus`; PDF/download admin gate 6 status.
@@ -445,7 +429,7 @@ Nav `Kembali/Selanjutnya`, skip Step 1 bila Internal, `idempotency_key` anti dou
 
 ---
 
-## 26. Menjalankan & Menguji
+## 25. Menjalankan & Menguji
 
 ```bash
 npm run build
@@ -460,19 +444,17 @@ composer run dev
 | `divisi_teknik` | divisi | `/divisi/dashboard` |
 | `staff_hse` | staff | `/admin/dashboard` |
 | `manager_hse` | manager | `/admin/dashboard` |
-| `seniormanager_hse` | senior-manager | `/admin/dashboard` |
 
 Test: `composer run test` (SQLite memory). Catatan: kolom `enum` MySQL tidak dienforce SQLite — cek string status manual ke migrasi.
 
 ---
 
-## 27. Penutup — Alur Satu Kalimat per Role
+## 26. Penutup — Alur Satu Kalimat per Role
 
 - **Publik**: lihat monitoring → login.
 - **Divisi**: buat → submit → pantau → perbaiki bila revisi → batalkan bila perlu.
 - **Staff**: review antrean 1 → teruskan / kembalikan.
-- **Manager**: review antrean 2 → teruskan / kembalikan.
-- **Senior Manager**: review akhir → aktifkan / kembalikan.
+- **Manager**: review akhir → aktifkan / kembalikan.
 - **Superadmin**: kelola akun + divisi.
 
 Dokumen ini (`presentasi-sistem-permit.md`) adalah bahan PPT-nya — tiap heading `---` adalah 1 slide dan bisa langsung dipresentasikan dari Markdown.

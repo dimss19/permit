@@ -19,12 +19,12 @@ php artisan serve   # dev DB = MySQL 'workpermit' (see .env)
 
 - Login is by **username + password**, NOT email (customized Breeze). See `app/Http/Requests/Auth/LoginRequest.php` and `resources/views/auth/login.blade.php`.
 - Inactive users (`users.is_active = false`) are blocked at login. Rate limit: 5 attempts/min per username+IP.
-- Roles (`users.role`): `superadmin`, `divisi`, `staff`, `manager`, `senior-manager`.
+- Roles (`users.role`): `superadmin`, `divisi`, `staff`, `manager`.
 - Post-login redirect map lives in **two** places — keep in sync: `routes/web.php` (`/dashboard` route) and `AuthenticatedSessionController::store()`.
 
 ## Architecture
 
-- Controllers grouped by role namespace: `App\Http\Controllers\SuperAdmin`, `Divisi`, `Admin` (the latter shared by staff/manager/senior-manager).
+- Controllers grouped by role namespace: `App\Http\Controllers\SuperAdmin`, `Divisi`, `Admin` (the latter shared by staff/manager).
 - `App\Models\Permit`, `Division`, `User`. Permit JSON columns cast to `array`: `klasifikasi_pekerjaan`, `daftar_pekerja`, `peralatan_kerja`, `bahaya_pekerjaan`, `tindakan_pencegahan`, `apd`, `approval_signatures`, `cancellation_signatures`.
 - The `divisions` table exists but is **not FK-linked** to users/permits. "Divisi" is just a `role`. SuperAdmin's DivisionController manages this orphaned table; `DivisionSeeder` exists but is **not called** by `DatabaseSeeder`.
 - Custom middleware `prevent-back-history` (alias registered in `bootstrap/app.php`) wraps the authed role routes in `routes/web.php`.
@@ -32,9 +32,9 @@ php artisan serve   # dev DB = MySQL 'workpermit' (see .env)
 
 ## Permit flow & quirks
 
-Statuses (MySQL enum, +`Cancelled` from a later migration): `Draft`, `Submitted`, `Review Staff`, `Review Manager`, `Review Senior Manager`, `Revision`, `Active`, `Closed`, `Cancelled`.
+Statuses (MySQL enum, +`Cancelled` from a later migration): `Draft`, `Submitted`, `Review Staff`, `Review Manager`, `Revision`, `Active`, `Closed`, `Cancelled`.
 
-- Approval order: Draft → Review Staff → Review Manager → Review Senior Manager → Active → Closed.
+- Approval order: Draft → Review Staff → Review Manager → Active → Closed.
 - **`Submitted` is an orphan status** — submit goes straight to `Review Staff`; the "Submitted" history filter can return 0 (documented bug #10). Don't add logic depending on it.
 - `no_permit` is generated as `WP-<year>-<8 hex chars>` via `random_bytes` (race-condition fix already applied; do not revert to `count()+1`).
 - "Tanda tangan" (signature) is a base64 PNG data-URL in a hidden input, not a real file. **No actual document upload is implemented yet** (forms lack `enctype="multipart/form-data"`).
@@ -51,4 +51,4 @@ Statuses (MySQL enum, +`Cancelled` from a later migration): `Draft`, `Submitted`
 - Blade views + Tailwind CSS v3 + Alpine.js. Custom theme colors in `tailwind.config.js`: `inka-navy`, `inka-light-gray`, `inka-text-muted`, `inka-border`, `accent-orange`; font Inter.
 - Design per `prd.md`: minimal/Apple-like, card-based, lots of whitespace, big primary buttons.
 - Controllers query permits scoped to `Auth::id()` (e.g., `Permit::where('user_id', Auth::id())`) rather than route-model binding — preserve this ownership scoping (IDOR guard).
-- Seeded demo accounts, all password `password` (`database/seeders/UserSeeder.php`): `superadmin`, `divisi_teknik`, `staff_hse`, `manager_hse`, `seniormanager_hse` @ `inka.co.id`.
+- Seeded demo accounts, all password `password` (`database/seeders/UserSeeder.php`): `superadmin`, `divisi_teknik`, `staff_hse`, `manager_hse` @ `inka.co.id`.
