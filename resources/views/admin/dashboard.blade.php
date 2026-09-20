@@ -5,7 +5,6 @@
         $roleName = match($role) {
             'staff' => 'Staff',
             'manager' => 'Manager',
-            'senior-manager' => 'Senior Manager',
             default => 'Admin'
         };
     @endphp
@@ -41,23 +40,7 @@
         </a>
         @endif
 
-        @if($role === 'senior-manager')
-        {{-- Permit Aktif Hari Ini (Khusus Senior Manager) --}}
-        <a href="/admin/history?status=Active"
-           class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-green-200 transition-all group">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Active Hari Ini</p>
-                <div class="w-8 h-8 rounded-xl bg-green-50 flex items-center justify-center group-hover:bg-green-100 transition-colors">
-                    <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                </div>
-            </div>
-            <p class="text-4xl font-bold text-green-500">{{ $counts['active_today'] ?? 0 }}</p>
-            <p class="text-xs text-gray-400 mt-1">Permit disetujui hari ini</p>
-        </a>
-        @endif
-
-        {{-- Permit Hari Ini (Semua Role, kalau Staff/Manager bisa pakai ini) --}}
-        @if($role !== 'senior-manager')
+        {{-- Permit Hari Ini (Semua Role) --}}
         <a href="/admin/approvals?date=today"
            class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-gray-200 transition-all group">
             <div class="flex items-center justify-between mb-3">
@@ -69,7 +52,6 @@
             <p class="text-4xl font-bold text-gray-700">{{ $counts['today'] ?? 0 }}</p>
             <p class="text-xs text-gray-400 mt-1">Antrean masuk hari ini</p>
         </a>
-        @endif
 
     </div>
 
