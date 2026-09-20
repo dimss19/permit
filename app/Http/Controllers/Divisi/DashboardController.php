@@ -16,7 +16,7 @@ class DashboardController extends Controller
         $counts = [
             'draft'     => Permit::where('user_id', $userId)->where('status', 'Draft')->count(),
             'submitted' => Permit::where('user_id', $userId)
-                                  ->whereIn('status', ['Submitted', 'Review Staff', 'Review Manager', 'Review Senior Manager'])
+                                  ->whereIn('status', ['Submitted', 'Review Staff', 'Review Manager'])
                                   ->count(),
             'active'    => Permit::where('user_id', $userId)->where('status', 'Active')->count(),
             'closed'    => Permit::where('user_id', $userId)->where('status', 'Closed')->count(),

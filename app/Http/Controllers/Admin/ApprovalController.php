@@ -29,19 +29,10 @@ class ApprovalController extends Controller
             return [
                 'roleName' => 'Manager',
                 'expectedStatus' => 'Review Manager',
-                'nextStatus' => 'Review Senior Manager',
-                'nextRoleName' => 'Senior Manager',
-                'sortCol' => 'updated_at',
-                'dateColumnLabel' => 'Tgl. Masuk Manager'
-            ];
-        } elseif ($role === 'senior-manager') {
-            return [
-                'roleName' => 'Senior Manager',
-                'expectedStatus' => 'Review Senior Manager',
                 'nextStatus' => 'Active',
                 'nextRoleName' => 'Aktif',
                 'sortCol' => 'updated_at',
-                'dateColumnLabel' => 'Tgl. Masuk Senior Manager'
+                'dateColumnLabel' => 'Tgl. Masuk Manager'
             ];
         }
 
@@ -159,7 +150,7 @@ class ApprovalController extends Controller
         $permit = Permit::findOrFail($permitId);
 
         // Hanya izinkan download dari permit yang sedang dalam status review
-        $allowedStatuses = ['Review Staff', 'Review Manager', 'Review Senior Manager', 'Revision', 'Active', 'Closed'];
+        $allowedStatuses = ['Review Staff', 'Review Manager', 'Revision', 'Active', 'Closed'];
         if (!in_array($permit->status, $allowedStatuses)) {
             abort(403, 'Permit tidak tersedia untuk diakses.');
         }

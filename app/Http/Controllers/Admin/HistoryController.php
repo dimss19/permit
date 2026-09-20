@@ -16,7 +16,6 @@ class HistoryController extends Controller
         $roleName = match($role) {
             'staff' => 'Staff',
             'manager' => 'Manager',
-            'senior-manager' => 'Senior Manager',
             default => 'Admin'
         };
 

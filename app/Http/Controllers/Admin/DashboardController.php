@@ -36,16 +36,6 @@ class DashboardController extends Controller
                 ->where('status', 'Review Manager')
                 ->orderBy('updated_at', 'asc')
                 ->get();
-        } 
-        elseif ($role === 'senior-manager') {
-            $counts = [
-                'pending' => Permit::where('status', 'Review Senior Manager')->count(),
-                'active_today' => Permit::where('status', 'Active')->whereDate('updated_at', $today)->count(),
-            ];
-            $permits = Permit::with(['user', 'classifications'])
-                ->where('status', 'Review Senior Manager')
-                ->orderBy('updated_at', 'asc')
-                ->get();
         }
 
         return view('admin.dashboard', compact('counts', 'permits', 'role'));

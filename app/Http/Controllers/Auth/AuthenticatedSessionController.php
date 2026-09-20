@@ -32,11 +32,10 @@ class AuthenticatedSessionController extends Controller
         $role = Auth::user()->role;
 
         $redirectMap = [
-            'superadmin'     => '/superadmin/dashboard',
-            'divisi'         => '/divisi/dashboard',
-            'staff'          => '/admin/dashboard',
-            'manager'        => '/admin/dashboard',
-            'senior-manager' => '/admin/dashboard',
+            'superadmin' => '/superadmin/dashboard',
+            'divisi'     => '/divisi/dashboard',
+            'staff'      => '/admin/dashboard',
+            'manager'    => '/admin/dashboard',
         ];
 
         $destination = $redirectMap[$role] ?? '/dashboard';
