@@ -138,7 +138,7 @@ class PermitSeeder extends Seeder
                 'telepon'          => '088901234567',
                 'tanggal_mulai'    => Carbon::now()->addDays(4),
                 'tanggal_selesai'  => Carbon::now()->addDays(6),
-                'status'           => 'Review Senior Manager',
+                'status'           => 'Active',
                 'klasifikasi_pekerjaan' => ['galian', 'ketinggian'],
                 'submitted_at'     => Carbon::now()->subDays(2),
                 'approval_signatures' => [
