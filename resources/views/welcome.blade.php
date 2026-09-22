@@ -299,28 +299,40 @@
 
         <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             <div>
-                <img src="{{ asset('assets/images/brief1.jpeg') }}" alt="Galeri 1" class="w-full h-40 object-cover rounded-lg shadow-sm">
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 1</p>
+                <div class="overflow-hidden rounded-lg shadow-sm">
+                    <img src="{{ asset('assets/images/brief1.jpeg') }}" alt="Galeri 1" class="w-full h-40 object-cover [object-position:100%_80%] scale-110 hover:scale-125 transition-transform duration-300">
+                </div>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Safety Briefing</p>
             </div>
             <div>
-                <img src="{{ asset('assets/images/brief2.jpeg') }}" alt="Galeri 2" class="w-full h-40 object-cover rounded-lg shadow-sm">
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 2</p>
+                <div class="overflow-hidden rounded-lg shadow-sm">
+                    <img src="{{ asset('assets/images/brief2.jpeg') }}" alt="Galeri 2" class="w-full h-40 object-cover scale-110 hover:scale-125 transition-transform duration-300">
+                </div>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3"> Safety Induction </p>
             </div>
             <div>
-                <img src="{{ asset('assets/images/brief3.jpeg') }}" alt="Galeri 3" class="w-full h-40 object-cover rounded-lg shadow-sm">
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 3</p>
+                <div class="overflow-hidden rounded-lg shadow-sm">
+                    <img src="{{ asset('assets/images/brief3.jpeg') }}" alt="Galeri 3" class="w-full h-40 object-cover [object-position:center_80%] scale-110 hover:scale-125 transition-transform duration-300">
+                </div>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Audit Eksternal</p>
             </div>
             <div>
-                <img src="{{ asset('assets/images/brief4.jpeg') }}" alt="Galeri 4" class="w-full h-40 object-cover rounded-lg shadow-sm">
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 4</p>
+                <div class="overflow-hidden rounded-lg shadow-sm">
+                    <img src="{{ asset('assets/images/brief4.jpeg') }}" alt="Galeri 4" class="w-full h-40 object-cover scale-110 hover:scale-125 transition-transform duration-300">
+                </div>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Inspeksi 5R</p>
             </div>
             <div>
-                <img src="{{ asset('assets/images/brief5.jpeg') }}" alt="Galeri 5" class="w-full h-40 object-cover rounded-lg shadow-sm">
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 5</p>
+                <div class="overflow-hidden rounded-lg shadow-sm">
+                    <img src="{{ asset('assets/images/brief5.jpeg') }}" alt="Galeri 5" class="w-full h-40 object-cover [object-position:100%_80%] scale-110 hover:scale-125 transition-transform duration-300">
+                </div>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Safety Patrol</p>
             </div>
             <div>
-                <img src="{{ asset('assets/images/brief6.jpeg') }}" alt="Galeri 6" class="w-full h-40 object-cover rounded-lg shadow-sm">
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Judul Foto 6</p>
+                <div class="overflow-hidden rounded-lg shadow-sm">
+                    <img src="{{ asset('assets/images/brief6.jpeg') }}" alt="Galeri 6" class="w-full h-40 object-cover [object-position:100%_100%] scale-110 hover:scale-125 transition-transform duration-300">
+                </div>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Audit SMK3LH</p>
             </div>
         </div>
     </div>

@@ -216,9 +216,9 @@
                     </div>
                     <div id="peralatan-list" class="space-y-2">
                         <div class="peralatan-row grid grid-cols-4 gap-2 items-center">
-                            <input type="text" name="peralatan_kerja[0][alat]" placeholder="mis. Gerinda" class="form-input text-base">
+                            <input type="text" name="peralatan_kerja[0][alat]" placeholder="e.g. Gerinda" class="form-input text-base">
                             <input type="text" name="peralatan_kerja[0][jumlah_alat]" placeholder="1" class="form-input text-base">
-                            <input type="text" name="peralatan_kerja[0][material]" placeholder="mis. Baja" class="form-input text-base">
+                            <input type="text" name="peralatan_kerja[0][material]" placeholder="e.g. Baja" class="form-input text-base">
                             <input type="text" name="peralatan_kerja[0][jumlah_material]" placeholder="5 kg" class="form-input text-base">
                         </div>
                     </div>
