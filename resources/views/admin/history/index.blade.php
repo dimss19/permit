@@ -72,7 +72,7 @@
                             <td class="px-6 py-3.5 whitespace-nowrap"><span class="font-semibold text-gray-800">{{ $permit->no_permit }}</span></td>
                             <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
-                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? '—' }}</td>
+                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}</td>
                             <td class="px-6 py-3.5 text-gray-600 text-xs">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5 text-gray-600 text-xs">{{ $permit->lokasi ?? '—' }}</td>
                             <td class="px-6 py-3.5 whitespace-nowrap"><span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[11px] font-semibold {{ $badge }}">{{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}</span></td>

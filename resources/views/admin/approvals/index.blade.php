@@ -82,7 +82,7 @@
                             <td class="px-6 py-3.5 whitespace-nowrap"><a href="/admin/approvals/{{ $permit->id }}" class="font-semibold text-inka-navy hover:underline" onclick="event.stopPropagation()">{{ $permit->no_permit }}</a></td>
                             <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
-                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? '—' }}</td>
+                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}</td>
                             <td class="px-6 py-3.5 text-gray-600 text-xs">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5 text-gray-600 text-xs">{{ $permit->lokasi ?? '—' }}</td>
                             <td class="px-6 py-3.5 whitespace-nowrap">

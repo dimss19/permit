@@ -4,10 +4,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Permit {{ $permit->no_permit }}</title>
     <style>
-        @page { margin: 20px 30px; }
+        @page { margin: 12px 25px; }
         body { font-family: sans-serif; font-size: 10px; line-height: 1.2; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 4px; vertical-align: top; }
+        th, td { border: 1px solid #000; padding: 3px; vertical-align: top; }
         .no-border { border: none !important; }
         .text-center { text-align: center; }
         .text-left { text-align: left; }
@@ -351,19 +351,18 @@
                         }
                     @endphp
                     <tr>
-                        <td style="border: none; border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 0;">
+                        <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
                             <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Safety Officer</div>
-                            <div class="text-center" style="padding: 2px;">{{ $cso }}</div>
+                            <div class="text-center" style="padding: 2px;">Staff HSE  </div>
                         </td>
                         <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
-                            @if($cso_sig)<img src="{{ $cso_sig }}" style="max-height: 30px;">@endif
+                            @if($csm_sig)<img src="{{ $csm_sig }}" style="max-height: 30px;">@endif
                         </td>
                     </tr>
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">SM GA</div>
-                            <!-- ponytail: nama SM dikunci, hanya ada 1 senior manager -->
-                            <div class="text-center" style="padding: 2px;">Wahyu Meidianto</div>
+                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Manager HSE</div>
+                            <div class="text-center" style="padding: 2px;">Dimas Ali Akbar</div>
                         </td>
                         <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
                             @if($csm_sig)<img src="{{ $csm_sig }}" style="max-height: 30px;">@endif

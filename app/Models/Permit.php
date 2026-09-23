@@ -12,6 +12,7 @@ class Permit extends Model
     protected $fillable = [
         'no_permit',
         'user_id',
+        'divisi_pengaju',
         'tipe',
         'nama_pekerjaan',
         'kontraktor',

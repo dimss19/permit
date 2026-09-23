@@ -248,6 +248,7 @@
             <a href="#tentang" class="hover:text-[var(--navy-950)] transition-colors">Tentang Kami</a>
         </div>
         <div class="flex items-center gap-2.5">
+            <a href="/ajukan-permit" class="btn btn-amber">Ajukan Permit</a>
             @auth
                 <a href="{{ route('dashboard') }}" class="btn btn-solid">Dashboard</a>
             @else
@@ -267,26 +268,25 @@
         <p class="text-[15.5px] text-white/100 mb-8 hero-animate" id="hero-sub">
         Sistem Informasi Monitoring dan Izin Kerja INKA Madiun        </p>
         <div class="flex gap-3 justify-center flex-wrap hero-animate" id="hero-actions">
+            <a href="/ajukan-permit" class="btn btn-amber btn-lg">
+                Ajukan Safety Permit
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </a>
             @auth
-                <a href="{{ route('dashboard') }}" class="btn btn-amber btn-lg">
+                <a href="{{ route('dashboard') }}" class="btn btn-outline-light btn-lg">
                     Ke Dashboard
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
             @else
-                <a href="{{ route('login') }}" class="btn btn-amber btn-lg">
-                    Masuk
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                <a href="{{ route('login') }}" class="btn btn-outline-light btn-lg">
+                    Masuk Petugas
                 </a>
             @endauth
             <a href="#monitoring" class="btn btn-outline-light btn-lg">
                 Monitoring Permit
             </a>
-            <a href="#alur" class="btn btn-outline-light btn-lg">
-                Alur Pengajuan
-            </a>
         </div>
         <p class="text-xs text-white/100 mt-[20px] hero-animate" id="hero-note">
-            Untuk pegawai/admin divisi INKA. Kontraktor yang ingin bekerja sama tidak mendaftar sendiri — silakan hubungi divisi terkait di INKA Madiun.
+            Tanpa akun. Isi form pengajuan langsung — permit otomatis masuk verifikasi Staff HSE.
         </p>
     </div>
 </section>
@@ -320,7 +320,7 @@
                 <div class="overflow-hidden rounded-lg shadow-sm">
                     <img src="{{ asset('assets/images/brief4.jpeg') }}" alt="Galeri 4" class="w-full h-40 object-cover scale-110 hover:scale-125 transition-transform duration-300">
                 </div>
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Inspeksi 5R</p>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Lean Manufacturing</p>
             </div>
             <div>
                 <div class="overflow-hidden rounded-lg shadow-sm">
@@ -330,9 +330,9 @@
             </div>
             <div>
                 <div class="overflow-hidden rounded-lg shadow-sm">
-                    <img src="{{ asset('assets/images/brief6.jpeg') }}" alt="Galeri 6" class="w-full h-40 object-cover [object-position:100%_100%] scale-110 hover:scale-125 transition-transform duration-300">
+                    <img src="{{ asset('assets/images/brief6.jpeg') }}" alt="Galeri 6" class="w-full h-40 object-cover [object-position:38%_100%] scale-110 hover:scale-125 transition-transform duration-300">
                 </div>
-                <p class="text-center text-sm font-medium text-gray-700 mt-3">Audit SMK3LH</p>
+                <p class="text-center text-sm font-medium text-gray-700 mt-3">Patroli 5R</p>
             </div>
         </div>
     </div>
@@ -465,7 +465,7 @@
                                     'no_permit' => $permit->no_permit,
                                     'tipe' => $permit->tipe,
                                     'nama_pekerjaan' => $permit->nama_pekerjaan,
-                                    'divisi' => optional($permit->user)->name ?? '—',
+                                    'divisi' => optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—',
                                     'kontraktor' => $permit->kontraktor,
                                     'lokasi' => $permit->lokasi ?? '—',
                                     'tanggal_permit' => $tglDisplay,
@@ -486,7 +486,7 @@
                                     <x-permit-klasifikasi-badges :permit="$permit" />
                                 </td>
                                 <td class="px-5 py-3.5 font-medium text-gray-800 whitespace-nowrap">
-                                    {{ optional($permit->user)->name ?? '—' }}
+                                    {{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}
                                 </td>
                                 <td class="px-5 py-3.5 text-gray-600 text-xs">
                                     {{ $permit->kontraktor }}
@@ -631,8 +631,8 @@
     <div class="max-w-[1080px] mx-auto">
         <div class="max-w-[560px] mx-auto text-center mb-[46px] reveal">
             <div class="sec-tag">Alur Pengajuan</div>
-            <h2 class="text-[28px] font-extrabold tracking-[-.01em] mb-3 text-[var(--navy-950)]">Bagaimana Kontraktor Bisa Bekerja Sama dengan INKA</h2>
-            <p class="text-[14.5px] text-[var(--ink-600)]">Kontraktor tidak mendaftar sendiri — seluruh data dan pengajuan izin kerja diinput oleh divisi terkait melalui dashboard internal.</p>
+            <h2 class="text-[28px] font-extrabold tracking-[-.01em] mb-3 text-[var(--navy-950)]">Bagaimana Cara Mengajukan Izin Kerja</h2>
+            <p class="text-[14.5px] text-[var(--ink-600)]">Tanpa akun — isi form langsung di landing page, permit otomatis masuk verifikasi HSE.</p>
         </div>
 
         <div class="flow">
@@ -640,13 +640,13 @@
             <div class="flow-grid grid grid-cols-1 md:grid-cols-5 gap-4 relative z-10">
                 <div class="flow-step reveal" style="transition-delay:0ms">
                     <div class="sn">1</div>
-                    <h4>Kontraktor Hubungi Divisi</h4>
-                    <p>Kontraktor yang ingin bekerja sama menghubungi PIC divisi INKA yang bersangkutan.</p>
+                    <h4>Buka Form Pengajuan</h4>
+                    <p>Klik <strong>Ajukan Safety Permit</strong> di atas — tanpa login, tanpa akun.</p>
                 </div>
                 <div class="flow-step reveal" style="transition-delay:80ms">
                     <div class="sn">2</div>
-                    <h4>Divisi Input Data Kontraktor</h4>
-                    <p>Admin divisi menambahkan data perusahaan &amp; PIC kontraktor lewat dashboard.</p>
+                    <h4>Isi Data & Divisi</h4>
+                    <p>Tulis nama divisi/unit pengaju, data kontraktor, dan detail pekerjaan.</p>
                 </div>
                 <div class="flow-step reveal" style="transition-delay:160ms">
                     <div class="sn">3</div>
@@ -656,19 +656,19 @@
                 <div class="flow-step reveal" style="transition-delay:240ms">
                     <div class="sn">4</div>
                     <h4>Lengkapi Berkas K3</h4>
-                    <p>Divisi melampirkan dokumen pendukung seperti HIRADC, JSA, atau HSE Plan.</p>
+                    <p>Lampirkan dokumen pendukung seperti HIRADC, JSA, atau HSE Plan (wajib untuk Eksternal).</p>
                 </div>
                 <div class="flow-step reveal" style="transition-delay:320ms">
                     <div class="sn">5</div>
-                    <h4>Ajukan &amp; Verifikasi</h4>
-                    <p>Divisi mengajukan izin kerja untuk diverifikasi Safety Officer sebelum pekerjaan dimulai.</p>
+                    <h4>Kirim &amp; Verifikasi</h4>
+                    <p>Permit langsung berstatus Review Staff untuk diverifikasi sebelum pekerjaan dimulai.</p>
                 </div>
             </div>
         </div>
 
         <div class="flow-note reveal-scale" style="transition-delay:200ms">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="shrink-0 mt-0.5"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><path d="M12 9v4M12 17h.01"/></svg>
-            <span><strong>Penting:</strong> kontraktor tidak memiliki akun dan tidak mendaftar sendiri di sistem ini. Seluruh data kontraktor serta pengajuan izin kerja risiko tinggi diinput dan dikelola oleh divisi INKA yang bekerja sama dengannya.</span>
+            <span><strong>Info:</strong> pengajuan tidak memerlukan akun. Isi nama divisi/unit pengaju langsung di form, seluruh permit publik otomatis masuk antrian verifikasi Staff HSE dan terpantau di tabel Monitoring.</span>
         </div>
     </div>
 </section>

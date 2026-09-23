@@ -13,6 +13,13 @@ Route::get('/', function () {
     return view('welcome', compact('permits'));
 });
 
+// ===== PENGAJUAN PUBLIK (tanpa login) =====
+Route::middleware(['throttle:10,1'])->group(function () {
+    Route::get('/ajukan-permit', [\App\Http\Controllers\Public\PermitController::class, 'create']);
+    Route::post('/ajukan-permit', [\App\Http\Controllers\Public\PermitController::class, 'store']);
+});
+Route::get('/ajukan-permit/sukses/{id}', [\App\Http\Controllers\Public\PermitController::class, 'success']);
+
 Route::get('/dashboard', function () {
     if (!Auth::check()) {
         return redirect('/login');

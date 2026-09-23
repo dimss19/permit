@@ -118,7 +118,7 @@
                             </td>
                             <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
-                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? '—' }}</td>
+                            <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}</td>
                             <td class="px-6 py-3.5 text-gray-600 text-sm">{{ $permit->kontraktor }}</td>
                             <td class="px-6 py-3.5 text-gray-600 text-sm">{{ $permit->lokasi ?? '—' }}</td>
                             <td class="px-6 py-3.5">
