@@ -10,7 +10,7 @@
     @endphp
 
     {{-- ===== WIDGET RINGKASAN ===== --}}
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
         {{-- Pending Approval (Semua Role) --}}
         <a href="/admin/approvals"
@@ -24,21 +24,6 @@
             <p class="text-4xl font-bold text-blue-500">{{ $counts['pending'] ?? 0 }}</p>
             <p class="text-xs text-gray-400 mt-1">Menunggu persetujuan Anda</p>
         </a>
-
-        @if($role === 'staff')
-        {{-- Permit Direvisi (Khusus Staff) --}}
-        <a href="/admin/approvals?status=Revision"
-           class="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:border-red-200 transition-all group">
-            <div class="flex items-center justify-between mb-3">
-                <p class="text-sm font-semibold text-gray-400 uppercase tracking-wide">Permit Direvisi</p>
-                <div class="w-8 h-8 rounded-xl bg-red-50 flex items-center justify-center group-hover:bg-red-100 transition-colors">
-                    <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                </div>
-            </div>
-            <p class="text-4xl font-bold text-red-500">{{ $counts['revision'] ?? 0 }}</p>
-            <p class="text-xs text-gray-400 mt-1">Dikembalikan ke Divisi</p>
-        </a>
-        @endif
 
         {{-- Permit Hari Ini (Semua Role) --}}
         <a href="/admin/approvals?date=today"

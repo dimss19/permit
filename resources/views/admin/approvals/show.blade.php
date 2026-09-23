@@ -249,12 +249,7 @@
         <form id="approval-form" method="POST" action="/admin/approvals/{{ $permit->id }}">
             @csrf
             @method('PUT')
-            
-            <div class="mb-4">
-                <label class="block text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Catatan Revisi (Hanya jika perlu perbaikan)</label>
-                <textarea name="catatan_revisi" id="catatan_revisi" rows="3" class="w-full form-input text-sm rounded-xl border-gray-200 focus:border-inka-navy focus:ring-inka-navy/20" placeholder="Opsional jika menyetujui. Wajib jika meminta revisi..."></textarea>
-            </div>
-            
+
             <div class="mb-6 p-4 border border-gray-200 rounded-xl bg-gray-50">
                 <div class="flex items-center justify-between mb-2">
                     <div>
@@ -288,12 +283,6 @@
                         Setujui & Lanjutkan ke {{ $config['nextRoleName'] }}
                     @endif
                 </button>
-                <button type="button" id="btn-revise" class="px-6 py-2.5 bg-red-100 text-red-700 text-sm font-semibold rounded-xl hover:bg-red-200 transition-colors">
-                    Kembalikan ke Divisi (Revisi)
-                </button>
-                
-                {{-- Hidden input for action --}}
-                <input type="hidden" name="action" id="action-input">
             </div>
         </form>
     </div>
@@ -394,22 +383,6 @@
                 }
                 form.dataset.submitting = 'true';
                 document.getElementById('btn-approve').disabled = true;
-                document.getElementById('btn-revise').disabled = true;
-                document.getElementById('action-input').value = 'approve';
-                form.submit();
-            });
-            
-            document.getElementById('btn-revise').addEventListener('click', function(e) {
-                if (form.dataset.submitting === 'true') return;
-                const catatan = document.getElementById('catatan_revisi').value;
-                if (!catatan.trim()) {
-                    alert('Harap isi catatan revisi sebelum mengembalikan ke Divisi.');
-                    return;
-                }
-                form.dataset.submitting = 'true';
-                document.getElementById('btn-approve').disabled = true;
-                document.getElementById('btn-revise').disabled = true;
-                document.getElementById('action-input').value = 'revise';
                 form.submit();
             });
         })();

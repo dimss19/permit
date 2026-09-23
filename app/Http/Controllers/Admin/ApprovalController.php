@@ -85,44 +85,29 @@ class ApprovalController extends Controller
             return redirect('/admin/approvals')->with('error', 'Permit tidak valid untuk direview.');
         }
 
-        $action = $request->input('action'); 
+        // Tanpa akun pengaju, tidak ada alur revisi — hanya setujui.
+        $request->validate([
+            'tanda_tangan' => 'required|string',
+        ]);
 
-        if ($action === 'approve') {
-            $request->validate([
-                'tanda_tangan' => 'required|string',
-            ]);
+        $signatures = $permit->approval_signatures ?? [];
+        $signatures[] = [
+            'role' => $config['roleName'],
+            'name' => Auth::user()->name,
+            'signature' => $request->tanda_tangan,
+            'date' => now()->toDateTimeString(),
+        ];
 
-            $signatures = $permit->approval_signatures ?? [];
-            $signatures[] = [
-                'role' => $config['roleName'],
-                'name' => Auth::user()->name,
-                'signature' => $request->tanda_tangan,
-                'date' => now()->toDateTimeString(),
-            ];
+        $permit->forceFill([
+            'status' => $config['nextStatus'],
+            'catatan_revisi' => null,
+            'approval_signatures' => $signatures,
+        ])->save();
 
-            $permit->forceFill([
-                'status' => $config['nextStatus'],
-                'catatan_revisi' => null,
-                'approval_signatures' => $signatures,
-            ])->save();
-
-            if ($config['nextStatus'] === 'Active') {
-                $message = 'Permit berhasil disetujui dan kini berstatus ACTIVE.';
-            } else {
-                $message = 'Permit berhasil disetujui dan diteruskan ke ' . $config['nextRoleName'] . '.';
-            }
-
-        } elseif ($action === 'revise') {
-            $request->validate([
-                'catatan_revisi' => 'required|string|max:500'
-            ]);
-            $permit->forceFill([
-                'status' => 'Revision',
-                'catatan_revisi' => $request->catatan_revisi,
-            ])->save();
-            $message = 'Permit dikembalikan ke Divisi untuk direvisi.';
+        if ($config['nextStatus'] === 'Active') {
+            $message = 'Permit berhasil disetujui dan kini berstatus ACTIVE.';
         } else {
-            return redirect('/admin/approvals')->with('error', 'Aksi tidak valid.');
+            $message = 'Permit berhasil disetujui dan diteruskan ke ' . $config['nextRoleName'] . '.';
         }
 
         return redirect('/admin/approvals')->with('success', $message);

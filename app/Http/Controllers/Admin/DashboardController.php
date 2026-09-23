@@ -19,7 +19,6 @@ class DashboardController extends Controller
         if ($role === 'staff') {
             $counts = [
                 'pending' => Permit::where('status', 'Review Staff')->count(),
-                'revision' => Permit::where('status', 'Revision')->count(),
                 'today' => Permit::where('status', 'Review Staff')->whereDate('updated_at', $today)->count(),
             ];
             $permits = Permit::with(['user', 'classifications'])

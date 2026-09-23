@@ -28,7 +28,6 @@
 
         <select name="status" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
             <option value="">Status: {{ $config['expectedStatus'] }}</option>
-            <option value="Revision" {{ request('status') === 'Revision' ? 'selected' : '' }}>Direvisi</option>
             <option value="Semua" {{ request('status') === 'Semua' ? 'selected' : '' }}>Semua Status</option>
         </select>
 

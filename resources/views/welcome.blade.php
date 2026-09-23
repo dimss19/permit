@@ -306,7 +306,7 @@
             </div>
             <div>
                 <div class="overflow-hidden rounded-lg shadow-sm">
-                    <img src="{{ asset('assets/images/brief2.jpeg') }}" alt="Galeri 2" class="w-full h-40 object-cover scale-110 hover:scale-125 transition-transform duration-300">
+                    <img src="{{ asset('assets/images/brief2.jpeg') }}" alt="Galeri 2" class="w-full h-40 object-cover [object-position:70 10%_20%] scale-110 hover:scale-125 transition-transform duration-300">
                 </div>
                 <p class="text-center text-sm font-medium text-gray-700 mt-3"> Safety Induction </p>
             </div>
