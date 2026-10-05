@@ -4,31 +4,33 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <title>Permit {{ $permit->no_permit }}</title>
     <style>
-        @page { margin: 12px 25px; }
-        body { font-family: sans-serif; font-size: 10px; line-height: 1.2; }
+        @page { margin: 14px 22px; }
+        body { font-family: sans-serif; font-size: 9.5px; line-height: 1.3; }
         table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 3px; vertical-align: top; }
+        th, td { border: 1px solid #000; padding: 2px 3px; vertical-align: top; }
         .no-border { border: none !important; }
         .text-center { text-align: center; }
         .text-left { text-align: left; }
         .text-right { text-align: right; }
         .font-bold { font-weight: bold; }
-        .section-header { background-color: #000; color: #fff; font-weight: bold; padding: 4px; }
+        .section-header { background-color: #000; color: #fff; font-weight: bold; padding: 4px; font-size: 10px; }
         .checkbox-container { display: inline-block; width: 33%; margin-bottom: 4px; }
         .checkbox-container-4 { display: inline-block; width: 24%; margin-bottom: 4px; }
-        .checkbox-box { display: inline-block; width: 10px; height: 10px; border: 1px solid #000; margin-right: 4px; text-align: center; line-height: 10px; font-size: 8px; font-weight: bold; }
-        .header-table td { padding: 5px; }
-        .logo { width: 120px; }
+        .checkbox-box { display: inline-block; width: 9px; height: 9px; border: 1px solid #000; margin-right: 3px; text-align: center; line-height: 9px; font-size: 7px; font-weight: bold; }
+        .header-table td { padding: 4px; }
+        .logo { width: 110px; }
         
-        .box { border: 1px solid #000; display: inline-block; width: 12px; height: 12px; text-align: center; line-height: 12px; font-weight: bold; font-family: monospace; font-size: 10px; vertical-align: middle; }
+        .box { border: 1px solid #000; display: inline-block; width: 10px; height: 10px; text-align: center; line-height: 10px; font-weight: bold; font-family: monospace; font-size: 9px; vertical-align: middle; }
+        .sig-img { max-height: 28px; }
+        .sig-cell { height: 32px; }
     </style>
 </head>
 <body>
 
     <!-- Header -->
-    <table class="header-table" style="margin-bottom: 5px;">
+    <table class="header-table" style="margin-bottom: 4px;">
         <tr>
-            <td width="25%" class="text-center" style="vertical-align: middle;">
+            <td width="25%" align="center" class="text-center" style="vertical-align: middle; text-align: center;">
                 @php
                     $path = public_path('assets/images/logoinka.svg');
                     // DomPDF sometimes struggles with SVG directly, so we use base64 or fallback to text if missing
@@ -36,20 +38,20 @@
                         $type = pathinfo($path, PATHINFO_EXTENSION);
                         $data = file_get_contents($path);
                         $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-                        echo '<img src="'.$base64.'" class="logo" style="display:block; margin:0 auto;" alt="Logo INKA">';
+                        echo '<img src="'.$base64.'" class="logo" style="display:block; margin-left:auto; margin-right:auto; padding-left:25px; padding-top:6px;" alt="Logo INKA">';
                     } else {
                         echo '<h1 style="color:#d32f2f; margin:0;">INKA</h1>';
                     }
                 @endphp
             </td>
-            <td width="50%" class="text-center font-bold" style="vertical-align: middle; font-size: 14px;">
+            <td width="50%" class="text-center font-bold" style="vertical-align: middle; font-size: 13px;">
                 SURAT IZIN PEKERJAAN BERESIKO<br>TINGGI
             </td>
             <td width="25%">
                 <table style="border: none;">
-                    <tr><td style="border: none; border-bottom: 1px solid #000; padding: 2px;">NO : {{ $permit->no_permit }}</td></tr>
-                    <tr><td style="border: none; border-bottom: 1px solid #000; padding: 2px;">Tgl : {{ $permit->created_at->format('d/m/Y') }}</td></tr>
-                    <tr><td style="border: none; padding: 2px;">Hal : ........... dari ...........</td></tr>
+                    <tr><td style="border: none; border-bottom: 1px solid #000; padding: 1px;">NO : {{ $permit->no_permit }}</td></tr>
+                    <tr><td style="border: none; border-bottom: 1px solid #000; padding: 1px;">Tgl : {{ $permit->created_at->format('d/m/Y') }}</td></tr>
+                    <tr><td style="border: none; padding: 1px;">Hal : ........... dari ...........</td></tr>
                 </table>
             </td>
         </tr>
@@ -57,7 +59,7 @@
 
     <!-- A. KLASIFIKASI -->
     <div class="section-header">A. KLASIFIKASI PEKERJAAN</div>
-    <table style="margin-bottom: 5px;">
+    <table style="margin-bottom: 4px;">
         <tr>
             @php 
                 $klas = is_string($permit->klasifikasi_pekerjaan) ? json_decode($permit->klasifikasi_pekerjaan, true) : ($permit->klasifikasi_pekerjaan ?? []); 
@@ -95,13 +97,14 @@
 
     <!-- B. INFORMASI -->
     <div class="section-header">B. INFORMASI PEKERJAAN</div>
-    <table style="margin-bottom: 5px; border-bottom: none;">
+    <table style="margin-bottom: 4px; border-bottom: none;">
         <tr>
             <td width="55%" style="padding: 0; border: none; border-right: 1px solid #000;">
                 <table style="border: none; width: 100%;">
                     <table style="border: none;"> 
                         <table style="border: none;">
                             <tr><td width="40%" style="border: none;">Pekerjaan</td><td style="border: none;">: {{ $permit->nama_pekerjaan }}</td></tr>
+                            <tr><td style="border: none;">Site</td><td style="border: none;">: {{ $permit->site ?? 'Madiun' }}</td></tr>
                             <tr><td style="border: none;">Lokasi</td><td style="border: none;">: {{ $permit->lokasi }}</td></tr>
                             <tr><td style="border: none;">Manager / Penanggung Jawab</td><td style="border: none;">: {{ $permit->penanggung_jawab }}</td></tr>
                             <tr><td style="border: none;">No. Telpon</td><td style="border: none;">: {{ $permit->telepon }}</td></tr>
@@ -141,7 +144,7 @@
         </tr>
     </table>
     <!-- PERALATAN KERJA -->
-    <table style="margin-bottom: 5px;">
+    <table style="margin-bottom: 4px;">
         <tr>
             <th width="35%" style="background-color: #ccc;">Peralatan Kerja</th>
             <th width="15%" style="background-color: #ccc;">Jumlah</th>
@@ -155,7 +158,7 @@
         @endphp
         @foreach($pk as $row)
             <tr>
-                <td class="text-center" style="height: 18px; padding: 2px 4px;">{{ $row['alat'] ?? '' }}</td>
+                <td class="text-center" style="height: 16px; padding: 2px 4px;">{{ $row['alat'] ?? '' }}</td>
                 <td class="text-center" style="padding: 2px 4px;">{{ $row['jumlah_alat'] ?? '' }}</td>
                 <td class="text-center" style="padding: 2px 4px;">{{ $row['material'] ?? '' }}</td>
                 <td class="text-center" style="padding: 2px 4px;">{{ $row['jumlah_material'] ?? '' }}</td>
@@ -165,7 +168,7 @@
 
     <!-- C. BAHAYA PEKERJAAN -->
     <div class="section-header">C. BAHAYA PEKERJAAN</div>
-    <div style="border: 1px solid #000; padding: 4px; margin-bottom: 5px;">
+    <div style="border: 1px solid #000; padding: 3px; margin-bottom: 4px;">
         @php
             $bp = is_string($permit->bahaya_pekerjaan) ? json_decode($permit->bahaya_pekerjaan, true) : ($permit->bahaya_pekerjaan ?? []);
             $bList1 = ['percikan_panas'=>'Percikan Panas', 'bahaya_kebakaran'=>'Bahaya Kebakaran', 'cidera_tulang_belakang'=>'Cidera Tulang Belakang', 'pencemaran_lingkungan'=>'Pencemaran Lingk.', 'terpukul_terbentur'=>'Terpukul / Terbentur', 'penerangan_kurang'=>'Penerangan Kurang', 'bahaya_makhluk_hidup'=>'Bahaya Makhluk Hidup'];
@@ -204,7 +207,7 @@
 
     <!-- D. TINDAKAN PENCEGAHAN BAHAYA -->
     <div class="section-header">D. TINDAKAN PENCEGAHAN BAHAYA</div>
-    <div style="border: 1px solid #000; padding: 4px; margin-bottom: 5px;">
+    <div style="border: 1px solid #000; padding: 3px; margin-bottom: 4px;">
         @php
             $tp = is_string($permit->tindakan_pencegahan) ? json_decode($permit->tindakan_pencegahan, true) : ($permit->tindakan_pencegahan ?? []);
             $tList1 = ['proteksi_dari_jatuh'=>'Proteksi Dari Jatuh', 'media_penghambat_api'=>'Media Penghambat Api / Percikan', 'pintu_masuk_keluar'=>'Pintu Masuk / Keluar', 'safety_briefing'=>'Safety Brifing'];
@@ -243,7 +246,7 @@
 
     <!-- E. ALAT PELINDUNG DIRI -->
     <div class="section-header">E. ALAT PELINDUNG DIRI</div>
-    <div style="border: 1px solid #000; padding: 4px; margin-bottom: 5px;">
+    <div style="border: 1px solid #000; padding: 3px; margin-bottom: 4px;">
         @php
             $apd = is_string($permit->apd) ? json_decode($permit->apd, true) : ($permit->apd ?? []);
             $aList1 = ['helm_keselamatan'=>'Helm Keselamatan', 'kaca_mata_keselamatan'=>'Kaca Mata Keselamatan', 'sarung_tangan'=>'Sarung Tangan Kulit/Kaos/Karet', 'baju_pelindung'=>'Baju Pelindung'];
@@ -280,12 +283,12 @@
 
     <!-- F. VALIDASI KERJA -->
     <div class="section-header">F. VALIDASI KERJA</div>
-    <table style="margin-bottom: 5px; table-layout: fixed;">
+    <table style="margin-bottom: 4px; table-layout: fixed;">
         <tr>
             <td width="60%" style="border-right: none; padding-right: 0;">
                 <div>Izin diberikan sesuai pengajuan dan kondisi di atas :</div>
-                <div style="margin-top: 5px;">Mulai Tgl &nbsp;: {{ $permit->tanggal_mulai ? \Carbon\Carbon::parse($permit->tanggal_mulai)->format('d/m/Y') : '......................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->tanggal_mulai ? \Carbon\Carbon::parse($permit->tanggal_mulai)->format('H:i') : '......................' }}</div>
-                <div style="margin-top: 5px;">Selesai Tgl : {{ $permit->tanggal_selesai ? \Carbon\Carbon::parse($permit->tanggal_selesai)->format('d/m/Y') : '......................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->tanggal_selesai ? \Carbon\Carbon::parse($permit->tanggal_selesai)->format('H:i') : '......................' }}</div>
+                <div style="margin-top: 3px;">Mulai Tgl &nbsp;: {{ $permit->tanggal_mulai ? \Carbon\Carbon::parse($permit->tanggal_mulai)->format('d/m/Y') : '......................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->tanggal_mulai ? \Carbon\Carbon::parse($permit->tanggal_mulai)->format('H:i') : '......................' }}</div>
+                <div style="margin-top: 3px;">Selesai Tgl : {{ $permit->tanggal_selesai ? \Carbon\Carbon::parse($permit->tanggal_selesai)->format('d/m/Y') : '......................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->tanggal_selesai ? \Carbon\Carbon::parse($permit->tanggal_selesai)->format('H:i') : '......................' }}</div>
             </td>
             <td width="40%" style="padding: 0; border: none;">
                 <table style="border: none; width: 100%; border-left: 1px solid #000; border-right: 1px solid #000; border-top: 1px solid #000;">
@@ -300,26 +303,36 @@
                         $so = ''; $so_sig = '';
                         $sm = ''; $sm_sig = '';
                         foreach($sigs as $s) {
-                            if($s['role'] == 'Staff' || $s['role'] == 'Safety Officer') { $so = $s['name']; $so_sig = $s['signature']; }
-                            if($s['role'] == 'Manager' || str_contains($s['role'], 'QM & SHE')) { $sm = $s['name']; $sm_sig = $s['signature']; }
+                            $sRole = $s['role'] ?? '';
+                            if($sRole == 'Staff' || $sRole == 'Safety Officer') { $so = $s['name'] ?? ''; $so_sig = $s['signature'] ?? ''; }
+                            if($sRole == 'Manager' || str_contains($sRole, 'QM & SHE') || str_contains($sRole, 'Manager')) { $sm = $s['name'] ?? ''; $sm_sig = $s['signature'] ?? ''; }
                         }
                     @endphp
                     <tr>
                         <td style="border: none; border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Pemohon / Manager</div>
-                            <div class="text-center" style="padding: 2px;">{{ $pemohon }}</div>
+                            <div style="border-bottom: 1px solid #000; font-size: 7px; padding: 1px 2px;">Pemohon</div>
+                            <div class="text-center" style="padding: 5px 2px 2px;">{{ $pemohon }}</div>
                         </td>
-                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
-                            @if($pemohon_sig)<img src="{{ $pemohon_sig }}" style="max-height: 30px;">@endif
+                        <td class="text-center sig-cell" style="border: none; border-bottom: 1px solid #000; height: 32px; vertical-align: middle;">
+                            @if($pemohon_sig)<img src="{{ $pemohon_sig }}" class="sig-img" style="max-height: 28px;">@endif
                         </td>
                     </tr>
                     <tr>
                         <td style="border: none; border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Safety Officer</div>
-                            <div class="text-center" style="padding: 2px;">{{ $so }}</div>
+                            <div style="border-bottom: 1px solid #000; font-size: 7px; padding: 1px 2px;">Safety Officer</div>
+                            <div class="text-center" style="padding: 5px 2px 2px;">{{ $so }}</div>
                         </td>
-                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
-                            @if($so_sig)<img src="{{ $so_sig }}" style="max-height: 30px;">@endif
+                        <td class="text-center sig-cell" style="border: none; border-bottom: 1px solid #000; height: 32px; vertical-align: middle;">
+                            @if($so_sig)<img src="{{ $so_sig }}" class="sig-img" style="max-height: 28px;">@endif
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border: none; border-bottom: 1px solid #000; border-right: 1px solid #000; padding: 0;">
+                            <div style="border-bottom: 1px solid #000; font-size: 7px; padding: 1px 2px;">Manager HSE</div>
+                            <div class="text-center" style="padding: 5px 2px 2px;">Dimas Ali Akbar</div>
+                        </td>
+                        <td class="text-center sig-cell" style="border: none; border-bottom: 1px solid #000; height: 32px; vertical-align: middle;">
+                            @if($sm_sig)<img src="{{ $sm_sig }}" class="sig-img" style="max-height: 28px;">@endif
                         </td>
                     </tr>
                 </table>
@@ -329,11 +342,11 @@
 
     <!-- G. PEMBATALAN IZIN KERJA -->
     <div class="section-header">G. PEMBATALAN IZIN KERJA</div>
-    <table style="margin-bottom: 5px; table-layout: fixed;">
+    <table style="margin-bottom: 4px; table-layout: fixed;">
         <tr>
             <td width="60%" style="border-right: none; padding-right: 0;">
                 <div>Izin kerja dibatalkan</div>
-                <div style="margin-top: 15px;">Tanggal &nbsp;: {{ $permit->cancelled_at ? \Carbon\Carbon::parse($permit->cancelled_at)->format('d/m/Y') : '..................................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->cancelled_at ? \Carbon\Carbon::parse($permit->cancelled_at)->format('H:i') : '......................' }}</div>
+                <div style="margin-top: 6px;">Tanggal &nbsp;: {{ $permit->cancelled_at ? \Carbon\Carbon::parse($permit->cancelled_at)->format('d/m/Y') : '..................................' }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Jam : {{ $permit->cancelled_at ? \Carbon\Carbon::parse($permit->cancelled_at)->format('H:i') : '......................' }}</div>
             </td>
             <td width="40%" style="padding: 0; border: none;">
                 <table style="border: none; width: 100%; border-left: 1px solid #000; border-right: 1px solid #000; border-top: 1px solid #000;">
@@ -352,20 +365,20 @@
                     @endphp
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Safety Officer</div>
-                            <div class="text-center" style="padding: 2px;">Staff HSE  </div>
+                            <div style="border-bottom: 1px solid #000; font-size: 7px; padding: 1px 2px;">Safety Officer</div>
+                            <div class="text-center" style="padding: 5px 2px 2px;">Staff HSE  </div>
                         </td>
-                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
-                            @if($csm_sig)<img src="{{ $csm_sig }}" style="max-height: 30px;">@endif
+                        <td class="text-center sig-cell" style="border: none; border-bottom: 1px solid #000; height: 32px; vertical-align: middle;">
+                            @if($csm_sig)<img src="{{ $csm_sig }}" class="sig-img" style="max-height: 28px;">@endif
                         </td>
                     </tr>
                     <tr>
                         <td style="border: none; border-right: 1px solid #000; border-bottom: 1px solid #000; padding: 0;">
-                            <div style="border-bottom: 1px solid #000; font-size: 8px; padding: 2px;">Manager HSE</div>
-                            <div class="text-center" style="padding: 2px;">Dimas Ali Akbar</div>
+                            <div style="border-bottom: 1px solid #000; font-size: 7px; padding: 1px 2px;">Manager HSE</div>
+                            <div class="text-center" style="padding: 5px 2px 2px;">Dimas Ali Akbar</div>
                         </td>
-                        <td class="text-center" style="border: none; border-bottom: 1px solid #000; height: 35px; vertical-align: middle;">
-                            @if($csm_sig)<img src="{{ $csm_sig }}" style="max-height: 30px;">@endif
+                        <td class="text-center sig-cell" style="border: none; border-bottom: 1px solid #000; height: 32px; vertical-align: middle;">
+                            @if($csm_sig)<img src="{{ $csm_sig }}" class="sig-img" style="max-height: 28px;">@endif
                         </td>
                     </tr>
                 </table>

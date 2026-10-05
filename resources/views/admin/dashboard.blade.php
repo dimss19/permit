@@ -47,7 +47,14 @@
         <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
             <div>
                 <h3 class="text-base font-semibold text-gray-800">Permit Menunggu Approval ({{ $roleName }})</h3>
-                <p class="text-sm text-gray-400 mt-0.5">Urutan berdasarkan waktu pengajuan terlama</p>
+                <p class="text-sm text-gray-400 mt-0.5">
+                    Urutan berdasarkan waktu pengajuan terlama
+                    @if($role === 'staff' && auth()->user()->site)
+                        &middot; Site {{ auth()->user()->site }}
+                    @elseif($role === 'manager')
+                        &middot; Semua site
+                    @endif
+                </p>
             </div>
             <div class="flex items-center gap-3">
                 <a href="/admin/approvals" class="text-base font-semibold text-inka-navy hover:underline">
@@ -81,6 +88,7 @@
                     <thead>
                         <tr class="text-sm text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
+                            <th class="px-6 py-3 font-semibold">Site</th>
                             <th class="px-6 py-3 font-semibold">Tipe</th>
                             <th class="px-6 py-3 font-semibold">Klasifikasi Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Divisi</th>
@@ -101,6 +109,7 @@
                                     {{ $permit->no_permit }}
                                 </a>
                             </td>
+                            <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-site-badge :site="$permit->site" /></td>
                             <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
                             <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}</td>

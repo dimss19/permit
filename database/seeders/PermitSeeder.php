@@ -22,6 +22,7 @@ class PermitSeeder extends Seeder
         $permits = [
             [
                 'no_permit'        => 'WP-2026-001',
+                'site'             => 'Madiun',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Perbaikan Atap Gudang B',
                 'kontraktor'       => 'PT Maju Mundur Konstruksi',
@@ -36,6 +37,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-002',
+                'site'             => 'Banyuwangi',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Instalasi Panel Listrik Unit 3',
                 'kontraktor'       => 'CV Terang Abadi',
@@ -50,6 +52,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-003',
+                'site'             => 'Madiun',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Pengelasan Pipa Boiler',
                 'kontraktor'       => 'PT Sarana Teknik Jaya',
@@ -65,6 +68,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-004',
+                'site'             => 'Banyuwangi',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Pembersihan Tangki Air',
                 'kontraktor'       => 'UD Bersih Sejahtera',
@@ -79,6 +83,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-005',
+                'site'             => 'Madiun',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Pemasangan Scaffolding Area Korosi',
                 'kontraktor'       => 'PT Rangka Makmur',
@@ -94,6 +99,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-006',
+                'site'             => 'Banyuwangi',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Pengecatan Gedung A',
                 'kontraktor'       => 'CV Warna Warni',
@@ -108,6 +114,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-007',
+                'site'             => 'Madiun',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Service AC Sentral',
                 'kontraktor'       => 'PT Dingin Sejuk',
@@ -130,6 +137,7 @@ class PermitSeeder extends Seeder
             ],
             [
                 'no_permit'        => 'WP-2026-008',
+                'site'             => 'Banyuwangi',
                 'user_id'          => $divisi->id,
                 'nama_pekerjaan'   => 'Pemasangan Kabel Fiber Optik',
                 'kontraktor'       => 'PT Cepat Net',

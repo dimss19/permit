@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classification;
 use App\Models\Permit;
 use App\Models\PermitDocument;
+use App\Services\PermitMailNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ class PermitController extends Controller
     {
         $request->validate([
             'tipe'             => 'required|in:Internal,Eksternal',
+            'site'             => 'required|in:Madiun,Banyuwangi',
             'nama_pekerjaan'   => 'required|string|max:255',
             'kontraktor'       => 'required|string|max:255',
             'lokasi'           => 'required|string|max:255',
@@ -63,6 +65,7 @@ class PermitController extends Controller
                 'no_permit'             => $noPermit,
                 'user_id'               => $user->id,
                 'tipe'                  => $request->input('tipe', 'Internal'),
+                'site'                  => $request->input('site', 'Madiun'),
                 'nama_pekerjaan'        => $request->nama_pekerjaan,
                 'kontraktor'            => $request->kontraktor,
                 'lokasi'                => $request->lokasi,
@@ -125,6 +128,10 @@ class PermitController extends Controller
             ? 'Permit berhasil disimpan sebagai Draft.'
             : 'Permit berhasil diajukan.';
 
+        if ($status === 'Review Staff') {
+            PermitMailNotifier::notifyStaff($permit);
+        }
+
         return redirect('/divisi/dashboard')->with('success', $message);
     }
 
@@ -153,6 +160,7 @@ class PermitController extends Controller
 
         $request->validate([
             'tipe'             => 'required|in:Internal,Eksternal',
+            'site'             => 'required|in:Madiun,Banyuwangi',
             'nama_pekerjaan'   => 'required|string|max:255',
             'kontraktor'       => 'required|string|max:255',
             'lokasi'           => 'required|string|max:255',
@@ -212,6 +220,7 @@ class PermitController extends Controller
 
             $permit->update([
                 'tipe'                  => $newTipe,
+                'site'                  => $request->input('site', $permit->site ?? 'Madiun'),
                 'nama_pekerjaan'        => $request->nama_pekerjaan,
                 'kontraktor'            => $request->kontraktor,
                 'lokasi'                => $request->lokasi,
@@ -277,6 +286,10 @@ class PermitController extends Controller
         $message = $status === 'Draft'
             ? 'Perubahan permit berhasil disimpan sebagai Draft.'
             : 'Permit berhasil diajukan.';
+
+        if ($status === 'Review Staff') {
+            PermitMailNotifier::notifyStaff($permit->fresh());
+        }
 
         return redirect('/divisi/dashboard')->with('success', $message);
     }

@@ -9,11 +9,15 @@ class Permit extends Model
 {
     use HasFactory;
 
+    /** Daftar site yang didukung (multi-site: Madiun & Banyuwangi) */
+    public const SITES = ['Madiun', 'Banyuwangi'];
+
     protected $fillable = [
         'no_permit',
         'user_id',
         'divisi_pengaju',
         'tipe',
+        'site',
         'nama_pekerjaan',
         'kontraktor',
         'lokasi',
@@ -73,5 +77,29 @@ class Permit extends Model
     public function scopeByDivisi($query, $userId)
     {
         return $query->where('user_id', $userId);
+    }
+
+    /** Scope: filter site tertentu (null/'' = semua site) */
+    public function scopeForSite($query, ?string $site)
+    {
+        if ($site && in_array($site, self::SITES, true)) {
+            return $query->where('site', $site);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Scope visibilitas per role:
+     * - staff  -> hanya permit sesuai site user (IDOR guard antar-site)
+     * - lainnya (manager, superadmin) -> semua site
+     */
+    public function scopeVisibleTo($query, $user)
+    {
+        if (($user->role ?? null) === 'staff' && ! empty($user->site)) {
+            return $query->where('site', $user->site);
+        }
+
+        return $query;
     }
 }

@@ -41,13 +41,35 @@
         <div>
             <p class="text-xs text-gray-400 mb-1">Nomor Permit</p>
             <p class="text-xl font-bold text-gray-800">{{ $permit->no_permit }}</p>
-            <div class="mt-1"><x-permit-tipe-badge :tipe="$permit->tipe" /></div>
+            <div class="mt-1 flex items-center gap-2"><x-permit-tipe-badge :tipe="$permit->tipe" /><x-permit-site-badge :site="$permit->site" /></div>
             <p class="text-xs text-gray-500 mt-1">Divisi: <span class="font-semibold text-gray-700">{{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}</span></p>
         </div>
         <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold {{ $badge }}">
             {{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}
         </span>
     </div>
+
+    @if(!$canReview)
+    @php
+        $reviewerMap = ['Review Staff' => 'Staff HSE', 'Review Manager' => 'Manager HSE'];
+        $needed = $reviewerMap[$permit->status] ?? null;
+        $myRole = auth()->user()->role ?? '';
+        $myLabel = ['staff' => 'Staff HSE', 'manager' => 'Manager HSE', 'divisi' => 'Divisi', 'superadmin' => 'Super Admin'][$myRole] ?? $myRole;
+    @endphp
+    <div class="bg-amber-50 border border-amber-200 rounded-2xl px-6 py-4 mb-5 flex gap-3">
+        <svg class="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+            <p class="text-sm font-semibold text-amber-700">Mode lihat saja</p>
+            @if($needed)
+            <p class="text-sm text-amber-600 mt-1">Permit ini menunggu review {{ $needed }}. Anda login sebagai {{ $myLabel }}, sehingga kolom tanda tangan tidak tampil. Untuk menyetujui, logout lalu login dengan akun {{ $needed }} (atau buka ulang tautan dari email setelah login dengan akun tersebut).</p>
+            @else
+            <p class="text-sm text-amber-600 mt-1">Permit berstatus {{ $permit->status }} sehingga sudah tidak bisa direview. Halaman ini hanya untuk melihat.</p>
+            @endif
+        </div>
+    </div>
+    @endif
 
     @if($permit->status === 'Revision' && $permit->catatan_revisi)
     <div class="bg-red-50 border border-red-200 rounded-2xl px-6 py-4 mb-5 flex gap-3">

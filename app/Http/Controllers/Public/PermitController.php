@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Classification;
 use App\Models\Permit;
 use App\Models\PermitDocument;
+use App\Services\PermitMailNotifier;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -23,6 +24,7 @@ class PermitController extends Controller
         $request->validate([
             'divisi_pengaju'   => 'required|string|max:255',
             'tipe'             => 'required|in:Internal,Eksternal',
+            'site'             => 'required|in:Madiun,Banyuwangi',
             'nama_pekerjaan'   => 'required|string|max:255',
             'kontraktor'       => 'required|string|max:255',
             'lokasi'           => 'required|string|max:255',
@@ -50,6 +52,7 @@ class PermitController extends Controller
                 'user_id'               => null,
                 'divisi_pengaju'        => $request->divisi_pengaju,
                 'tipe'                  => $request->input('tipe', 'Internal'),
+                'site'                  => $request->input('site', 'Madiun'),
                 'nama_pekerjaan'        => $request->nama_pekerjaan,
                 'kontraktor'            => $request->kontraktor,
                 'lokasi'                => $request->lokasi,
@@ -106,6 +109,8 @@ class PermitController extends Controller
 
             return $permit;
         });
+
+        PermitMailNotifier::notifyStaff($permit);
 
         return redirect('/ajukan-permit/sukses/' . $permit->id)
             ->with('no_permit', $permit->no_permit);

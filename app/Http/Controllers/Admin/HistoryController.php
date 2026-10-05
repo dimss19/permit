@@ -19,10 +19,14 @@ class HistoryController extends Controller
             default => 'Admin'
         };
 
-        $query = Permit::with(['user', 'classifications']);
+        $query = Permit::with(['user', 'classifications'])->visibleTo(Auth::user());
 
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+
+        if ($request->filled('site')) {
+            $query->forSite($request->site);
         }
 
         if ($request->filled('tipe')) {

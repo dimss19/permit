@@ -51,7 +51,7 @@
         <div>
             <p class="text-xs text-gray-400 mb-1">Nomor Permit</p>
             <p class="text-xl font-bold text-gray-800">{{ $permit->no_permit }}</p>
-            <div class="mt-1"><x-permit-tipe-badge :tipe="$permit->tipe" /></div>
+            <div class="mt-1 flex items-center gap-2"><x-permit-tipe-badge :tipe="$permit->tipe" /><x-permit-site-badge :site="$permit->site" /></div>
         </div>
         <span class="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-semibold {{ $badge }}">
             {{ str_starts_with($permit->status, 'Review') ? 'Menunggu ' . $permit->status : $permit->status }}

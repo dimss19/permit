@@ -7,8 +7,11 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     $permits = \App\Models\Permit::with(['user', 'classifications'])
         ->whereNotIn('status', ['Draft'])
+        ->forSite(request('site'))
         ->orderByRaw('COALESCE(submitted_at, created_at) DESC')
-        ->paginate(10);
+        ->paginate(10)
+        ->withQueryString()
+        ->fragment('monitoring');
 
     return view('welcome', compact('permits'));
 });

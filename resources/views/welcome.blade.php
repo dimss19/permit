@@ -285,13 +285,13 @@
                 Monitoring Permit
             </a>
         </div>
-        <p class="text-xs text-white/100 mt-[20px] hero-animate" id="hero-note">
+        <p class="text-xs text-white/100 mt-[36px] hero-animate" id="hero-note">
             Tanpa akun. Isi form pengajuan langsung — permit otomatis masuk verifikasi Staff HSE.
         </p>
     </div>
 </section>
 
-<section class="py-16 bg-gray-50">
+<section class="pt-8 pb-16 bg-gray-50">
     <div class="max-w-6xl mx-auto px-6">
         <p class="text-center italic text-black-500 mb-10">
             Pastikan setiap pekerjaan dimulai dengan izin yang tervalidasi demi lingkungan kerja yang aman dan tertib.
@@ -394,6 +394,18 @@
                     Total: <span class="text-inka-navy font-bold">{{ $permits->total() }}</span> Permit Terdaftar
                 </div>
             </div>
+            <form method="GET" action="{{ url('/') }}#monitoring" class="px-6 py-3 border-b border-gray-100 bg-white flex flex-wrap items-center gap-3">
+                <label class="text-xs font-semibold text-gray-500">Filter site:</label>
+                <select name="site" onchange="this.form.submit()" class="text-xs font-semibold border border-gray-200 rounded-lg px-3 py-1.5 text-gray-700 focus:outline-none focus:border-inka-navy">
+                    <option value="">Semua Site</option>
+                    @foreach(\App\Models\Permit::SITES as $s)
+                        <option value="{{ $s }}" {{ request('site') === $s ? 'selected' : '' }}>{{ $s }}</option>
+                    @endforeach
+                </select>
+                @if(request('site'))
+                <a href="{{ url('/') }}#monitoring" class="text-xs text-gray-400 hover:text-gray-600">Reset</a>
+                @endif
+            </form>
 
             @if($permits->isEmpty())
                 <div class="py-16 text-center text-gray-400">
@@ -406,6 +418,7 @@
                         <thead>
                             <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/70">
                                 <th class="px-5 py-3.5 font-semibold">No. Permit</th>
+                                <th class="px-5 py-3.5 font-semibold">Site</th>
                                 <th class="px-5 py-3.5 font-semibold">Tipe</th>
                                 <th class="px-5 py-3.5 font-semibold">Klasifikasi Pekerjaan</th>
                                 <th class="px-5 py-3.5 font-semibold">Divisi</th>
@@ -463,6 +476,7 @@
 
                                 $modalPayload = [
                                     'no_permit' => $permit->no_permit,
+                                    'site' => $permit->site ?? 'Madiun',
                                     'tipe' => $permit->tipe,
                                     'nama_pekerjaan' => $permit->nama_pekerjaan,
                                     'divisi' => optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—',
@@ -478,6 +492,9 @@
                             <tr class="hover:bg-blue-50/20 transition-colors">
                                 <td class="px-5 py-3.5 whitespace-nowrap font-bold text-inka-navy">
                                     {{ $permit->no_permit }}
+                                </td>
+                                <td class="px-5 py-3.5 whitespace-nowrap">
+                                    <x-permit-site-badge :site="$permit->site" />
                                 </td>
                                 <td class="px-5 py-3.5 whitespace-nowrap">
                                     <x-permit-tipe-badge :tipe="$permit->tipe" />
@@ -592,6 +609,10 @@
                     <div>
                         <p class="text-xs text-gray-500 font-medium">Lokasi Pekerjaan</p>
                         <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.lokasi"></p>
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-500 font-medium">Site</p>
+                        <p class="font-semibold text-gray-800 mt-0.5" x-text="activePermit.site || '—'"></p>
                     </div>
                     <div>
                         <p class="text-xs text-gray-500 font-medium">Tanggal Permit (Periode Pengerjaan)</p>

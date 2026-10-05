@@ -18,8 +18,20 @@
             <option value="Internal" {{ request('tipe') === 'Internal' ? 'selected' : '' }}>Internal</option>
             <option value="Eksternal" {{ request('tipe') === 'Eksternal' ? 'selected' : '' }}>Eksternal</option>
         </select>
+        @if(auth()->user()->role === 'manager')
+        <select name="site" class="border border-gray-200 rounded-xl text-sm px-3 py-2 focus:outline-none focus:ring-2 focus:ring-inka-navy/20 focus:border-inka-navy text-gray-600">
+            <option value="">Semua Site</option>
+            @foreach(\App\Models\Permit::SITES as $s)
+                <option value="{{ $s }}" {{ request('site') === $s ? 'selected' : '' }}>Site {{ $s }}</option>
+            @endforeach
+        </select>
+        @elseif(auth()->user()->site)
+        <span class="inline-flex items-center text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
+            Site: {{ auth()->user()->site }}
+        </span>
+        @endif
         <button type="submit" class="px-4 py-2 bg-inka-navy text-white text-sm font-semibold rounded-xl hover:opacity-90 transition-opacity">Cari</button>
-        @if(request('search') || request('status') || request('tipe'))
+        @if(request('search') || request('status') || request('tipe') || request('site'))
         <a href="/admin/history" class="text-sm text-gray-400 hover:text-gray-600 transition-colors">Reset</a>
         @endif
     </form>
@@ -42,6 +54,7 @@
                     <thead>
                         <tr class="text-xs text-gray-400 uppercase tracking-wide border-b border-gray-100 bg-gray-50/60">
                             <th class="px-6 py-3 font-semibold">No. Permit</th>
+                            <th class="px-6 py-3 font-semibold">Site</th>
                             <th class="px-6 py-3 font-semibold">Tipe</th>
                             <th class="px-6 py-3 font-semibold">Klasifikasi Pekerjaan</th>
                             <th class="px-6 py-3 font-semibold">Divisi</th>
@@ -70,6 +83,7 @@
                         @endphp
                         <tr class="hover:bg-blue-50/30 transition-colors">
                             <td class="px-6 py-3.5 whitespace-nowrap"><span class="font-semibold text-gray-800">{{ $permit->no_permit }}</span></td>
+                            <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-site-badge :site="$permit->site" /></td>
                             <td class="px-6 py-3.5 whitespace-nowrap"><x-permit-tipe-badge :tipe="$permit->tipe" /></td>
                             <td class="px-6 py-3.5"><x-permit-klasifikasi-badges :permit="$permit" /></td>
                             <td class="px-6 py-3.5 text-gray-700 font-medium whitespace-nowrap">{{ optional($permit->user)->name ?? $permit->divisi_pengaju ?? '—' }}</td>

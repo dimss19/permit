@@ -6,7 +6,7 @@
         <div class="flex items-center justify-between" id="step-indicator">
             @php
                 $steps = [
-                    0 => 'Tipe Permit',
+                    0 => 'Site & Tipe',
                     1 => 'Dokumen',
                     2 => 'Klasifikasi & Info',
                     3 => 'Bahaya & Pencegahan',
@@ -53,9 +53,29 @@
         </div>
 
         {{-- ========================================================
-             STEP 0 — PILIH TIPE PERMIT
+             STEP 0 — PILIH SITE & TIPE PERMIT
              ======================================================== --}}
         <div id="step-0" class="space-y-5">
+            <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div class="px-6 py-4 border-b border-gray-100">
+                    <h3 class="text-base font-semibold text-gray-800">Pilih Site <span class="text-red-500">*</span></h3>
+                    <p class="text-sm text-gray-400 mt-0.5">Permit akan direview oleh Staff HSE site yang dipilih</p>
+                </div>
+                <div class="px-6 py-5 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <button type="button" onclick="selectSite('Madiun')" id="btn-site-madiun"
+                        class="site-btn group p-6 rounded-2xl border-2 border-inka-navy bg-inka-navy/5 text-left transition-all">
+                        <p class="text-lg font-bold text-gray-800">Madiun</p>
+                        <p class="text-sm text-gray-400 mt-1">Plant Madiun — direview Staff HSE Madiun</p>
+                    </button>
+                    <button type="button" onclick="selectSite('Banyuwangi')" id="btn-site-banyuwangi"
+                        class="site-btn group p-6 rounded-2xl border-2 border-gray-200 hover:border-inka-navy text-left transition-all">
+                        <p class="text-lg font-bold text-gray-800">Banyuwangi</p>
+                        <p class="text-sm text-gray-400 mt-1">Plant Banyuwangi — direview Staff HSE Banyuwangi</p>
+                    </button>
+                </div>
+                <input type="hidden" name="site" id="site-input" value="{{ old('site', 'Madiun') }}">
+            </div>
+
             <div class="bg-white rounded-2xl border border-gray-100 shadow-sm">
                 <div class="px-6 py-4 border-b border-gray-100">
                     <h3 class="text-base font-semibold text-gray-800">Pilih Tipe Permit</h3>
@@ -482,6 +502,22 @@
             activeBtn.classList.remove('border-gray-200');
         }
 
+        let selectedSite = document.getElementById('site-input').value || 'Madiun';
+
+        function selectSite(site) {
+            selectedSite = site;
+            document.getElementById('site-input').value = site;
+
+            document.querySelectorAll('.site-btn').forEach(btn => {
+                btn.classList.remove('border-inka-navy', 'bg-inka-navy/5');
+                btn.classList.add('border-gray-200');
+            });
+            const activeBtn = document.getElementById('btn-site-' + site.toLowerCase());
+            activeBtn.classList.add('border-inka-navy', 'bg-inka-navy/5');
+            activeBtn.classList.remove('border-gray-200');
+        }
+        selectSite(selectedSite);
+
         function changeStep(direction) {
             let nextStep = currentStep + direction;
             if (nextStep < 0 || nextStep >= totalSteps) return;
@@ -596,6 +632,11 @@
             html += `<div class="p-3 bg-gray-50 rounded-xl mb-4">
                 <p class="text-sm text-gray-400">Tipe Permit</p>
                 <p class="font-semibold text-gray-800">${selectedTipe}</p>
+            </div>`;
+
+            html += `<div class="p-3 bg-gray-50 rounded-xl mb-4">
+                <p class="text-sm text-gray-400">Site</p>
+                <p class="font-semibold text-gray-800">${selectedSite}</p>
             </div>`;
 
             const namaP = fd.get('nama_pekerjaan') || '—';

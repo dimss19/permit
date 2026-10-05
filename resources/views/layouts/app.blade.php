@@ -31,9 +31,9 @@
                 $expectedStatus = $statusMap[$role] ?? null;
                 if ($expectedStatus) {
                     try {
-                        $pendingCount = \App\Models\Permit::where('status', $expectedStatus)->count();
-                        $pendingPermits = \App\Models\Permit::with('user')
-                            ->where('status', $expectedStatus)
+                        $notifQuery = \App\Models\Permit::visibleTo(auth()->user())->where('status', $expectedStatus);
+                        $pendingCount = (clone $notifQuery)->count();
+                        $pendingPermits = $notifQuery->with('user')
                             ->orderBy('updated_at', 'desc')
                             ->take(5)
                             ->get();
@@ -162,7 +162,7 @@
                                         <span class="text-[10px] text-gray-400">{{ $permit->updated_at->diffForHumans() }}</span>
                                     </div>
                                     <p class="text-xs text-gray-700 font-medium truncate">{{ $permit->nama_pekerjaan }}</p>
-                                    <p class="text-[11px] text-gray-500 truncate mt-0.5">{{ optional($permit->user)->name ?? 'Divisi' }}</p>
+                                    <p class="text-[11px] text-gray-500 truncate mt-0.5">{{ $permit->site ?? 'Madiun' }} &middot; {{ optional($permit->user)->name ?? 'Divisi' }}</p>
                                 </a>
                                 @endforeach
                                 @if($pendingCount > 5)

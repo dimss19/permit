@@ -18,10 +18,11 @@ class DashboardController extends Controller
 
         if ($role === 'staff') {
             $counts = [
-                'pending' => Permit::where('status', 'Review Staff')->count(),
-                'today' => Permit::where('status', 'Review Staff')->whereDate('updated_at', $today)->count(),
+                'pending' => Permit::visibleTo(Auth::user())->where('status', 'Review Staff')->count(),
+                'today' => Permit::visibleTo(Auth::user())->where('status', 'Review Staff')->whereDate('updated_at', $today)->count(),
             ];
             $permits = Permit::with(['user', 'classifications'])
+                ->visibleTo(Auth::user())
                 ->where('status', 'Review Staff')
                 ->orderBy('submitted_at', 'asc')
                 ->get();

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Permit;
 use App\Models\PermitDocument;
+use App\Services\PermitMailNotifier;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -42,7 +43,13 @@ class ApprovalController extends Controller
     public function index(Request $request)
     {
         $config = $this->getRoleConfig();
-        $query = Permit::with(['user', 'classifications']);
+        $query = Permit::with(['user', 'classifications'])->visibleTo(Auth::user());
+
+        // Manager melihat semua site + boleh filter per site.
+        // Staff otomatis ter-scope ke site-nya via visibleTo().
+        if (Auth::user()->role === 'manager' && $request->filled('site')) {
+            $query->forSite($request->site);
+        }
 
         if ($request->date === 'today') {
             $query->whereDate('updated_at', today())->where('status', $config['expectedStatus']);
@@ -70,7 +77,12 @@ class ApprovalController extends Controller
     {
         $config = $this->getRoleConfig();
         $permit = Permit::with(['user', 'documents'])->findOrFail($id);
-        
+
+        // Staff hanya boleh membuka permit dari site-nya sendiri.
+        if (Auth::user()->role === 'staff' && $permit->site !== Auth::user()->site) {
+            return redirect('/admin/approvals')->with('error', 'Permit site ' . ($permit->site ?? '—') . ' bukan wewenang Anda (site ' . (Auth::user()->site ?? '—') . ').');
+        }
+
         $canReview = $permit->status === $config['expectedStatus'];
 
         return view('admin.approvals.show', compact('permit', 'canReview', 'config'));
@@ -80,6 +92,11 @@ class ApprovalController extends Controller
     {
         $config = $this->getRoleConfig();
         $permit = Permit::findOrFail($id);
+
+        // Staff hanya boleh me-review permit dari site-nya sendiri.
+        if (Auth::user()->role === 'staff' && $permit->site !== Auth::user()->site) {
+            return redirect('/admin/approvals')->with('error', 'Permit site ' . ($permit->site ?? '—') . ' bukan wewenang Anda (site ' . (Auth::user()->site ?? '—') . ').');
+        }
 
         if ($permit->status !== $config['expectedStatus']) {
             return redirect('/admin/approvals')->with('error', 'Permit tidak valid untuk direview.');
@@ -104,6 +121,10 @@ class ApprovalController extends Controller
             'approval_signatures' => $signatures,
         ])->save();
 
+        if ($config['nextStatus'] === 'Review Manager') {
+            PermitMailNotifier::notifyManager($permit->fresh());
+        }
+
         if ($config['nextStatus'] === 'Active') {
             $message = 'Permit berhasil disetujui dan kini berstatus ACTIVE.';
         } else {
@@ -116,6 +137,11 @@ class ApprovalController extends Controller
     public function downloadPdf($id)
     {
         $permit = Permit::findOrFail($id);
+
+        // Staff hanya boleh mengunduh PDF dari site-nya sendiri.
+        if (Auth::user()->role === 'staff' && $permit->site !== Auth::user()->site) {
+            abort(403, 'Permit bukan wewenang site Anda.');
+        }
 
         $allowedStatuses = ['Review Staff', 'Review Manager', 'Revision', 'Active', 'Closed'];
         if (!in_array($permit->status, $allowedStatuses)) {
@@ -133,6 +159,11 @@ class ApprovalController extends Controller
     {
         $config = $this->getRoleConfig();
         $permit = Permit::findOrFail($permitId);
+
+        // Staff hanya boleh mengunduh dokumen dari site-nya sendiri.
+        if (Auth::user()->role === 'staff' && $permit->site !== Auth::user()->site) {
+            abort(403, 'Permit bukan wewenang site Anda.');
+        }
 
         // Hanya izinkan download dari permit yang sedang dalam status review
         $allowedStatuses = ['Review Staff', 'Review Manager', 'Revision', 'Active', 'Closed'];
